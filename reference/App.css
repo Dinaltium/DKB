@@ -1,0 +1,40 @@
+.busconnect-page {
+    min-height: 100vh;
+    background: #f8f9fa;
+}
+
+.ticket-stub {
+    position: relative;
+    border: 2px dashed rgba(13, 27, 42, 0.22);
+    background: #ffffff;
+}
+
+.ticket-stub::before,
+.ticket-stub::after {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background: #f8f9fa;
+    border: 2px solid rgba(13, 27, 42, 0.22);
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.ticket-stub::before {
+    left: -12px;
+}
+
+.ticket-stub::after {
+    right: -12px;
+}
+
+.surface-card {
+    box-shadow: 4px 4px 0 rgba(13, 27, 42, 0.08);
+}
+
+.surface-card:hover {
+    box-shadow: 6px 6px 0 rgba(13, 27, 42, 0.14);
+    transform: translate(-2px, -2px);
+}
