@@ -19,6 +19,7 @@ export interface Bus {
   fullFare: number;
   driverName: string;
   conductorName: string;
+  routeGeometry?: { lat: number; lng: number }[];
   status: BusStatus;
   schedule: string[];
   statusNote: string;

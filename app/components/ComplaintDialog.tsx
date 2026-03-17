@@ -4,23 +4,14 @@ import { useState } from "react";
 import { toast } from "sonner";
 import type { Complaint } from "@/lib/types";
 
-const CATEGORIES = [
-  "Overcharging",
-  "Wrong Route",
-  "Harassment",
-  "Reckless Driving",
-  "Other",
-];
+const CATEGORIES = ["Overcharging", "Wrong Route", "Harassment", "Reckless Driving", "Other"];
 
 interface ComplaintDialogProps {
   busNumber: string;
   onSuccess?: () => void;
 }
 
-export function ComplaintDialog({
-  busNumber,
-  onSuccess,
-}: ComplaintDialogProps) {
+export function ComplaintDialog({ busNumber, onSuccess }: ComplaintDialogProps) {
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState("Overcharging");
   const [description, setDescription] = useState("");
@@ -28,18 +19,11 @@ export function ComplaintDialog({
   const [loading, setLoading] = useState(false);
 
   const submitComplaint = () => {
-    if (!description.trim()) {
-      toast.error("Please add complaint details");
-      return;
-    }
-
+    if (!description.trim()) { toast.error("Please add complaint details"); return; }
     setLoading(true);
-
     setTimeout(() => {
       try {
-        const stored = JSON.parse(
-          localStorage.getItem("buslink_complaints") || "[]",
-        ) as Complaint[];
+        const stored = JSON.parse(localStorage.getItem("buslink_complaints") || "[]") as Complaint[];
         const newComplaint: Complaint = {
           id: `CMP-${Date.now()}`,
           busNumber,
@@ -53,9 +37,7 @@ export function ComplaintDialog({
         stored.push(newComplaint);
         localStorage.setItem("buslink_complaints", JSON.stringify(stored));
         toast.success("Complaint submitted successfully");
-        setDescription("");
-        setPhotoName("");
-        setOpen(false);
+        setDescription(""); setPhotoName(""); setOpen(false);
         onSuccess?.();
       } catch {
         toast.error("Unable to submit complaint");
@@ -65,13 +47,13 @@ export function ComplaintDialog({
     }, 600);
   };
 
+  const inputStyle = { background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" };
+
   if (!open) {
     return (
-      <button
-        onClick={() => setOpen(true)}
-        data-testid="open-complaint-dialog-button"
-        className="h-12 rounded-none border-2 border-[#0D1B2A] bg-white px-5 text-sm font-bold uppercase tracking-wide text-[#0D1B2A] hover:bg-slate-100 active:scale-[0.98]"
-      >
+      <button onClick={() => setOpen(true)} data-testid="open-complaint-dialog-button"
+        className="h-12 rounded-none border-2 px-5 text-sm font-bold uppercase tracking-wide hover:opacity-80 active:scale-[0.98]"
+        style={{ background: "var(--bg-surface)", borderColor: "var(--border-strong)", color: "var(--text-primary)" }}>
         Complaint / Feedback
       </button>
     );
@@ -79,83 +61,52 @@ export function ComplaintDialog({
 
   return (
     <>
-      {/* Backdrop */}
+      <div className="fixed inset-0 z-40 bg-black/50" onClick={() => setOpen(false)} />
       <div
-        className="fixed inset-0 z-40 bg-black/50"
-        onClick={() => setOpen(false)}
-      />
-
-      {/* Dialog */}
-      <div className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-none border-2 border-slate-300 bg-white p-6 shadow-2xl">
+        className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-none border-2 p-6 shadow-2xl"
+        style={{ background: "var(--bg-surface)", borderColor: "var(--border-medium)" }}
+      >
         <div className="mb-1 flex items-start justify-between">
           <div>
             <h2
-              className="text-3xl font-extrabold uppercase text-[#0D1B2A]"
-              style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+              className="text-3xl font-extrabold uppercase"
+              style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}
               data-testid="complaint-dialog-title"
             >
               Raise Complaint
             </h2>
-            <p
-              className="text-sm text-slate-500"
-              data-testid="complaint-dialog-description"
-            >
+            <p className="text-sm" style={{ color: "var(--text-muted)" }} data-testid="complaint-dialog-description">
               Bus Number: {busNumber}
             </p>
           </div>
-          <button
-            onClick={() => setOpen(false)}
-            className="ml-4 rounded-full p-1 text-slate-400 hover:text-slate-700"
-          >
+          <button onClick={() => setOpen(false)} className="ml-4 rounded-full p-1 hover:opacity-80" style={{ color: "var(--text-muted)" }}>
             ✕
           </button>
         </div>
 
         <div className="mt-4 space-y-3">
-          <select
-            data-testid="complaint-category-select"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="h-11 w-full border-2 border-slate-300 bg-white px-3 text-sm outline-none focus:border-[#0D1B2A]"
-          >
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
+          <select data-testid="complaint-category-select" value={category} onChange={(e) => setCategory(e.target.value)}
+            className="h-11 w-full border-2 px-3 text-sm outline-none" style={inputStyle}>
+            {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
 
-          <textarea
-            data-testid="complaint-description-input"
-            placeholder="Describe the issue..."
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={4}
-            className="w-full border-2 border-slate-300 p-3 text-sm outline-none focus:border-[#0D1B2A]"
-          />
+          <textarea data-testid="complaint-description-input" placeholder="Describe the issue..."
+            value={description} onChange={(e) => setDescription(e.target.value)} rows={4}
+            className="w-full border-2 p-3 text-sm outline-none" style={inputStyle} />
 
-          <input
-            type="file"
-            accept="image/*"
-            data-testid="complaint-photo-input"
-            className="h-11 w-full border-2 border-slate-300 px-2 text-sm"
-            onChange={(e) => setPhotoName(e.target.files?.[0]?.name ?? "")}
-          />
+          <input type="file" accept="image/*" data-testid="complaint-photo-input"
+            className="h-11 w-full border-2 px-2 text-sm" style={inputStyle}
+            onChange={(e) => setPhotoName(e.target.files?.[0]?.name ?? "")} />
         </div>
 
         <div className="mt-4 flex justify-end gap-2">
-          <button
-            onClick={() => setOpen(false)}
-            className="h-11 border-2 border-slate-300 px-4 text-sm font-semibold uppercase tracking-wide text-slate-600 hover:bg-slate-50"
-          >
+          <button onClick={() => setOpen(false)}
+            className="h-11 border-2 px-4 text-sm font-semibold uppercase tracking-wide hover:opacity-80"
+            style={{ borderColor: "var(--border-medium)", color: "var(--text-secondary)", background: "transparent" }}>
             Cancel
           </button>
-          <button
-            data-testid="complaint-submit-button"
-            onClick={submitComplaint}
-            disabled={loading}
-            className="h-11 rounded-none border-2 border-[#0D1B2A] bg-[#0D1B2A] px-5 text-sm font-semibold uppercase tracking-wide text-white hover:bg-slate-800 disabled:opacity-60"
-          >
+          <button data-testid="complaint-submit-button" onClick={submitComplaint} disabled={loading}
+            className="h-11 rounded-none border-2 border-[#0D1B2A] bg-[#0D1B2A] px-5 text-sm font-semibold uppercase tracking-wide text-white hover:bg-slate-800 disabled:opacity-60">
             {loading ? "Submitting..." : "Submit Complaint"}
           </button>
         </div>

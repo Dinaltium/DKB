@@ -1,21 +1,115 @@
 @import "tailwindcss";
 
+/* ── Light theme (default) ── */
 :root {
-  --background: #f8f9fa;
-  --foreground: #0d1b2a;
+  /* Page & surface backgrounds */
+  --bg-page:        #f8f9fa;
+  --bg-surface:     #ffffff;
+  --bg-surface-2:   #f1f3f5;
+  --bg-surface-3:   #e9ecef;
+
+  /* Brand colours (stay fixed across themes) */
+  --color-navy:     #0D1B2A;
+  --color-amber:    #F4A522;
+  --color-teal:     #0E7C86;
+
+  /* Text */
+  --text-primary:   #0D1B2A;
+  --text-secondary: #4a5568;
+  --text-muted:     #718096;
+  --text-inverse:   #ffffff;
+
+  /* Borders */
+  --border-default: rgba(13, 27, 42, 0.15);
+  --border-medium:  rgba(13, 27, 42, 0.25);
+  --border-strong:  rgba(13, 27, 42, 0.40);
+
+  /* Ticket stub punch holes */
+  --ticket-hole-bg: #f8f9fa;
+
+  /* Header */
+  --header-bg:      rgba(255, 255, 255, 0.90);
+  --header-border:  rgba(13, 27, 42, 0.10);
+
+  /* Status badge backgrounds */
+  --status-running-bg:     #ecfdf5;
+  --status-running-text:   #065f46;
+  --status-running-border: #a7f3d0;
+  --status-delayed-bg:     #fffbeb;
+  --status-delayed-text:   #92400e;
+  --status-delayed-border: #fde68a;
+  --status-stopped-bg:     #fff1f2;
+  --status-stopped-text:   #9f1239;
+  --status-stopped-border: #fecdd3;
+
+  /* Card shadow */
+  --shadow-card:    4px 4px 0 rgba(13, 27, 42, 0.08);
+  --shadow-card-hover: 6px 6px 0 rgba(13, 27, 42, 0.14);
+
+  /* Input / form */
+  --input-bg:       #ffffff;
+  --input-border:   #cbd5e0;
+  --input-text:     #0D1B2A;
+
+  /* Select element */
+  --select-bg:      #ffffff;
 }
 
+/* ── Dark theme ── */
+[data-theme="dark"] {
+  --bg-page:        #0f1923;
+  --bg-surface:     #1a2535;
+  --bg-surface-2:   #243044;
+  --bg-surface-3:   #2d3d54;
+
+  --text-primary:   #e8edf3;
+  --text-secondary: #9aafc5;
+  --text-muted:     #6b849e;
+  --text-inverse:   #0D1B2A;
+
+  --border-default: rgba(255, 255, 255, 0.08);
+  --border-medium:  rgba(255, 255, 255, 0.14);
+  --border-strong:  rgba(255, 255, 255, 0.22);
+
+  --ticket-hole-bg: #0f1923;
+
+  --header-bg:      rgba(15, 25, 35, 0.92);
+  --header-border:  rgba(255, 255, 255, 0.07);
+
+  --status-running-bg:     #052e16;
+  --status-running-text:   #6ee7b7;
+  --status-running-border: #065f46;
+  --status-delayed-bg:     #2d1b00;
+  --status-delayed-text:   #fcd34d;
+  --status-delayed-border: #92400e;
+  --status-stopped-bg:     #2d0a0f;
+  --status-stopped-text:   #fca5a5;
+  --status-stopped-border: #9f1239;
+
+  --shadow-card:    4px 4px 0 rgba(0, 0, 0, 0.30);
+  --shadow-card-hover: 6px 6px 0 rgba(0, 0, 0, 0.45);
+
+  --input-bg:       #243044;
+  --input-border:   #3d5068;
+  --input-text:     #e8edf3;
+
+  --select-bg:      #243044;
+}
+
+/* ── Base styles ── */
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg-page);
+  color: var(--text-primary);
   font-family: Inter, Arial, Helvetica, sans-serif;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 /* ── Ticket stub card — dashed border with punch holes ── */
 .ticket-stub {
   position: relative;
-  border: 2px dashed rgba(13, 27, 42, 0.22);
-  background: #ffffff;
+  border: 2px dashed var(--border-medium);
+  background: var(--bg-surface);
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .ticket-stub::before,
@@ -25,54 +119,69 @@ body {
   width: 18px;
   height: 18px;
   border-radius: 999px;
-  background: #f8f9fa;
-  border: 2px solid rgba(13, 27, 42, 0.22);
+  background: var(--ticket-hole-bg);
+  border: 2px solid var(--border-medium);
   top: 50%;
   transform: translateY(-50%);
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
-.ticket-stub::before {
-  left: -12px;
-}
-.ticket-stub::after {
-  right: -12px;
-}
+.ticket-stub::before { left: -12px; }
+.ticket-stub::after  { right: -12px; }
 
 /* ── Surface card with offset shadow ── */
 .surface-card {
-  box-shadow: 4px 4px 0 rgba(13, 27, 42, 0.08);
+  box-shadow: var(--shadow-card);
   transition:
     box-shadow 0.2s ease,
     transform 0.2s ease;
 }
 
 .surface-card:hover {
-  box-shadow: 6px 6px 0 rgba(13, 27, 42, 0.14);
+  box-shadow: var(--shadow-card-hover);
   transform: translate(-2px, -2px);
 }
 
 /* ── Page wrapper ── */
 .buslink-page {
   min-height: 100vh;
-  background: #f8f9fa;
+  background: var(--bg-page);
+  transition: background 0.2s ease;
+}
+
+/* ── Dark mode theme transition — smooth on toggle ── */
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color, color;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+}
+
+/* Exclude transitions on elements where they'd cause jank */
+svg *,
+canvas,
+img,
+video {
+  transition: none !important;
 }
 
 /* ── Live bus pulse animation (used by Leaflet divIcon) ── */
 @keyframes liveping {
-  0% {
-    transform: scale(1);
-    opacity: 0.9;
-  }
-  70% {
-    transform: scale(2.4);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(2.4);
-    opacity: 0;
-  }
+  0%   { transform: scale(1);   opacity: 0.9; }
+  70%  { transform: scale(2.4); opacity: 0; }
+  100% { transform: scale(2.4); opacity: 0; }
 }
 
 .live-ping {
   animation: liveping 2s ease-out infinite;
+}
+
+/* ── Dark-mode map tile inversion ── */
+[data-theme="dark"] .leaflet-tile {
+  filter: invert(1) hue-rotate(180deg) brightness(0.85) contrast(0.9);
+}
+
+[data-theme="dark"] .leaflet-container {
+  background: #1a2535;
 }

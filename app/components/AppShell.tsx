@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bus, ShieldCheck, UserCog } from "lucide-react";
+import { Bus, Moon, ShieldCheck, Sun, UserCog } from "lucide-react";
 import { useLanguage } from "@/app/context/LanguageContext";
+import { useTheme } from "@/app/context/ThemeContext";
 import { LANGUAGE_OPTIONS } from "@/lib/i18n";
 
 interface AppShellProps {
@@ -15,6 +16,7 @@ interface AppShellProps {
 export function AppShell({ title, subtitle, children }: AppShellProps) {
   const pathname = usePathname();
   const { language, setLanguage, tr } = useLanguage();
+  const { isDark, toggleTheme } = useTheme();
 
   const navItems = [
     { to: "/search", label: tr("routeSearch"), icon: Bus },
@@ -25,30 +27,43 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
   return (
     <div className="buslink-page">
       {/* ── Header ── */}
-      <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
+      <header
+        className="sticky top-0 z-40 backdrop-blur-xl"
+        style={{
+          background: "var(--header-bg)",
+          borderBottom: "1px solid var(--header-border)",
+        }}
+      >
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-4 md:px-8">
           <div className="min-w-0">
             <Link
               href="/"
-              className="font-barlow text-3xl uppercase tracking-wide text-[#0D1B2A]"
+              className="text-3xl uppercase tracking-wide"
               style={{
                 fontFamily: "'Barlow Condensed', sans-serif",
                 fontWeight: 800,
+                color: "var(--text-primary)",
               }}
             >
               {tr("brand")}
             </Link>
-            <p className="text-xs text-slate-500 md:text-sm">
+            <p className="text-xs md:text-sm" style={{ color: "var(--text-muted)" }}>
               {subtitle ?? tr("tagline")}
             </p>
           </div>
 
-          {/* Language switcher */}
+          {/* Controls: language switcher + theme toggle */}
           <div className="flex items-center gap-2">
+            {/* Language switcher */}
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value as typeof language)}
-              className="h-10 rounded border-2 border-slate-300 bg-white px-2 text-sm text-slate-700 focus:outline-none"
+              className="h-10 rounded border-2 px-2 text-sm focus:outline-none"
+              style={{
+                background: "var(--select-bg)",
+                borderColor: "var(--input-border)",
+                color: "var(--text-primary)",
+              }}
             >
               {LANGUAGE_OPTIONS.map((opt) => (
                 <option key={opt.code} value={opt.code}>
@@ -56,6 +71,24 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
                 </option>
               ))}
             </select>
+
+            {/* Dark / Light mode toggle */}
+            <button
+              onClick={toggleTheme}
+              aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+              className="flex h-10 w-10 items-center justify-center rounded border-2 transition-colors hover:opacity-80"
+              style={{
+                background: isDark ? "var(--bg-surface-2)" : "var(--bg-surface)",
+                borderColor: "var(--input-border)",
+                color: "var(--text-primary)",
+              }}
+            >
+              {isDark ? (
+                <Sun className="h-4 w-4 text-amber-400" />
+              ) : (
+                <Moon className="h-4 w-4" style={{ color: "var(--text-secondary)" }} />
+              )}
+            </button>
           </div>
         </div>
       </header>
@@ -64,8 +97,11 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
       <main className="mx-auto w-full max-w-6xl px-4 pb-28 pt-8 md:px-8 md:pt-12">
         <div className="mb-8 md:mb-10">
           <h1
-            className="text-4xl font-extrabold uppercase text-[#0D1B2A] sm:text-5xl lg:text-6xl"
-            style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+            className="text-4xl font-extrabold uppercase sm:text-5xl lg:text-6xl"
+            style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              color: "var(--text-primary)",
+            }}
           >
             {title}
           </h1>

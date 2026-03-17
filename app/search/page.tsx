@@ -21,10 +21,7 @@ interface SearchResult {
 
 const STOP_NAMES = STOPS.map((s) => s.name);
 
-function getEffectiveStatus(
-  busId: string,
-  defaultStatus: BusStatus,
-): BusStatus {
+function getEffectiveStatus(busId: string, defaultStatus: BusStatus): BusStatus {
   try {
     const overrides = JSON.parse(
       localStorage.getItem("buslink_bus_status") ?? "{}",
@@ -34,12 +31,6 @@ function getEffectiveStatus(
     return defaultStatus;
   }
 }
-
-const STATUS_BADGE: Record<BusStatus, string> = {
-  Running: "bg-emerald-50 text-emerald-700 border-emerald-300",
-  "Not Running": "bg-rose-50 text-rose-700 border-rose-300",
-  Delayed: "bg-amber-50 text-amber-700 border-amber-300",
-};
 
 export default function SearchPage() {
   const [origin, setOrigin] = useState("Mangalore Central");
@@ -66,14 +57,9 @@ export default function SearchPage() {
       const toIdx = toStop ? bus.routeStopIds.indexOf(toStop.id) : -1;
 
       if (fromIdx === -1 || toIdx === -1) return [];
-      if (fromIdx >= toIdx) return []; // wrong direction
+      if (fromIdx >= toIdx) return [];
 
-      const fare = calcFare(
-        bus.fullFare,
-        fromIdx,
-        toIdx,
-        bus.routeStopIds.length,
-      );
+      const fare = calcFare(bus.fullFare, fromIdx, toIdx, bus.routeStopIds.length);
       const availableSeats = bus.totalSeats - bus.occupiedSeats;
       const status = getEffectiveStatus(bus.id, bus.status);
 
@@ -104,19 +90,37 @@ export default function SearchPage() {
         } satisfies SearchResult,
       ];
     });
-  }, [
-    searched,
-    origin,
-    destination,
-    timeFilter,
-    maxFare,
-    minSeats,
-    OPERATORS_MAP,
-  ]);
+  }, [searched, origin, destination, timeFilter, maxFare, minSeats, OPERATORS_MAP]);
 
   const handleSearch = () => {
     if (!origin || !destination) return;
     setSearched(true);
+  };
+
+  const statusStyle = (s: BusStatus) => {
+    if (s === "Running")
+      return {
+        background: "var(--status-running-bg)",
+        color: "var(--status-running-text)",
+        border: "1px solid var(--status-running-border)",
+      };
+    if (s === "Delayed")
+      return {
+        background: "var(--status-delayed-bg)",
+        color: "var(--status-delayed-text)",
+        border: "1px solid var(--status-delayed-border)",
+      };
+    return {
+      background: "var(--status-stopped-bg)",
+      color: "var(--status-stopped-text)",
+      border: "1px solid var(--status-stopped-border)",
+    };
+  };
+
+  const inputStyle = {
+    background: "var(--input-bg)",
+    borderColor: "var(--input-border)",
+    color: "var(--input-text)",
   };
 
   return (
@@ -127,32 +131,31 @@ export default function SearchPage() {
       {/* ── Search form ── */}
       <section className="ticket-stub rounded-lg p-4 md:p-6">
         <div className="grid gap-3 md:grid-cols-2">
-          <div>
-            <input
-              value={origin}
-              onChange={(e) => setOrigin(e.target.value)}
-              list="stop-options"
-              placeholder="Origin stop"
-              data-testid="route-origin-input"
-              className="h-12 w-full border-2 border-slate-300 px-3 text-sm outline-none focus:border-[#0D1B2A]"
-            />
-          </div>
-          <div>
-            <input
-              value={destination}
-              onChange={(e) => setDestination(e.target.value)}
-              list="stop-options"
-              placeholder="Destination stop"
-              data-testid="route-destination-input"
-              className="h-12 w-full border-2 border-slate-300 px-3 text-sm outline-none focus:border-[#0D1B2A]"
-            />
-          </div>
+          <input
+            value={origin}
+            onChange={(e) => setOrigin(e.target.value)}
+            list="stop-options"
+            placeholder="Origin stop"
+            data-testid="route-origin-input"
+            className="h-12 w-full border-2 px-3 text-sm outline-none"
+            style={inputStyle}
+          />
+          <input
+            value={destination}
+            onChange={(e) => setDestination(e.target.value)}
+            list="stop-options"
+            placeholder="Destination stop"
+            data-testid="route-destination-input"
+            className="h-12 w-full border-2 px-3 text-sm outline-none"
+            style={inputStyle}
+          />
           <input
             type="time"
             value={timeFilter}
             onChange={(e) => setTimeFilter(e.target.value)}
             data-testid="route-time-filter-input"
-            className="h-12 border-2 border-slate-300 px-3 text-sm outline-none focus:border-[#0D1B2A]"
+            className="h-12 border-2 px-3 text-sm outline-none"
+            style={inputStyle}
           />
           <input
             type="number"
@@ -160,7 +163,8 @@ export default function SearchPage() {
             onChange={(e) => setMaxFare(e.target.value)}
             placeholder="Max fare ₹"
             data-testid="route-max-fare-filter-input"
-            className="h-12 border-2 border-slate-300 px-3 text-sm outline-none focus:border-[#0D1B2A]"
+            className="h-12 border-2 px-3 text-sm outline-none"
+            style={inputStyle}
           />
           <input
             type="number"
@@ -168,7 +172,8 @@ export default function SearchPage() {
             onChange={(e) => setMinSeats(e.target.value)}
             placeholder="Min available seats"
             data-testid="route-min-seats-filter-input"
-            className="h-12 border-2 border-slate-300 px-3 text-sm outline-none focus:border-[#0D1B2A]"
+            className="h-12 border-2 px-3 text-sm outline-none"
+            style={inputStyle}
           />
         </div>
 
@@ -194,7 +199,7 @@ export default function SearchPage() {
         data-testid="route-search-results-section"
       >
         {searched && results.length === 0 && (
-          <div className="ticket-stub rounded-lg p-5 text-sm text-slate-600">
+          <div className="ticket-stub rounded-lg p-5 text-sm" style={{ color: "var(--text-secondary)" }}>
             No buses found for this route with the selected filters.
           </div>
         )}
@@ -203,35 +208,41 @@ export default function SearchPage() {
           <div
             key={item.busNumber}
             data-testid={`search-result-card-${item.busNumber.toLowerCase()}`}
-            className="surface-card rounded-lg border-2 border-slate-200 bg-white"
+            className="surface-card rounded-lg border-2"
+            style={{
+              background: "var(--bg-surface)",
+              borderColor: "var(--border-default)",
+            }}
           >
             <div className="grid gap-3 p-5 md:grid-cols-[1.3fr_1fr_auto] md:items-center">
               <div>
                 <p
-                  className="text-4xl font-extrabold leading-none text-[#0D1B2A]"
-                  style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+                  className="text-4xl font-extrabold leading-none"
+                  style={{
+                    fontFamily: "'Barlow Condensed', sans-serif",
+                    color: "var(--text-primary)",
+                  }}
                   data-testid={`search-result-bus-number-${item.busNumber.toLowerCase()}`}
                 >
                   {item.busNumber}
                 </p>
-                <p className="mt-1 text-sm text-slate-600">
+                <p className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
                   {item.origin} → {item.destination}
                 </p>
-                <p className="mt-1 text-xs uppercase tracking-wider text-slate-500">
+                <p className="mt-1 text-xs uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
                   {item.operatorName}
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-sm md:grid-cols-1">
+              <div className="grid grid-cols-2 gap-2 text-sm md:grid-cols-1" style={{ color: "var(--text-primary)" }}>
                 <p>
                   Departure: <strong>{item.departureTime}</strong>
                 </p>
-                <p className="font-semibold text-[#0E7C86]">
-                  Fare: ₹{item.fare}
-                </p>
+                <p className="font-semibold text-[#0E7C86]">Fare: ₹{item.fare}</p>
                 <p>Seats: {item.availableSeats}</p>
                 <span
-                  className={`inline-flex w-fit rounded-full border px-2 py-0.5 text-xs font-semibold ${STATUS_BADGE[item.status]}`}
+                  className="inline-flex w-fit rounded-full px-2 py-0.5 text-xs font-semibold"
+                  style={statusStyle(item.status)}
                 >
                   {item.status}
                 </span>

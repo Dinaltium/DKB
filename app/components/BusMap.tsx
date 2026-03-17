@@ -22,37 +22,24 @@ interface LeafletMarker {
 
 interface LeafletMap {
   remove: () => void;
-  panTo: (
-    latlng: [number, number],
-    options?: Record<string, unknown>,
-  ) => void;
+  panTo: (latlng: [number, number], options?: Record<string, unknown>) => void;
+  on: (event: string, handler: () => void) => void;
+  off: (event: string, handler: () => void) => void;
 }
 
-// Fetch road-following route from OSRM public API
 async function fetchRoadRoute(stops: Stop[]): Promise<[number, number][]> {
   const coordStr = stops.map((s) => `${s.lng},${s.lat}`).join(";");
-  const url = `https://router.project-osrm.org/route/v1/foot/${coordStr}?overview=full&geometries=geojson`;
+  const url = `https://router.project-osrm.org/route/v1/driving/${coordStr}?overview=full&geometries=geojson&continue_straight=true`;
   try {
     const res = await fetch(url);
     const data = (await res.json()) as {
       code: string;
-      routes?: {
-        geometry?: {
-          coordinates?: [number, number][];
-        };
-      }[];
+      routes?: { geometry?: { coordinates?: [number, number][] } }[];
     };
     if (data.code === "Ok" && data.routes?.[0]?.geometry?.coordinates) {
-      // OSRM returns [lng, lat] — flip to [lat, lng] for Leaflet
-      return data.routes[0].geometry.coordinates.map(([lng, lat]) => [
-        lat,
-        lng,
-      ]);
+      return data.routes[0].geometry.coordinates.map(([lng, lat]) => [lat, lng]);
     }
-  } catch {
-    // fall through to straight-line fallback
-  }
-  // Fallback to straight lines if OSRM fails
+  } catch {}
   return stops.map((s) => [s.lat, s.lng]);
 }
 
@@ -64,6 +51,12 @@ export default function BusMap({ stops, livePosition }: BusMapProps) {
   const routePolylineRef = useRef<LeafletPolyline | null>(null);
   const [mapReady, setMapReady] = useState(false);
 
+  // ── User pan tracking ──────────────────────────────────────────────────────
+  // true  = user has manually panned away — don't auto-follow
+  // false = following the bus (default)
+  const userPannedRef = useRef(false);
+  const [isFollowing, setIsFollowing] = useState(true);
+
   // ── Create map and static layers ──────────────────────────────────────────
   useEffect(() => {
     if (!mapContainerRef.current || !stops.length) return;
@@ -74,11 +67,8 @@ export default function BusMap({ stops, livePosition }: BusMapProps) {
       const L = (await import("leaflet")).default;
       if (!mounted || !mapContainerRef.current) return;
 
-      // Tear down previous map
       if (mapInstanceRef.current) {
-        try {
-          mapInstanceRef.current.remove();
-        } catch {}
+        try { mapInstanceRef.current.remove(); } catch {}
         mapInstanceRef.current = null;
         liveMarkerRef.current = null;
         routePolylineRef.current = null;
@@ -86,12 +76,9 @@ export default function BusMap({ stops, livePosition }: BusMapProps) {
         setMapReady(false);
       }
 
-      const avgLat = stops.reduce((a, s) => a + s.lat, 0) / stops.length;
-      const avgLng = stops.reduce((a, s) => a + s.lng, 0) / stops.length;
-
       const map = L.map(mapContainerRef.current, {
-        scrollWheelZoom: false,
-      }).setView([avgLat, avgLng], 11);
+        scrollWheelZoom: true,
+      });
 
       L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
@@ -103,7 +90,15 @@ export default function BusMap({ stops, livePosition }: BusMapProps) {
         },
       ).addTo(map);
 
-      // Stop markers — custom circle style
+      // ── Detect user pan/zoom — stop auto-following ─────────────────────────
+      // 'dragstart' fires when user physically drags the map
+      const onUserDrag = () => {
+        userPannedRef.current = true;
+        setIsFollowing(false);
+      };
+      map.on("dragstart", onUserDrag);
+
+      // Stop markers
       stops.forEach((stop, idx) => {
         const isTerminus = idx === 0 || idx === stops.length - 1;
         const icon = L.divIcon({
@@ -124,7 +119,7 @@ export default function BusMap({ stops, livePosition }: BusMapProps) {
           .bindPopup(`<strong>${stop.name}</strong>`);
       });
 
-      // Draw dashed placeholder immediately
+      // Dashed placeholder polyline
       const straightLine = stops.map((s): [number, number] => [s.lat, s.lng]);
       const polyline = L.polyline(straightLine, {
         color: "#0E7C86",
@@ -134,7 +129,7 @@ export default function BusMap({ stops, livePosition }: BusMapProps) {
       }).addTo(map);
       routePolylineRef.current = polyline as unknown as LeafletPolyline;
 
-      // Fit map bounds to all stops
+      // Fit bounds to all stops on initial load
       const bounds = L.latLngBounds(straightLine);
       map.fitBounds(bounds, { padding: [30, 30] });
 
@@ -142,7 +137,7 @@ export default function BusMap({ stops, livePosition }: BusMapProps) {
       mapInstanceRef.current = map as unknown as LeafletMap;
       if (mounted) setMapReady(true);
 
-      // Fetch real road route — replaces dashed placeholder
+      // Fetch real road route
       const roadPoints = await fetchRoadRoute(stops);
       if (mounted && routePolylineRef.current) {
         routePolylineRef.current.setLatLngs(roadPoints);
@@ -157,9 +152,7 @@ export default function BusMap({ stops, livePosition }: BusMapProps) {
     return () => {
       mounted = false;
       if (mapInstanceRef.current) {
-        try {
-          mapInstanceRef.current.remove();
-        } catch {}
+        try { mapInstanceRef.current.remove(); } catch {}
         mapInstanceRef.current = null;
         liveMarkerRef.current = null;
         routePolylineRef.current = null;
@@ -168,7 +161,7 @@ export default function BusMap({ stops, livePosition }: BusMapProps) {
     };
   }, [stops]);
 
-  // ── Update live position marker ────────────────────────────────────────────
+  // ── Update live marker — only pan if user hasn't manually moved away ───────
   useEffect(() => {
     if (!mapReady || !livePosition) return;
 
@@ -198,18 +191,57 @@ export default function BusMap({ stops, livePosition }: BusMapProps) {
         .bindPopup("<strong>🚌 Bus is here</strong>") as unknown as LeafletMarker;
     }
 
-    map.panTo([livePosition.lat, livePosition.lng], {
-      animate: true,
-      duration: 1.2,
-    });
+    // Only auto-pan if user hasn't manually moved the map
+    if (!userPannedRef.current) {
+      map.panTo([livePosition.lat, livePosition.lng], {
+        animate: true,
+        duration: 1.2,
+      });
+    }
   }, [mapReady, livePosition]);
+
+  // ── Recenter handler — called when user clicks "Back to Bus" button ────────
+  const recenterOnBus = () => {
+    if (!livePosition || !mapInstanceRef.current) return;
+    userPannedRef.current = false;
+    setIsFollowing(true);
+    mapInstanceRef.current.panTo(
+      [livePosition.lat, livePosition.lng],
+      { animate: true, duration: 0.8 },
+    );
+  };
 
   return (
     <div className="ticket-stub overflow-hidden rounded-lg">
-      <div className="flex items-center gap-2 bg-amber-50 px-3 py-1.5 text-xs text-amber-800">
-        <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-amber-500" />
-        Route follows actual NH66 road data via OpenStreetMap
+      {/* Top bar */}
+      <div className="flex items-center justify-between bg-amber-50 px-3 py-1.5">
+        <div className="flex items-center gap-2 text-xs text-amber-800">
+          <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-amber-500" />
+          Route follows NH66 road data via OpenStreetMap
+        </div>
+
+        {/* Back to Bus button — only shown when user has panned away */}
+        {!isFollowing && livePosition && (
+          <button
+            onClick={recenterOnBus}
+            className="flex items-center gap-1.5 rounded-full border border-[#0D1B2A] 
+              bg-white px-3 py-1 text-xs font-bold text-[#0D1B2A] 
+              shadow-sm hover:bg-slate-50 active:scale-95 transition-transform"
+          >
+            {/* Bus emoji as icon */}
+            🚌 Back to Bus
+          </button>
+        )}
+
+        {/* Following indicator */}
+        {isFollowing && livePosition && (
+          <span className="flex items-center gap-1 text-xs text-emerald-700">
+            <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
+            Following bus
+          </span>
+        )}
       </div>
+
       <div
         ref={mapContainerRef}
         className="h-72 w-full md:h-96"
