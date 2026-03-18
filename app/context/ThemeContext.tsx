@@ -16,23 +16,19 @@ const ThemeContext = createContext<ThemeCtx>({
   isDark: false,
 });
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("light");
+function getInitialTheme(): Theme {
+  if (typeof window === "undefined") return "light"; // SSR guard
+  try {
+    const saved = localStorage.getItem("buslink-theme") as Theme | null;
+    if (saved === "dark" || saved === "light") return saved;
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches)
+      return "dark";
+  } catch {}
+  return "light";
+}
 
-  // On mount: read from localStorage or system preference
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("buslink-theme") as Theme | null;
-      if (saved === "dark" || saved === "light") {
-        setTheme(saved);
-        return;
-      }
-    } catch {}
-    // Fall back to system preference
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      setTheme("dark");
-    }
-  }, []);
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [theme, setTheme] = useState<Theme>(getInitialTheme);
 
   // Apply theme to <html> element so Tailwind dark: variants + CSS vars both work
   useEffect(() => {
@@ -53,7 +49,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, isDark: theme === "dark" }}>
+    <ThemeContext.Provider
+      value={{ theme, toggleTheme, isDark: theme === "dark" }}
+    >
       {children}
     </ThemeContext.Provider>
   );

@@ -1,59 +1,59 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
-import type { Complaint } from "@/lib/types";
+import { submitComplaintAction } from "@/lib/actions/bus";
 
 const CATEGORIES = ["Overcharging", "Wrong Route", "Harassment", "Reckless Driving", "Other"];
 
 interface ComplaintDialogProps {
+  busId:     string;
   busNumber: string;
   onSuccess?: () => void;
 }
 
-export function ComplaintDialog({ busNumber, onSuccess }: ComplaintDialogProps) {
-  const [open, setOpen] = useState(false);
-  const [category, setCategory] = useState("Overcharging");
+export function ComplaintDialog({ busId, busNumber, onSuccess }: ComplaintDialogProps) {
+  const [open, setOpen]           = useState(false);
+  const [category, setCategory]   = useState("Overcharging");
   const [description, setDescription] = useState("");
-  const [photoName, setPhotoName] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isPending, startTransition]  = useTransition();
 
-  const submitComplaint = () => {
+  const handleSubmit = () => {
     if (!description.trim()) { toast.error("Please add complaint details"); return; }
-    setLoading(true);
-    setTimeout(() => {
-      try {
-        const stored = JSON.parse(localStorage.getItem("buslink_complaints") || "[]") as Complaint[];
-        const newComplaint: Complaint = {
-          id: `CMP-${Date.now()}`,
-          busNumber,
-          busId: busNumber,
-          category,
-          description,
-          photoName: photoName || undefined,
-          timestamp: Date.now(),
-          status: "pending",
-        };
-        stored.push(newComplaint);
-        localStorage.setItem("buslink_complaints", JSON.stringify(stored));
+
+    startTransition(async () => {
+      const result = await submitComplaintAction({
+        busId,
+        busNumber,
+        category,
+        description,
+      });
+
+      if (result.success) {
         toast.success("Complaint submitted successfully");
-        setDescription(""); setPhotoName(""); setOpen(false);
+        setDescription("");
+        setOpen(false);
         onSuccess?.();
-      } catch {
-        toast.error("Unable to submit complaint");
-      } finally {
-        setLoading(false);
+      } else {
+        toast.error("Unable to submit complaint. Please try again.");
       }
-    }, 600);
+    });
   };
 
-  const inputStyle = { background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" };
+  const inputStyle = {
+    background:  "var(--input-bg)",
+    borderColor: "var(--input-border)",
+    color:       "var(--input-text)",
+  };
 
   if (!open) {
     return (
-      <button onClick={() => setOpen(true)} data-testid="open-complaint-dialog-button"
+      <button
+        onClick={() => setOpen(true)}
+        data-testid="open-complaint-dialog-button"
         className="h-12 rounded-none border-2 px-5 text-sm font-bold uppercase tracking-wide hover:opacity-80 active:scale-[0.98]"
-        style={{ background: "var(--bg-surface)", borderColor: "var(--border-strong)", color: "var(--text-primary)" }}>
+        style={{ background: "var(--bg-surface)", borderColor: "var(--border-strong)", color: "var(--text-primary)" }}
+      >
         Complaint / Feedback
       </button>
     );
@@ -76,38 +76,55 @@ export function ComplaintDialog({ busNumber, onSuccess }: ComplaintDialogProps) 
               Raise Complaint
             </h2>
             <p className="text-sm" style={{ color: "var(--text-muted)" }} data-testid="complaint-dialog-description">
-              Bus Number: {busNumber}
+              Bus {busNumber}
             </p>
           </div>
-          <button onClick={() => setOpen(false)} className="ml-4 rounded-full p-1 hover:opacity-80" style={{ color: "var(--text-muted)" }}>
+          <button
+            onClick={() => setOpen(false)}
+            className="ml-4 rounded-full p-1 hover:opacity-80"
+            style={{ color: "var(--text-muted)" }}
+          >
             ✕
           </button>
         </div>
 
         <div className="mt-4 space-y-3">
-          <select data-testid="complaint-category-select" value={category} onChange={(e) => setCategory(e.target.value)}
-            className="h-11 w-full border-2 px-3 text-sm outline-none" style={inputStyle}>
+          <select
+            data-testid="complaint-category-select"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="h-11 w-full border-2 px-3 text-sm outline-none"
+            style={inputStyle}
+          >
             {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
 
-          <textarea data-testid="complaint-description-input" placeholder="Describe the issue..."
-            value={description} onChange={(e) => setDescription(e.target.value)} rows={4}
-            className="w-full border-2 p-3 text-sm outline-none" style={inputStyle} />
-
-          <input type="file" accept="image/*" data-testid="complaint-photo-input"
-            className="h-11 w-full border-2 px-2 text-sm" style={inputStyle}
-            onChange={(e) => setPhotoName(e.target.files?.[0]?.name ?? "")} />
+          <textarea
+            data-testid="complaint-description-input"
+            placeholder="Describe the issue..."
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows={4}
+            className="w-full border-2 p-3 text-sm outline-none"
+            style={inputStyle}
+          />
         </div>
 
         <div className="mt-4 flex justify-end gap-2">
-          <button onClick={() => setOpen(false)}
+          <button
+            onClick={() => setOpen(false)}
             className="h-11 border-2 px-4 text-sm font-semibold uppercase tracking-wide hover:opacity-80"
-            style={{ borderColor: "var(--border-medium)", color: "var(--text-secondary)", background: "transparent" }}>
+            style={{ borderColor: "var(--border-medium)", color: "var(--text-secondary)", background: "transparent" }}
+          >
             Cancel
           </button>
-          <button data-testid="complaint-submit-button" onClick={submitComplaint} disabled={loading}
-            className="h-11 rounded-none border-2 border-[#0D1B2A] bg-[#0D1B2A] px-5 text-sm font-semibold uppercase tracking-wide text-white hover:bg-slate-800 disabled:opacity-60">
-            {loading ? "Submitting..." : "Submit Complaint"}
+          <button
+            data-testid="complaint-submit-button"
+            onClick={handleSubmit}
+            disabled={isPending}
+            className="h-11 rounded-none border-2 border-[#0D1B2A] bg-[#0D1B2A] px-5 text-sm font-semibold uppercase tracking-wide text-white hover:bg-slate-800 disabled:opacity-60"
+          >
+            {isPending ? "Submitting..." : "Submit Complaint"}
           </button>
         </div>
       </div>

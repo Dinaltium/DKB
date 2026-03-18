@@ -16,21 +16,30 @@ const LanguageContext = createContext<LangCtx>({
   tr: (key) => key as string,
 });
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLang] = useState<Language>("tcy");
+/** Read the persisted language from localStorage (client-only). */
+function getInitialLanguage(): Language {
+  if (typeof window === "undefined") return "tcy"; // SSR — return default
+  try {
+    const saved = localStorage.getItem("buslink-lang") as Language | null;
+    if (saved) return saved;
+  } catch {}
+  return "tcy";
+}
 
+export function LanguageProvider({ children }: { children: React.ReactNode }) {
+  // Lazy initializer runs once on mount (client-side only after hydration).
+  // On the server it returns the default "tcy" to avoid hydration mismatches.
+  const [language, setLang] = useState<Language>(getInitialLanguage);
+
+  // Keep localStorage in sync whenever the language changes.
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("buslink-lang") as Language | null;
-      if (saved) setLang(saved);
+      localStorage.setItem("buslink-lang", language);
     } catch {}
-  }, []);
+  }, [language]);
 
   function setLanguage(lang: Language) {
     setLang(lang);
-    try {
-      localStorage.setItem("buslink-lang", lang);
-    } catch {}
   }
 
   const tr = (key: keyof typeof TEXTS.en) => t(language, key);

@@ -1,12 +1,24 @@
 "use client";
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { BUSES, getStopsForRoute } from "@/lib/data";
+import type { SimStop } from "@/lib/data";
+
+// ── Lightweight bus descriptor returned by /api/sim-data ──────────────────────
+export interface SimBusFull {
+  id: string;
+  number: string;
+  origin: string;
+  destination: string;
+  status: string;
+  routeStopIds: string[];
+}
 
 // ── Haversine distance in meters ──────────────────────────────────────────────
 function haversineMeters(
-  lat1: number, lng1: number,
-  lat2: number, lng2: number,
+  lat1: number,
+  lng1: number,
+  lat2: number,
+  lng2: number,
 ): number {
   const R = 6371000;
   const toRad = (d: number) => (d * Math.PI) / 180;
@@ -57,6 +69,8 @@ interface BusState {
 }
 
 interface LiveBusCtx {
+  /** All buses loaded from the DB (empty while loading). */
+  buses: SimBusFull[];
   getPosition: (busId: string) => BusLivePosition | null;
   getGeometrySource: (busId: string) => BusState["geometrySource"] | null;
 }
@@ -67,8 +81,10 @@ function buildSegments(coords: RoadCoord[]): Segment[] {
   let cum = 0;
   for (let i = 0; i < coords.length - 1; i++) {
     const len = haversineMeters(
-      coords[i].lat, coords[i].lng,
-      coords[i + 1].lat, coords[i + 1].lng,
+      coords[i].lat,
+      coords[i].lng,
+      coords[i + 1].lat,
+      coords[i + 1].lng,
     );
     segs.push({
       from: coords[i],
@@ -87,10 +103,7 @@ function routeLength(segs: Segment[]): number {
   return last.cumStart + last.length;
 }
 
-function positionAt(
-  segs: Segment[],
-  dist: number,
-): { lat: number; lng: number; progressPct: number } {
+function positionAt(segs: Segment[], dist: number) {
   const total = routeLength(segs);
   const d = Math.max(0, Math.min(dist, total));
   for (const seg of segs) {
@@ -107,10 +120,7 @@ function positionAt(
   return { lat: last.to.lat, lng: last.to.lng, progressPct: 100 };
 }
 
-function nearestStopLabels(
-  stopNames: string[],
-  progressPct: number,
-): { fromStop: string; toStop: string } {
+function nearestStopLabels(stopNames: string[], progressPct: number) {
   const idx = Math.floor((progressPct / 100) * (stopNames.length - 1));
   const safeIdx = Math.max(0, Math.min(idx, stopNames.length - 2));
   return {
@@ -119,42 +129,35 @@ function nearestStopLabels(
   };
 }
 
-// ── Priority 1: Load driver-traced geometry from localStorage ─────────────────
+// ── Priority 1: driver-traced geometry from localStorage ─────────────────────
 function loadDriverTrace(busId: string): RoadCoord[] | null {
   try {
     const all = JSON.parse(
       localStorage.getItem("buslink_route_geometry") ?? "{}",
     ) as Record<string, TracePoint[]>;
     const saved = all[busId];
-    // Need at least 3 points to be a valid trace
     if (saved && saved.length > 2) {
-      // Simplify — keep every 3rd point to reduce noise while
-      // keeping enough detail to follow the road accurately
       return saved
-        .filter((_, idx) => idx % 3 === 0)
+        .filter((_, i) => i % 3 === 0)
         .map(({ lat, lng }) => ({ lat, lng }));
     }
   } catch {}
   return null;
 }
 
-// ── Priority 2: Fetch road geometry from OSRM ────────────────────────────────
-// In-memory cache so OSRM is only called once per bus per session
+// ── Priority 2: OSRM road geometry ───────────────────────────────────────────
 const osrmCache = new Map<string, RoadCoord[]>();
 
 async function fetchOSRMGeometry(
   busId: string,
   stopCoords: RoadCoord[],
 ): Promise<RoadCoord[] | null> {
-  // Return cached result if available
   if (osrmCache.has(busId)) return osrmCache.get(busId)!;
-
   const coordStr = stopCoords.map((s) => `${s.lng},${s.lat}`).join(";");
   const url = `https://router.project-osrm.org/route/v1/driving/${coordStr}?overview=full&geometries=geojson&continue_straight=true`;
-
   try {
     const res = await fetch(url);
-    const data = await res.json() as {
+    const data = (await res.json()) as {
       code: string;
       routes?: { geometry?: { coordinates?: [number, number][] } }[];
     };
@@ -165,76 +168,90 @@ async function fetchOSRMGeometry(
       osrmCache.set(busId, coords);
       return coords;
     }
-  } catch {
-    // fall through
-  }
+  } catch {}
   return null;
 }
 
-// ── Resolve geometry with priority chain ─────────────────────────────────────
-// 1. Driver trace (most accurate — actual road the bus takes)
-// 2. OSRM routing (good approximation)
-// 3. Straight lines between stops (last resort fallback)
 async function resolveGeometry(
   busId: string,
   stopCoords: RoadCoord[],
 ): Promise<{ coords: RoadCoord[]; source: BusState["geometrySource"] }> {
   const driverTrace = loadDriverTrace(busId);
-  if (driverTrace) {
-    return { coords: driverTrace, source: "driver-trace" };
-  }
-
+  if (driverTrace) return { coords: driverTrace, source: "driver-trace" };
   const osrmCoords = await fetchOSRMGeometry(busId, stopCoords);
-  if (osrmCoords) {
-    return { coords: osrmCoords, source: "osrm" };
-  }
-
+  if (osrmCoords) return { coords: osrmCoords, source: "osrm" };
   return { coords: stopCoords, source: "fallback" };
+}
+
+// ── Stable pseudo-random start offset based on bus ID ────────────────────────
+// Gives each bus a different starting position on the route so they don't all
+// appear at the same point on first render. The hash is deterministic so HMR
+// doesn't cause jumps.
+function getStartOffset(busId: string): number {
+  let hash = 0;
+  for (let i = 0; i < busId.length; i++) {
+    hash = (hash << 5) - hash + busId.charCodeAt(i);
+    hash |= 0; // Convert to 32-bit int
+  }
+  return ((Math.abs(hash) % 90) + 5) / 100; // Range: 0.05 – 0.94
 }
 
 // ── Context ───────────────────────────────────────────────────────────────────
 const LiveBusContext = createContext<LiveBusCtx>({
+  buses: [],
   getPosition: () => null,
   getGeometrySource: () => null,
 });
 
-const STARTS: Record<string, number> = {
-  "MNG-101": 0.12,
-  "MNG-205": 0.43,
-  "UDU-310": 0.71,
-};
-
 export function LiveBusProvider({ children }: { children: React.ReactNode }) {
+  const [buses, setBuses] = useState<SimBusFull[]>([]);
   const [busStates, setBusStates] = useState<Record<string, BusState>>({});
   const initializedRef = useRef(false);
 
-  // ── Initialize all buses on mount ──────────────────────────────────────────
+  // ── Step 1: Fetch buses + stops from the DB via /api/sim-data ─────────────
   useEffect(() => {
     if (initializedRef.current) return;
     initializedRef.current = true;
 
-    async function initBuses() {
+    async function initSimulation() {
+      let simBuses: SimBusFull[] = [];
+      let stopsMap: Record<string, SimStop> = {};
+
+      try {
+        const res = await fetch("/api/sim-data");
+        const data = (await res.json()) as {
+          buses: SimBusFull[];
+          stops: SimStop[];
+        };
+
+        simBuses = data.buses ?? [];
+        stopsMap = Object.fromEntries((data.stops ?? []).map((s) => [s.id, s]));
+      } catch (err) {
+        console.error("[LiveBusProvider] Failed to load sim data:", err);
+        return;
+      }
+
+      setBuses(simBuses);
+
+      // ── Step 2: Build initial simulation state for each bus ───────────────
       const init: Record<string, BusState> = {};
 
       await Promise.all(
-        BUSES.map(async (bus) => {
-          const stops = getStopsForRoute(bus.routeStopIds);
-          const stopCoords: RoadCoord[] = stops.map((s) => ({
-            lat: s.lat,
-            lng: s.lng,
-          }));
-          const stopNames = stops.map((s) => s.name);
+        simBuses.map(async (bus) => {
+          // Resolve SimStop[] for this bus's route (preserving order).
+          const simStops: SimStop[] = bus.routeStopIds
+            .map((id) => stopsMap[id])
+            .filter((s): s is SimStop => !!s);
 
-          // Resolve geometry using priority chain:
-          // driver trace → OSRM → fallback straight lines
-          const { coords, source } = await resolveGeometry(
-            bus.id,
-            stopCoords,
-          );
+          if (simStops.length < 2) return; // Skip buses with incomplete route data
 
+          const stopCoords = simStops.map((s) => ({ lat: s.lat, lng: s.lng }));
+          const stopNames = simStops.map((s) => s.name);
+
+          const { coords, source } = await resolveGeometry(bus.id, stopCoords);
           const segments = buildSegments(coords);
           const totalDist = routeLength(segments);
-          const dist = (STARTS[bus.id] ?? 0.1) * totalDist;
+          const dist = getStartOffset(bus.id) * totalDist;
 
           init[bus.id] = {
             segments,
@@ -250,46 +267,60 @@ export function LiveBusProvider({ children }: { children: React.ReactNode }) {
       setBusStates(init);
     }
 
-    void initBuses();
+    void initSimulation();
   }, []);
 
-  // ── Re-initialize a single bus when its driver trace is updated ────────────
-  // Call this after a driver saves a new trace from the operator dashboard
+  // ── Re-initialize a bus after driver saves a new traced route ─────────────
   const refreshBusGeometry = async (busId: string) => {
-    const bus = BUSES.find((b) => b.id === busId);
+    const bus = buses.find((b) => b.id === busId);
     if (!bus) return;
 
-    // Clear OSRM cache for this bus so driver trace takes priority
-    osrmCache.delete(busId);
+    // Re-fetch stops from the API to get fresh coordinates.
+    try {
+      const res = await fetch("/api/sim-data");
+      const data = (await res.json()) as {
+        buses: SimBusFull[];
+        stops: SimStop[];
+      };
+      const stopsMap = Object.fromEntries(
+        (data.stops ?? []).map((s) => [s.id, s]),
+      );
 
-    const stops = getStopsForRoute(bus.routeStopIds);
-    const stopCoords = stops.map((s) => ({ lat: s.lat, lng: s.lng }));
-    const stopNames = stops.map((s) => s.name);
+      osrmCache.delete(busId);
 
-    const { coords, source } = await resolveGeometry(busId, stopCoords);
-    const segments = buildSegments(coords);
-    const totalDist = routeLength(segments);
+      const simStops = bus.routeStopIds
+        .map((id) => stopsMap[id])
+        .filter((s): s is SimStop => !!s);
+      const stopCoords = simStops.map((s) => ({ lat: s.lat, lng: s.lng }));
+      const stopNames = simStops.map((s) => s.name);
 
-    setBusStates((prev) => ({
-      ...prev,
-      [busId]: {
-        ...prev[busId],
-        segments,
-        totalDist,
-        geometrySource: source,
-        stopNames,
-      },
-    }));
+      const { coords, source } = await resolveGeometry(busId, stopCoords);
+      const segments = buildSegments(coords);
+      const totalDist = routeLength(segments);
+
+      setBusStates((prev) => ({
+        ...prev,
+        [busId]: {
+          ...prev[busId],
+          segments,
+          totalDist,
+          geometrySource: source,
+          stopNames,
+        },
+      }));
+    } catch (err) {
+      console.error("[LiveBusProvider] refreshBusGeometry failed:", err);
+    }
   };
 
-  // ── Advance each bus along its geometry every 2 seconds ───────────────────
+  // ── Advance each bus 50 m every 2 seconds ─────────────────────────────────
   useEffect(() => {
     const id = setInterval(() => {
       setBusStates((prev) => {
         const next = { ...prev };
         for (const busId of Object.keys(next)) {
           const b = { ...next[busId] };
-          const STEP = 50; // meters per tick
+          const STEP = 50;
           if (b.heading === "forward") {
             b.dist = Math.min(b.dist + STEP, b.totalDist);
             if (b.dist >= b.totalDist) b.heading = "reverse";
@@ -324,12 +355,11 @@ export function LiveBusProvider({ children }: { children: React.ReactNode }) {
 
   const getGeometrySource = (
     busId: string,
-  ): BusState["geometrySource"] | null => {
-    return busStates[busId]?.geometrySource ?? null;
-  };
+  ): BusState["geometrySource"] | null =>
+    busStates[busId]?.geometrySource ?? null;
 
   return (
-    <LiveBusContext.Provider value={{ getPosition, getGeometrySource }}>
+    <LiveBusContext.Provider value={{ buses, getPosition, getGeometrySource }}>
       {children}
     </LiveBusContext.Provider>
   );

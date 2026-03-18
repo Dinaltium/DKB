@@ -242,11 +242,13 @@ export default function BusMap({ stops, livePosition }: BusMapProps) {
         )}
       </div>
 
-      <div
-        ref={mapContainerRef}
-        className="h-72 w-full md:h-96"
-        data-testid="bus-route-map"
-      />
+      <div style={{ isolation: "isolate" }}>
+        <div
+          ref={mapContainerRef}
+          className="h-72 w-full md:h-96"
+          data-testid="bus-route-map"
+        />
+      </div>
     </div>
   );
 }

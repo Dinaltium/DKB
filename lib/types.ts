@@ -1,52 +1,27 @@
-export type BusStatus = "Running" | "Not Running" | "Delayed";
+// lib/types.ts
+// ─────────────────────────────────────────────────────────────────────────────
+// All domain types (Bus, Stop, Operator, Complaint, Payment, etc.) are now
+// inferred directly from the Drizzle schema in lib/db/schema.ts.
+//
+// UI-only types and convenience aliases live here.
+// ─────────────────────────────────────────────────────────────────────────────
+
 export type Language = "en" | "kn" | "tcy" | "be";
 
-export interface Stop {
-  id: string;
-  name: string;
-  lat: number;
-  lng: number;
-}
+// ── Bus status ────────────────────────────────────────────────────────────────
+// Mirrors the busStatusEnum values in lib/db/schema.ts.
+// Use this type anywhere you need to reference bus status outside of Drizzle.
+export type BusStatus = "Running" | "Not Running" | "Delayed";
 
-export interface Bus {
-  id: string;
-  number: string;
-  operatorId: string;
-  licensePlate: string;
-  origin: string;
-  destination: string;
-  routeStopIds: string[];
-  fullFare: number;
-  driverName: string;
-  conductorName: string;
-  routeGeometry?: { lat: number; lng: number }[];
-  status: BusStatus;
-  schedule: string[];
-  statusNote: string;
-  totalSeats: number;
-  occupiedSeats: number;
-  womenReservedTotal: number;
-  womenReservedAvailable: number;
-  studentCardAccepted: boolean;
-  studentDiscountPercent: number;
-  votes: { onTime: number; slightlyLate: number; veryLate: number };
-}
-
-export interface Operator {
-  id: string;
-  name: string;
-  email: string;
-  approved: boolean;
-  busIds: string[];
-}
-
-export interface Complaint {
-  id: string;
-  busNumber: string;
-  busId: string;
-  category: string;
-  description: string;
-  photoName?: string;
-  timestamp: number;
-  status: "pending" | "resolved";
-}
+// Re-export DB types for convenience so existing imports don't all break at once.
+// Gradually migrate callers to import directly from "@/lib/db/schema" instead.
+export type {
+  Bus,
+  Stop,
+  Operator,
+  Complaint,
+  Payment,
+  User,
+  TravelHistory,
+  LoyaltyAccount,
+} from "@/lib/db/schema";
