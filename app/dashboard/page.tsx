@@ -5,8 +5,11 @@ import {
   getAllBuses,
   getAllComplaints,
   getAllOperators,
+  getAllBusRequests,
+  getAllStops,
   getBusesForOperator,
   getComplaintsForOperator,
+  getBusRequestsByOperator,
   getOperatorByUserId,
   getPaymentsForUser,
   getTravelHistoryForUser,
@@ -73,10 +76,12 @@ export default async function DashboardPage() {
       );
     }
 
-    const [opBuses, opComplaints, payments] = await Promise.all([
+    const [opBuses, opComplaints, payments, operatorBusRequests, stops] = await Promise.all([
       getBusesForOperator(op.id),
       getComplaintsForOperator(op.id),
       getPaymentsForUser(userId),
+      getBusRequestsByOperator(op.id),
+      getAllStops(),
     ]);
 
     return (
@@ -89,6 +94,8 @@ export default async function DashboardPage() {
           buses={opBuses}
           complaints={opComplaints}
           payments={payments}
+          busRequests={operatorBusRequests}
+          stops={stops}
         />
       </AppShell>
     );
@@ -96,10 +103,12 @@ export default async function DashboardPage() {
 
   // ── Admin ──────────────────────────────────────────────────────────────────
   if (role === "admin") {
-    const [allBuses, allOperators, allComplaints] = await Promise.all([
+    const [allBuses, allOperators, allComplaints, allBusRequests, allStops] = await Promise.all([
       getAllBuses(),
       getAllOperators(),
       getAllComplaints(),
+      getAllBusRequests(),
+      getAllStops(),
     ]);
 
     return (
@@ -111,6 +120,8 @@ export default async function DashboardPage() {
           buses={allBuses}
           operators={allOperators}
           complaints={allComplaints}
+          busRequests={allBusRequests}
+          stops={allStops}
         />
       </AppShell>
     );

@@ -37,6 +37,12 @@ export const paymentStatusEnum = pgEnum("payment_status", [
   "pending",
 ]);
 
+export const busRequestStatusEnum = pgEnum("bus_request_status", [
+  "pending",
+  "approved",
+  "rejected",
+]);
+
 // ── Auth.js v5 required tables ─────────────────────────────────────────────
 // These are the exact column names Auth.js DrizzleAdapter expects.
 
@@ -180,6 +186,40 @@ export const busRoutes = pgTable(
   }),
 );
 
+// ── Bus requests (operator submits, admin approves) ───────────────────────────
+
+export const busRequests = pgTable("bus_requests", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  operatorId: uuid("operator_id")
+    .notNull()
+    .references(() => operators.id, { onDelete: "cascade" }),
+
+  number: text("number").notNull(),
+  licensePlate: text("license_plate").notNull(),
+  origin: text("origin").notNull(),
+  destination: text("destination").notNull(),
+  fullFare: integer("full_fare").notNull(),
+  driverName: text("driver_name").notNull(),
+  conductorName: text("conductor_name").notNull(),
+  totalSeats: integer("total_seats").notNull(),
+  schedule: jsonb("schedule").$type<string[]>().notNull().default([]),
+  womenReservedTotal: integer("women_reserved_total").notNull().default(0),
+  studentCardAccepted: boolean("student_card_accepted").notNull().default(false),
+  studentDiscountPercent: integer("student_discount_percent").notNull().default(0),
+  routeStopIds: jsonb("route_stop_ids").$type<string[]>().notNull().default([]),
+
+  operatorAadhaar: text("operator_aadhaar"),
+  operatorLicense: text("operator_license"),
+  rcNumber: text("rc_number"),
+  pollutionCertNumber: text("pollution_cert_number"),
+  insurancePolicyNumber: text("insurance_policy_number"),
+
+  status: busRequestStatusEnum("status").notNull().default("pending"),
+  adminNote: text("admin_note"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // ── Complaints ────────────────────────────────────────────────────────────────
 
 export const complaints = pgTable("complaints", {
@@ -263,6 +303,14 @@ export const usersRelations = relations(users, ({ one, many }) => ({
 export const operatorsRelations = relations(operators, ({ one, many }) => ({
   user: one(users, { fields: [operators.userId], references: [users.id] }),
   buses: many(buses),
+  busRequests: many(busRequests),
+}));
+
+export const busRequestsRelations = relations(busRequests, ({ one }) => ({
+  operator: one(operators, {
+    fields: [busRequests.operatorId],
+    references: [operators.id],
+  }),
 }));
 
 export const busesRelations = relations(buses, ({ one, many }) => ({
@@ -314,3 +362,5 @@ export type NewPayment = typeof payments.$inferInsert;
 export type TravelHistory = typeof travelHistory.$inferSelect;
 export type NewTravelHistory = typeof travelHistory.$inferInsert;
 export type LoyaltyAccount = typeof loyaltyAccounts.$inferSelect;
+export type BusRequest = typeof busRequests.$inferSelect;
+export type NewBusRequest = typeof busRequests.$inferInsert;

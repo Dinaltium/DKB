@@ -4,8 +4,9 @@
 type BusStatus        = "Running" | "Not Running" | "Delayed";
 type ComplaintStatus  = "pending" | "resolved";
 type PaymentStatus    = "success" | "failed" | "pending";
+type BusRequestStatus = "pending" | "approved" | "rejected";
 
-export type BadgeStatus = BusStatus | ComplaintStatus | PaymentStatus;
+export type BadgeStatus = BusStatus | ComplaintStatus | PaymentStatus | BusRequestStatus;
 
 const STYLES: Record<string, React.CSSProperties> = {
   // Bus
@@ -42,6 +43,17 @@ const STYLES: Record<string, React.CSSProperties> = {
     borderColor: "var(--status-running-border)",
   },
   failed: {
+    background:  "var(--status-stopped-bg)",
+    color:       "var(--status-stopped-text)",
+    borderColor: "var(--status-stopped-border)",
+  },
+  // Bus request
+  approved: {
+    background:  "var(--status-running-bg)",
+    color:       "var(--status-running-text)",
+    borderColor: "var(--status-running-border)",
+  },
+  rejected: {
     background:  "var(--status-stopped-bg)",
     color:       "var(--status-stopped-text)",
     borderColor: "var(--status-stopped-border)",

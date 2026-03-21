@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-import { complaints, payments, buses, operators } from "@/lib/db/schema";
+import { complaints, payments, buses, operators, busRequests, busRoutes } from "@/lib/db/schema";
 import { eq, sql } from "drizzle-orm";
 import { getOperatorByUserId } from "@/lib/db/queries";
 
@@ -147,6 +147,168 @@ export async function setOperatorApprovalAction(operatorId: string, approved: bo
     .update(operators)
     .set({ approved, updatedAt: new Date() })
     .where(eq(operators.id, operatorId));
+
+  revalidatePath("/dashboard");
+  return { success: true };
+}
+
+// ── Bus registration requests ────────────────────────────────────────────────
+
+export async function submitBusRequestAction(data: {
+  number: string;
+  licensePlate: string;
+  origin: string;
+  destination: string;
+  fullFare: number;
+  driverName: string;
+  conductorName: string;
+  totalSeats: number;
+  schedule: string[];
+  womenReservedTotal: number;
+  studentCardAccepted: boolean;
+  studentDiscountPercent: number;
+  routeStopIds: string[];
+  operatorAadhaar?: string;
+  operatorLicense?: string;
+  rcNumber?: string;
+  pollutionCertNumber?: string;
+  insurancePolicyNumber?: string;
+}) {
+  const session = await auth();
+  if (!session || session.user.role !== "operator") {
+    return { success: false, error: "Unauthorised" };
+  }
+  const op = await getOperatorByUserId(session.user.id);
+  if (!op || !op.approved) return { success: false, error: "Operator not approved" };
+
+  await db.insert(busRequests).values({
+    ...data,
+    operatorId: op.id,
+  });
+
+  revalidatePath("/dashboard");
+  return { success: true };
+}
+
+export async function approveBusRequestAction(requestId: string) {
+  const session = await auth();
+  if (session?.user?.role !== "admin") return { success: false, error: "Unauthorised" };
+
+  const [req] = await db.select().from(busRequests).where(eq(busRequests.id, requestId));
+  if (!req) return { success: false, error: "Request not found" };
+
+  const busId = req.number;
+  await db.insert(buses).values({
+    id: busId,
+    number: req.number,
+    operatorId: req.operatorId,
+    licensePlate: req.licensePlate,
+    origin: req.origin,
+    destination: req.destination,
+    fullFare: req.fullFare,
+    driverName: req.driverName,
+    conductorName: req.conductorName,
+    totalSeats: req.totalSeats,
+    occupiedSeats: 0,
+    schedule: req.schedule,
+    womenReservedTotal: req.womenReservedTotal,
+    womenReservedAvailable: req.womenReservedTotal,
+    studentCardAccepted: req.studentCardAccepted,
+    studentDiscountPercent: req.studentDiscountPercent,
+    status: "Running",
+    statusNote: "Service recently approved.",
+    votes: { onTime: 0, slightlyLate: 0, veryLate: 0 },
+  }).onConflictDoNothing();
+
+  if (req.routeStopIds.length > 0) {
+    await db.insert(busRoutes).values(
+      req.routeStopIds.map((stopId, i) => ({
+        busId,
+        stopId,
+        stopOrder: i,
+      }))
+    ).onConflictDoNothing();
+  }
+
+  await db.update(busRequests)
+    .set({ status: "approved", updatedAt: new Date() })
+    .where(eq(busRequests.id, requestId));
+
+  revalidatePath("/dashboard");
+  return { success: true };
+}
+
+export async function rejectBusRequestAction(requestId: string, adminNote?: string) {
+  const session = await auth();
+  if (session?.user?.role !== "admin") return { success: false, error: "Unauthorised" };
+
+  await db.update(busRequests)
+    .set({ status: "rejected", adminNote: adminNote ?? null, updatedAt: new Date() })
+    .where(eq(busRequests.id, requestId));
+
+  revalidatePath("/dashboard");
+  return { success: true };
+}
+
+export async function adminAddBusAction(data: {
+  number: string;
+  operatorId: string;
+  licensePlate: string;
+  origin: string;
+  destination: string;
+  fullFare: number;
+  driverName: string;
+  conductorName: string;
+  totalSeats: number;
+  schedule: string[];
+  womenReservedTotal: number;
+  studentCardAccepted: boolean;
+  studentDiscountPercent: number;
+  routeStopIds: string[];
+}) {
+  const session = await auth();
+  if (session?.user?.role !== "admin") return { success: false, error: "Unauthorised" };
+
+  const busId = data.number;
+  await db.insert(buses).values({
+    id: busId,
+    number: data.number,
+    operatorId: data.operatorId,
+    licensePlate: data.licensePlate,
+    origin: data.origin,
+    destination: data.destination,
+    fullFare: data.fullFare,
+    driverName: data.driverName,
+    conductorName: data.conductorName,
+    totalSeats: data.totalSeats,
+    occupiedSeats: 0,
+    schedule: data.schedule,
+    womenReservedTotal: data.womenReservedTotal,
+    womenReservedAvailable: data.womenReservedTotal,
+    studentCardAccepted: data.studentCardAccepted,
+    studentDiscountPercent: data.studentDiscountPercent,
+    status: "Running",
+    statusNote: "Added by admin.",
+    votes: { onTime: 0, slightlyLate: 0, veryLate: 0 },
+  });
+
+  if (data.routeStopIds.length > 0) {
+    await db.insert(busRoutes).values(
+      data.routeStopIds.map((stopId, i) => ({ busId, stopId, stopOrder: i }))
+    ).onConflictDoNothing();
+  }
+
+  revalidatePath("/dashboard");
+  return { success: true };
+}
+
+export async function reassignBusAction(busId: string, newOperatorId: string) {
+  const session = await auth();
+  if (session?.user?.role !== "admin") return { success: false, error: "Unauthorised" };
+
+  await db.update(buses)
+    .set({ operatorId: newOperatorId, updatedAt: new Date() })
+    .where(eq(buses.id, busId));
 
   revalidatePath("/dashboard");
   return { success: true };

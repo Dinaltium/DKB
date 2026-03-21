@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Bus, LayoutDashboard, LogIn, LogOut,
   Moon, Search, ShieldCheck, Sun, User,
@@ -27,6 +27,23 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
   const role = session?.user?.role;
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [pendingCount, setPendingCount] = useState(0);
+
+  useEffect(() => {
+    if (role !== "admin") return;
+    const fetchCount = async () => {
+      try {
+        const res = await fetch("/api/pending-count");
+        const { count } = await res.json();
+        setPendingCount(typeof count === "number" ? count : 0);
+      } catch {
+        setPendingCount(0);
+      }
+    };
+    fetchCount();
+    const interval = setInterval(fetchCount, 30000);
+    return () => clearInterval(interval);
+  }, [role]);
 
   // ── Mobile bottom nav — always visible items ───────────────────────────────
   const mobileNavItems = [
@@ -92,7 +109,7 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
               <div className="relative">
                 <button
                   onClick={() => setMenuOpen((o) => !o)}
-                  className="flex h-10 items-center gap-2 rounded border-2 px-3 text-sm font-semibold hover:opacity-80"
+                  className="relative flex h-10 items-center gap-2 rounded border-2 px-3 text-sm font-semibold hover:opacity-80"
                   style={{ background: "var(--bg-surface-2)", borderColor: "var(--input-border)", color: "var(--text-primary)" }}
                 >
                   {/* Avatar initials */}
@@ -105,6 +122,14 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
                   <span className="hidden md:inline max-w-[120px] truncate">
                     {session.user?.name ?? session.user?.email}
                   </span>
+                  {role === "admin" && pendingCount > 0 && (
+                    <span
+                      className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-none border-2 border-[#0D1B2A] bg-[#F4A522] text-[9px] font-black text-[#0D1B2A]"
+                      style={{ boxShadow: "1px 1px 0 #0D1B2A" }}
+                    >
+                      {pendingCount > 99 ? "99+" : pendingCount}
+                    </span>
+                  )}
                 </button>
 
                 {/* Dropdown menu */}
@@ -218,12 +243,20 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
             {role === "admin" && (
               <Link
                 href="/admin"
-                className={`flex min-w-[70px] flex-col items-center gap-1 rounded-md px-2 py-1 text-xs ${
+                className={`relative flex min-w-[70px] flex-col items-center gap-1 rounded-md px-2 py-1 text-xs ${
                   pathname.startsWith("/admin") ? "bg-[#F4A522] text-[#0D1B2A]" : "text-white"
                 }`}
               >
                 <ShieldCheck className="h-4 w-4" />
                 <span>Admin</span>
+                {pendingCount > 0 && (
+                  <span
+                    className="absolute -top-1 -right-1 flex h-4 min-w-[16px] items-center justify-center rounded-none border-2 border-[#0D1B2A] bg-[#F4A522] px-1 text-[9px] font-black text-[#0D1B2A]"
+                    style={{ boxShadow: "1px 1px 0 #0D1B2A" }}
+                  >
+                    {pendingCount > 99 ? "99+" : pendingCount}
+                  </span>
+                )}
               </Link>
             )}
             <button

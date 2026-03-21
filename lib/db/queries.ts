@@ -1,7 +1,7 @@
 // lib/db/queries.ts
 // Server-only. Never import in client components.
 
-import { eq, asc, desc, inArray, sql } from "drizzle-orm";
+import { eq, asc, desc, inArray, sql, count } from "drizzle-orm";
 import { db } from "./index";
 import {
   users,
@@ -13,6 +13,7 @@ import {
   payments,
   travelHistory,
   loyaltyAccounts,
+  busRequests,
   type Bus,
   type Stop,
   type Complaint,
@@ -251,4 +252,55 @@ export async function getLoyaltyAccount(userId: string) {
     .from(loyaltyAccounts)
     .where(eq(loyaltyAccounts.userId, userId));
   return rows[0];
+}
+
+// ── Bus requests ──────────────────────────────────────────────────────────────
+
+export async function getAllBusRequests() {
+  return db
+    .select({
+      request: busRequests,
+      operator: operators,
+      user: { name: users.name, email: users.email },
+    })
+    .from(busRequests)
+    .innerJoin(operators, eq(busRequests.operatorId, operators.id))
+    .innerJoin(users, eq(operators.userId, users.id))
+    .orderBy(desc(busRequests.createdAt));
+}
+
+export async function getPendingBusRequests() {
+  return db
+    .select({
+      request: busRequests,
+      operator: operators,
+      user: { name: users.name, email: users.email },
+    })
+    .from(busRequests)
+    .innerJoin(operators, eq(busRequests.operatorId, operators.id))
+    .innerJoin(users, eq(operators.userId, users.id))
+    .where(eq(busRequests.status, "pending"))
+    .orderBy(desc(busRequests.createdAt));
+}
+
+export async function getBusRequestsByOperator(operatorId: string) {
+  return db
+    .select()
+    .from(busRequests)
+    .where(eq(busRequests.operatorId, operatorId))
+    .orderBy(desc(busRequests.createdAt));
+}
+
+export async function getPendingCountForAdmin(): Promise<number> {
+  const [pendingBusReqs, pendingOperators] = await Promise.all([
+    db
+      .select({ total: count() })
+      .from(busRequests)
+      .where(eq(busRequests.status, "pending")),
+    db
+      .select({ total: count() })
+      .from(operators)
+      .where(eq(operators.approved, false)),
+  ]);
+  return (pendingBusReqs[0]?.total ?? 0) + (pendingOperators[0]?.total ?? 0);
 }
