@@ -10,6 +10,7 @@ declare module "next-auth" {
     user: {
       id: string;
       role: "passenger" | "operator" | "admin";
+      mustChangePassword?: boolean;
     } & DefaultSession["user"];
   }
 }
@@ -25,5 +26,7 @@ declare module "next-auth/jwt" {
     role?: string;
     /** Timestamp (ms) of the last role re-check against the DB */
     roleCheckedAt?: number;
+    /** Whether forced password change is required */
+    mustChangePassword?: boolean;
   }
 }

@@ -1,13 +1,16 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { t, TEXTS } from "@/lib/i18n";
-import type { Language } from "@/lib/types";
+import {
+  t,
+  type Language,
+  type TranslationKeys,
+} from "@/lib/i18n/index";
 
 interface LangCtx {
   language: Language;
   setLanguage: (l: Language) => void;
-  tr: (key: keyof typeof TEXTS.en) => string;
+  tr: (key: TranslationKeys) => string;
 }
 
 const LanguageContext = createContext<LangCtx>({
@@ -42,7 +45,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     setLang(lang);
   }
 
-  const tr = (key: keyof typeof TEXTS.en) => t(language, key);
+  const tr = (key: TranslationKeys) => t(language, key);
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, tr }}>

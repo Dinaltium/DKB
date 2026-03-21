@@ -61,7 +61,7 @@ export function ComplaintDialog({ busId, busNumber, onSuccess }: ComplaintDialog
 
   return (
     <>
-      <div className="fixed inset-0 z-40 bg-black/50" onClick={() => setOpen(false)} />
+      <div className="fixed inset-0 z-40 bg-black/50" />
       <div
         className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-none border-2 p-6 shadow-2xl"
         style={{ background: "var(--bg-surface)", borderColor: "var(--border-medium)" }}
@@ -87,6 +87,9 @@ export function ComplaintDialog({ busId, busNumber, onSuccess }: ComplaintDialog
             ✕
           </button>
         </div>
+        <p className="mt-1 text-center text-[10px]" style={{ color: "var(--text-muted)" }}>
+          Changes will be lost if you close
+        </p>
 
         <div className="mt-4 space-y-3">
           <select

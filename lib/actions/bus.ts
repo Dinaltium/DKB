@@ -1,11 +1,22 @@
 "use server";
 
+import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-import { complaints, payments, buses, operators, busRequests, busRoutes } from "@/lib/db/schema";
+import {
+  complaints,
+  payments,
+  buses,
+  operators,
+  busRequests,
+  busRoutes,
+  stops,
+  users,
+  loyaltyAccounts,
+} from "@/lib/db/schema";
 import { eq, sql } from "drizzle-orm";
-import { getOperatorByUserId } from "@/lib/db/queries";
+import { getOperatorByUserId, getUserByEmail } from "@/lib/db/queries";
 
 // ── Complaints ────────────────────────────────────────────────────────────────
 
@@ -329,5 +340,159 @@ export async function updateOccupancyAction(busId: string, occupiedSeats: number
 
   revalidatePath("/dashboard");
   revalidatePath(`/bus/${busId}`);
+  return { success: true };
+}
+
+export async function addStopAction(data: {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+}) {
+  const session = await auth();
+  if (session?.user?.role !== "admin") {
+    return { success: false, error: "Unauthorised" };
+  }
+
+  try {
+    await db.insert(stops).values(data).onConflictDoNothing();
+    revalidatePath("/dashboard");
+    return { success: true };
+  } catch {
+    return { success: false, error: "Stop ID already exists" };
+  }
+}
+
+export async function deleteStopAction(stopId: string) {
+  const session = await auth();
+  if (session?.user?.role !== "admin") {
+    return { success: false, error: "Unauthorised" };
+  }
+
+  const usages = await db
+    .select()
+    .from(busRoutes)
+    .where(eq(busRoutes.stopId, stopId));
+
+  if (usages.length > 0) {
+    return {
+      success: false,
+      error: `Cannot delete: stop is used by ${usages.length} bus route(s)`,
+    };
+  }
+
+  await db.delete(stops).where(eq(stops.id, stopId));
+  revalidatePath("/dashboard");
+  return { success: true };
+}
+
+export async function importStopsAction(
+  stopsData: { id: string; name: string; lat: number; lng: number }[],
+) {
+  const session = await auth();
+  if (session?.user?.role !== "admin") {
+    return { success: false, error: "Unauthorised" };
+  }
+
+  if (!Array.isArray(stopsData) || stopsData.length === 0) {
+    return { success: false, error: "No valid stop data provided" };
+  }
+
+  for (const s of stopsData) {
+    if (
+      !s.id ||
+      !s.name ||
+      typeof s.lat !== "number" ||
+      typeof s.lng !== "number"
+    ) {
+      return { success: false, error: `Invalid stop data: ${JSON.stringify(s)}` };
+    }
+  }
+
+  await db
+    .insert(stops)
+    .values(stopsData)
+    .onConflictDoUpdate({
+      target: stops.id,
+      set: {
+        name: sql`excluded.name`,
+        lat: sql`excluded.lat`,
+        lng: sql`excluded.lng`,
+      },
+    });
+
+  revalidatePath("/dashboard");
+  return { success: true, count: stopsData.length };
+}
+
+export async function createOperatorAction(data: {
+  companyName: string;
+  email: string;
+  password: string;
+  phone?: string;
+}) {
+  const session = await auth();
+  if (session?.user?.role !== "admin") {
+    return { success: false, error: "Unauthorised" };
+  }
+
+  const existing = await getUserByEmail(data.email);
+  if (existing) return { success: false, error: "Email already in use" };
+
+  const hashed = await bcrypt.hash(data.password, 12);
+  const now = new Date();
+  // ⚠ TEST MODE (5 min). Change to 7*24*60*60*1000 for production.
+  const expiresAt = new Date(now.getTime() + 5 * 60 * 1000);
+
+  const [user] = await db
+    .insert(users)
+    .values({
+      name: data.companyName,
+      email: data.email,
+      password: hashed,
+      role: "operator",
+      mustChangePassword: true,
+      passwordExpiresAt: expiresAt,
+    })
+    .returning({ id: users.id });
+
+  await db.insert(operators).values({
+    userId: user.id,
+    companyName: data.companyName,
+    phone: data.phone ?? null,
+    approved: true,
+  });
+
+  await db.insert(loyaltyAccounts).values({ userId: user.id }).onConflictDoNothing();
+
+  revalidatePath("/dashboard");
+  return { success: true };
+}
+
+export async function resetOperatorPasswordAction(
+  userId: string,
+  newPassword: string,
+) {
+  const session = await auth();
+  if (session?.user?.role !== "admin") {
+    return { success: false, error: "Unauthorised" };
+  }
+
+  const hashed = await bcrypt.hash(newPassword, 12);
+  const now = new Date();
+  // ⚠ TEST MODE (5 min). Change to 7*24*60*60*1000 for production.
+  const expiresAt = new Date(now.getTime() + 5 * 60 * 1000);
+
+  await db
+    .update(users)
+    .set({
+      password: hashed,
+      mustChangePassword: true,
+      passwordExpiresAt: expiresAt,
+      updatedAt: new Date(),
+    })
+    .where(eq(users.id, userId));
+
+  revalidatePath("/dashboard");
   return { success: true };
 }

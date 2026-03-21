@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+locations_failed.json
+locations_with_coords.json
+app.py
+geocode_log.csv
+fix_csv.py
+

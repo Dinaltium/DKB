@@ -54,6 +54,9 @@ export const users = pgTable("users", {
   image: text("image"),
   password: text("password"), // hashed; null for OAuth users
   role: userRoleEnum("role").notNull().default("passenger"),
+  mustChangePassword: boolean("must_change_password").notNull().default(false),
+  passwordChangedAt: timestamp("password_changed_at"),
+  passwordExpiresAt: timestamp("password_expires_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

@@ -1,42 +1,35 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useMemo, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
-import {
-  Bus,
-  ChevronDown,
-  ChevronUp,
-  MessageSquare,
-  Plus,
-  ShieldCheck,
-  Users,
-  X,
-} from "lucide-react";
-import {
-  setOperatorApprovalAction,
-  resolveComplaintAction,
-  approveBusRequestAction,
-  rejectBusRequestAction,
-  adminAddBusAction,
-  reassignBusAction,
-} from "@/lib/actions/bus";
 import { EmptyState } from "@/app/components/ui/EmptyState";
 import { StatusBadge } from "@/app/components/ui/StatusBadge";
-import type { Bus as BusType, Complaint, Operator, Stop } from "@/lib/db/schema";
-import type { BusRequest } from "@/lib/db/schema";
+import { StopBuilder } from "@/app/components/StopBuilder";
+import type { Bus as BusType, BusRequest, Complaint, Operator, Stop } from "@/lib/db/schema";
+import {
+  addStopAction,
+  adminAddBusAction,
+  approveBusRequestAction,
+  createOperatorAction,
+  deleteStopAction,
+  importStopsAction,
+  reassignBusAction,
+  rejectBusRequestAction,
+  resetOperatorPasswordAction,
+  resolveComplaintAction,
+  setOperatorApprovalAction,
+} from "@/lib/actions/bus";
 
 interface OperatorRow {
   operator: Operator;
   user: { name: string | null; email: string | null };
 }
-
 interface BusRequestRow {
   request: BusRequest;
   operator: Operator;
   user: { name: string | null; email: string | null };
 }
-
 interface Props {
   buses: BusType[];
   operators: OperatorRow[];
@@ -44,555 +37,238 @@ interface Props {
   busRequests: BusRequestRow[];
   stops: Stop[];
 }
+type Tab = "operators" | "buses" | "complaints" | "stops";
 
-type Tab = "operators" | "buses" | "complaints";
-type BusSubTab = "all" | "requests" | "approvals";
+const slugify = (name: string) =>
+  name.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-");
 
-const cardStyle = {
-  background: "var(--bg-surface)",
-  borderColor: "var(--border-default)",
-};
-
-const btnBase =
-  "h-10 rounded-none border-2 border-[#0D1B2A] px-4 text-xs font-bold uppercase tracking-wide transition-all hover:-translate-x-px hover:-translate-y-px disabled:opacity-50";
-const btnPrimary = `${btnBase} bg-[#F4A522] text-[#0D1B2A]`;
-const btnSecondary = `${btnBase} bg-white text-[#0D1B2A]`;
-
-export function AdminDashboard({
-  buses,
-  operators,
-  complaints,
-  busRequests,
-  stops,
-}: Props) {
-  const [activeTab, setActiveTab] = useState<Tab>("operators");
-  const [busSubTab, setBusSubTab] = useState<BusSubTab>("all");
+export function AdminDashboard({ buses, operators, complaints, busRequests, stops }: Props) {
+  const [tab, setTab] = useState<Tab>("operators");
   const [isPending, startTransition] = useTransition();
-  const [reviewRequest, setReviewRequest] = useState<BusRequestRow | null>(null);
   const [addBusOpen, setAddBusOpen] = useState(false);
-  const [rejectNote, setRejectNote] = useState("");
-  const [showRejectInput, setShowRejectInput] = useState<string | null>(null);
+  const [createOpOpen, setCreateOpOpen] = useState(false);
+  const [detailOpId, setDetailOpId] = useState<string | null>(null);
+  const [resetPwdUserId, setResetPwdUserId] = useState<string | null>(null);
+  const [importPreview, setImportPreview] = useState<Stop[] | null>(null);
+  const [stopSearch, setStopSearch] = useState("");
+  const [showAddStop, setShowAddStop] = useState(false);
+  const [newStopName, setNewStopName] = useState("");
+  const [newStopId, setNewStopId] = useState("");
+  const [newStopLat, setNewStopLat] = useState("");
+  const [newStopLng, setNewStopLng] = useState("");
+  const fileRef = useRef<HTMLInputElement | null>(null);
 
-  const pendingOperators = operators.filter((r) => !r.operator.approved);
-  const pendingComplaints = complaints.filter((c) => c.status === "pending");
-  const pendingBusRequests = busRequests.filter((r) => r.request.status === "pending");
+  const filteredStops = useMemo(
+    () =>
+      stops.filter((s) =>
+        s.name.toLowerCase().includes(stopSearch.toLowerCase()),
+      ),
+    [stops, stopSearch],
+  );
 
-  const handleApproval = (operatorId: string, approved: boolean) => {
-    startTransition(async () => {
-      const result = await setOperatorApprovalAction(operatorId, approved);
-      if (result.success)
-        toast.success(`Operator ${approved ? "approved" : "rejected"}`);
-      else toast.error(result.error ?? "Failed");
-    });
+  const busesByOperatorId = useMemo(() => {
+    const map: Record<string, BusType[]> = {};
+    for (const b of buses) {
+      map[b.operatorId] = map[b.operatorId] ?? [];
+      map[b.operatorId].push(b);
+    }
+    return map;
+  }, [buses]);
+
+  const operatorById = Object.fromEntries(operators.map((o) => [o.operator.id, o]));
+
+  const handleImportPick = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(String(reader.result)) as Stop[];
+        const valid =
+          Array.isArray(parsed) &&
+          parsed.every(
+            (s) =>
+              typeof s.id === "string" &&
+              typeof s.name === "string" &&
+              typeof s.lat === "number" &&
+              typeof s.lng === "number",
+          );
+        if (!valid) {
+          toast.error("Invalid JSON format. Expected array of {id, name, lat, lng}");
+          return;
+        }
+        setImportPreview(parsed);
+      } catch {
+        toast.error("Invalid JSON format. Expected array of {id, name, lat, lng}");
+      }
+    };
+    reader.readAsText(file);
   };
 
-  const handleResolve = (complaintId: string) => {
-    startTransition(async () => {
-      const result = await resolveComplaintAction(complaintId);
-      if (result.success) toast.success("Complaint resolved");
-      else toast.error(result.error ?? "Failed");
+  const exportStops = () => {
+    const blob = new Blob([JSON.stringify(stops, null, 2)], {
+      type: "application/json",
     });
-  };
-
-  const handleApproveRequest = (requestId: string) => {
-    startTransition(async () => {
-      const result = await approveBusRequestAction(requestId);
-      if (result.success) {
-        toast.success("Bus request approved");
-        setReviewRequest(null);
-      } else toast.error(result.error ?? "Failed");
-    });
-  };
-
-  const handleRejectRequest = (requestId: string, note?: string) => {
-    startTransition(async () => {
-      const result = await rejectBusRequestAction(requestId, note);
-      if (result.success) {
-        toast.success("Bus request rejected");
-        setReviewRequest(null);
-        setShowRejectInput(null);
-        setRejectNote("");
-      } else toast.error(result.error ?? "Failed");
-    });
-  };
-
-  const handleReassign = (busId: string, newOperatorId: string) => {
-    startTransition(async () => {
-      const result = await reassignBusAction(busId, newOperatorId);
-      if (result.success) toast.success("Bus reassigned");
-      else toast.error(result.error ?? "Failed");
-    });
-  };
-
-  const handleAddBus = (data: {
-    number: string;
-    operatorId: string;
-    licensePlate: string;
-    origin: string;
-    destination: string;
-    fullFare: number;
-    driverName: string;
-    conductorName: string;
-    totalSeats: number;
-    schedule: string[];
-    womenReservedTotal: number;
-    studentCardAccepted: boolean;
-    studentDiscountPercent: number;
-    routeStopIds: string[];
-  }) => {
-    startTransition(async () => {
-      const result = await adminAddBusAction(data);
-      if (result.success) {
-        toast.success("Bus added");
-        setAddBusOpen(false);
-      } else toast.error(result.error ?? "Failed");
-    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "buslink-stops.json";
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
-    <div className="space-y-6">
-      {/* Summary strip */}
-      <section className="grid gap-4 md:grid-cols-4">
-        <SummaryCard
-          icon={<Bus className="h-5 w-5 text-[#0E7C86]" />}
-          label="Total Buses"
-          value={buses.length}
-        />
-        <SummaryCard
-          icon={<Users className="h-5 w-5 text-[#0E7C86]" />}
-          label="Operators"
-          value={operators.length}
-        />
-        <SummaryCard
-          icon={<ShieldCheck className="h-5 w-5 text-amber-500" />}
-          label="Pending Approval"
-          value={pendingOperators.length + pendingBusRequests.length}
-          warn={pendingOperators.length + pendingBusRequests.length > 0}
-        />
-        <SummaryCard
-          icon={<MessageSquare className="h-5 w-5 text-red-500" />}
-          label="Open Complaints"
-          value={pendingComplaints.length}
-          warn={pendingComplaints.length > 0}
-        />
-      </section>
-
-      {/* Main tabs */}
-      <div
-        className="flex gap-2 border-b-2"
-        style={{ borderColor: "var(--border-default)" }}
-      >
-        {[
-          { id: "operators" as const, label: "Operators" },
-          { id: "buses" as const, label: "Buses" },
-          { id: "complaints" as const, label: "Complaints" },
-        ].map(({ id, label }) => (
-          <button
-            key={id}
-            onClick={() => setActiveTab(id)}
-            className="px-4 py-2 text-sm font-semibold uppercase tracking-wide"
-            style={{
-              color:
-                activeTab === id ? "var(--text-primary)" : "var(--text-muted)",
-              borderBottom:
-                activeTab === id
-                  ? "2px solid #F4A522"
-                  : "2px solid transparent",
-              marginBottom: "-2px",
-            }}
-          >
-            {label}
-            {id === "operators" && pendingOperators.length > 0 && (
-              <span
-                className="ml-1.5 rounded-none border-2 border-[#0D1B2A] bg-[#F4A522] px-1.5 py-0.5 text-[10px] font-bold text-[#0D1B2A]"
-                style={{ boxShadow: "1px 1px 0 #0D1B2A" }}
-              >
-                {pendingOperators.length}
-              </span>
-            )}
-            {id === "complaints" && pendingComplaints.length > 0 && (
-              <span
-                className="ml-1.5 rounded-none border-2 border-[#0D1B2A] bg-red-500 px-1.5 py-0.5 text-[10px] font-bold text-white"
-                style={{ boxShadow: "1px 1px 0 #0D1B2A" }}
-              >
-                {pendingComplaints.length}
-              </span>
-            )}
+    <div className="space-y-5">
+      <div className="flex gap-2 border-b-2" style={{ borderColor: "var(--border-default)" }}>
+        {(["operators", "buses", "complaints", "stops"] as const).map((id) => (
+          <button key={id} onClick={() => setTab(id)} className="px-4 py-2 text-sm font-bold uppercase tracking-wide" style={{ color: tab === id ? "var(--text-primary)" : "var(--text-muted)", borderBottom: tab === id ? "2px solid var(--cta-bg)" : "2px solid transparent", marginBottom: "-2px", fontFamily: "'Barlow Condensed', sans-serif" }}>
+            {id}
           </button>
         ))}
       </div>
 
-      {/* Operators tab */}
-      {activeTab === "operators" && (
+      {tab === "operators" && (
         <section className="space-y-3">
-          {operators.length === 0 && (
-            <EmptyState
-              title="No operators yet"
-              description="No operator accounts have been registered. Operators can sign up and request approval."
-            />
-          )}
-          {operators.map(({ operator, user }) => (
-            <article
-              key={operator.id}
-              className="rounded-none border-2 p-4"
-              style={{ ...cardStyle, boxShadow: "4px 4px 0 #0D1B2A" }}
-            >
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <p
-                    className="font-semibold"
-                    style={{ color: "var(--text-primary)" }}
-                  >
-                    {operator.companyName}
-                  </p>
-                  <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-                    {user.email}
-                  </p>
-                  <p
-                    className="mt-0.5 text-xs"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    {operator.approved ? "Approved" : "Pending approval"}
-                  </p>
+          <button onClick={() => setCreateOpOpen(true)} className="h-10 border-2 px-4 text-xs font-bold uppercase tracking-wide" style={{ background: "var(--cta-bg)", borderColor: "var(--text-primary)", color: "var(--text-primary)", boxShadow: "3px 3px 0 var(--text-primary)" }}>
+            + CREATE OPERATOR ACCOUNT
+          </button>
+          {operators.map(({ operator, user }) => {
+            const opBuses = busesByOperatorId[operator.id] ?? [];
+            const shown = opBuses.slice(0, 2);
+            const extra = opBuses.length - shown.length;
+            return (
+              <article key={operator.id} className="border-2 p-4" style={{ background: "var(--bg-surface)", borderColor: "var(--text-primary)", boxShadow: "4px 4px 0 var(--text-primary)" }}>
+                <p className="text-2xl font-extrabold uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>
+                  {operator.companyName}
+                </p>
+                <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                  {user.email ?? "No email"} {operator.phone ? ` • ${operator.phone}` : ""}
+                </p>
+                <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
+                  {opBuses.length === 0 ? (
+                    <span style={{ color: "var(--text-muted)" }}>No buses registered</span>
+                  ) : (
+                    <>
+                      {shown.map((b) => (
+                        <span key={b.id} className="border-2 px-2 py-0.5 text-[10px] font-black" style={{ background: "var(--cta-bg)", borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>
+                          {b.number}
+                        </span>
+                      ))}
+                      {extra > 0 && <span className="border-2 px-2 py-0.5 text-[10px] font-black" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>+{extra} more</span>}
+                    </>
+                  )}
+                  <span className="ml-auto"><StatusBadge status={operator.approved ? "approved" : "pending"} /></span>
                 </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleApproval(operator.id, true)}
-                    disabled={isPending || operator.approved}
-                    className="h-9 rounded-none border-2 border-emerald-700 bg-emerald-600 px-3 text-xs font-bold uppercase text-white transition-opacity hover:bg-emerald-700 disabled:opacity-40"
-                  >
-                    Approve
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <button disabled={isPending} onClick={() => startTransition(async () => { const r = await setOperatorApprovalAction(operator.id, !operator.approved); r.success ? toast.success(operator.approved ? "Operator revoked" : "Operator approved") : toast.error(r.error ?? "Failed"); })} className="h-9 border-2 px-3 text-xs font-bold uppercase" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>
+                    {operator.approved ? "REVOKE" : "APPROVE"}
                   </button>
-                  <button
-                    onClick={() => handleApproval(operator.id, false)}
-                    disabled={isPending || !operator.approved}
-                    className="h-9 rounded-none border-2 border-rose-700 bg-rose-600 px-3 text-xs font-bold uppercase text-white transition-opacity hover:bg-rose-700 disabled:opacity-40"
-                  >
-                    Reject
+                  <button disabled={isPending} onClick={() => setResetPwdUserId(operator.userId)} className="h-9 border-2 px-3 text-xs font-bold uppercase" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>
+                    RESET PASSWORD
+                  </button>
+                  <button onClick={() => setDetailOpId(operator.id)} className="h-9 border-2 px-3 text-xs font-bold uppercase" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>
+                    VIEW DETAILS →
                   </button>
                 </div>
-              </div>
-            </article>
-          ))}
+              </article>
+            );
+          })}
         </section>
       )}
 
-      {/* Buses tab with sub-tabs */}
-      {activeTab === "buses" && (
-        <section className="space-y-4">
-          <div className="flex flex-wrap gap-2 border-b-2 pb-3" style={{ borderColor: "var(--border-default)" }}>
-            {[
-              { id: "all" as const, label: "All Buses" },
-              {
-                id: "requests" as const,
-                label: "Bus Requests",
-                badge: busRequests.length,
-              },
-              {
-                id: "approvals" as const,
-                label: "Approvals",
-                badge: pendingBusRequests.length,
-                highlight: pendingBusRequests.length > 0,
-              },
-            ].map(({ id, label, badge, highlight }) => (
-              <button
-                key={id}
-                onClick={() => setBusSubTab(id)}
-                className="flex items-center gap-1.5 rounded-none border-2 px-4 py-2 text-sm font-semibold uppercase tracking-wide"
-                style={{
-                  borderColor: busSubTab === id ? "#0D1B2A" : "var(--border-default)",
-                  background: busSubTab === id ? "#F4A522" : "var(--bg-surface)",
-                  color: busSubTab === id ? "#0D1B2A" : highlight ? "#F4A522" : "var(--text-muted)",
-                  boxShadow: busSubTab === id ? "3px 3px 0 #0D1B2A" : "none",
-                }}
-              >
-                {label}
-                {badge !== undefined && badge > 0 && (
-                  <span
-                    className="rounded-none border-2 border-[#0D1B2A] bg-[#F4A522] px-1.5 py-0.5 text-[10px] font-bold text-[#0D1B2A]"
-                    style={{ boxShadow: "1px 1px 0 #0D1B2A" }}
-                  >
-                    {badge}
-                  </span>
-                )}
-              </button>
-            ))}
+      {tab === "stops" && (
+        <section className="space-y-3">
+          <div className="flex flex-wrap gap-2">
+            <input ref={fileRef} type="file" accept=".json" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleImportPick(f); e.currentTarget.value = ""; }} />
+            <button onClick={() => fileRef.current?.click()} className="h-10 border-2 px-4 text-xs font-bold uppercase" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)", boxShadow: "3px 3px 0 var(--text-primary)" }}>IMPORT JSON</button>
+            <button onClick={exportStops} className="h-10 border-2 px-4 text-xs font-bold uppercase" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)", boxShadow: "3px 3px 0 var(--text-primary)" }}>EXPORT JSON</button>
+            <button onClick={() => setShowAddStop((v) => !v)} className="h-10 border-2 px-4 text-xs font-bold uppercase" style={{ background: "var(--cta-bg)", borderColor: "var(--text-primary)", color: "var(--text-primary)", boxShadow: "3px 3px 0 var(--text-primary)" }}>+ ADD STOP</button>
           </div>
 
-          {/* Sub-tab: All Buses */}
-          {busSubTab === "all" && (
-            <div className="space-y-3">
-              <div className="flex justify-end">
-                <button
-                  onClick={() => setAddBusOpen(true)}
-                  className={btnPrimary}
-                  style={{ boxShadow: "3px 3px 0 #0D1B2A" }}
-                >
-                  <Plus className="mr-1.5 inline h-4 w-4" />
-                  Add Bus
-                </button>
+          {showAddStop && (
+            <form
+              className="grid gap-2 border-2 p-3 md:grid-cols-4"
+              style={{ borderColor: "var(--text-primary)", background: "var(--bg-surface)" }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                startTransition(async () => {
+                  const res = await addStopAction({
+                    id: newStopId.trim(),
+                    name: newStopName.trim(),
+                    lat: Number(newStopLat),
+                    lng: Number(newStopLng),
+                  });
+                  if (res.success) {
+                    toast.success("Stop added");
+                    setNewStopName(""); setNewStopId(""); setNewStopLat(""); setNewStopLng("");
+                  } else toast.error(res.error ?? "Failed");
+                });
+              }}
+            >
+              <input value={newStopName} onChange={(e) => { setNewStopName(e.target.value); setNewStopId(slugify(e.target.value)); }} placeholder="Stop Name" required className="h-10 border-2 px-2 text-sm" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }} />
+              <input value={newStopId} onChange={(e) => setNewStopId(e.target.value)} placeholder="Stop ID" required className="h-10 border-2 px-2 text-sm" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }} />
+              <input value={newStopLat} onChange={(e) => setNewStopLat(e.target.value)} type="number" step="0.000001" placeholder="Latitude" required className="h-10 border-2 px-2 text-sm" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }} />
+              <input value={newStopLng} onChange={(e) => setNewStopLng(e.target.value)} type="number" step="0.000001" placeholder="Longitude" required className="h-10 border-2 px-2 text-sm" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }} />
+              <button disabled={isPending} className="h-10 border-2 px-4 text-xs font-bold uppercase md:col-span-4" style={{ background: "var(--cta-bg)", borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>Save Stop</button>
+            </form>
+          )}
+
+          <input value={stopSearch} onChange={(e) => setStopSearch(e.target.value)} placeholder="Search stops by name..." className="h-10 w-full border-2 px-3 text-sm" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }} />
+          <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>{stops.length} stops total</p>
+
+          {filteredStops.length === 0 ? (
+            <EmptyState title="No stops added yet." description="Use Import JSON or Add Stop to get started." />
+          ) : (
+            filteredStops.map((s) => (
+              <div key={s.id} className="flex items-center gap-2 border-2 px-3 py-2" style={{ background: "var(--bg-surface)", borderColor: "var(--text-primary)" }}>
+                <span className="flex-1 text-lg font-bold uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>{s.name}</span>
+                <span className="font-mono text-xs" style={{ color: "var(--text-muted)" }}>{s.id}</span>
+                <span className="text-xs" style={{ color: "var(--text-muted)" }}>{s.lat.toFixed(6)}</span>
+                <span className="text-xs" style={{ color: "var(--text-muted)" }}>{s.lng.toFixed(6)}</span>
+                <button disabled={isPending} onClick={() => startTransition(async () => { const r = await deleteStopAction(s.id); r.success ? toast.success("Stop deleted") : toast.error(r.error ?? "Failed"); })} className="h-8 w-8 border-2 text-xs font-black" style={{ borderColor: "var(--status-stopped-border)", color: "var(--status-stopped-text)" }}>🗑</button>
               </div>
-              {buses.length === 0 && (
-                <EmptyState
-                  title="No buses registered"
-                  description="Add a bus directly or wait for operator bus requests to approve."
-                />
-              )}
-              {buses.map((bus) => (
-                <article
-                  key={bus.id}
-                  className="rounded-none border-2 p-4"
-                  style={{ ...cardStyle, boxShadow: "4px 4px 0 #0D1B2A" }}
-                >
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <p
-                        className="text-3xl font-extrabold"
-                        style={{
-                          fontFamily: "'Barlow Condensed', sans-serif",
-                          color: "var(--text-primary)",
-                        }}
-                      >
-                        {bus.number}
-                      </p>
-                      <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-                        {bus.origin} &#8594; {bus.destination}
-                      </p>
-                      <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-                        {bus.licensePlate} &middot; {bus.occupiedSeats}/{bus.totalSeats} seats
-                      </p>
-                      <div className="mt-1">
-                        <StatusBadge status={bus.status} />
-                      </div>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <select
-                        defaultValue={bus.operatorId}
-                        onChange={(e) => handleReassign(bus.id, e.target.value)}
-                        disabled={isPending}
-                        className="h-9 rounded-none border-2 px-2 text-sm outline-none"
-                        style={{
-                          background: "var(--input-bg)",
-                          borderColor: "var(--input-border)",
-                          color: "var(--input-text)",
-                        }}
-                      >
-                        {operators.map(({ operator }) => (
-                          <option key={operator.id} value={operator.id}>
-                            {operator.companyName}
-                            {!operator.approved ? " (pending)" : ""}
-                          </option>
-                        ))}
-                      </select>
-                      <Link
-                        href={`/bus/${bus.id}`}
-                        className={`inline-flex h-9 items-center ${btnSecondary}`}
-                        style={{ boxShadow: "3px 3px 0 #0D1B2A" }}
-                      >
-                        View
-                      </Link>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          )}
-
-          {/* Sub-tab: Bus Requests (all) */}
-          {busSubTab === "requests" && (
-            <div className="space-y-3">
-              {busRequests.length === 0 && (
-                <EmptyState
-                  title="No bus requests"
-                  description="Operators can submit bus registration requests from their dashboard."
-                />
-              )}
-              {busRequests.map((row) => (
-                <article
-                  key={row.request.id}
-                  className="rounded-none border-2 p-4"
-                  style={{ ...cardStyle, boxShadow: "4px 4px 0 #0D1B2A" }}
-                >
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <p
-                        className="text-xl font-extrabold"
-                        style={{
-                          fontFamily: "'Barlow Condensed', sans-serif",
-                          color: "var(--text-primary)",
-                        }}
-                      >
-                        {row.request.number}
-                      </p>
-                      <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-                        {row.request.origin} &#8594; {row.request.destination}
-                      </p>
-                      <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-                        {row.operator.companyName} &middot; {row.user.email}
-                      </p>
-                      <div className="mt-1">
-                        <StatusBadge status={row.request.status} />
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => setReviewRequest(row)}
-                      className={btnPrimary}
-                      style={{ boxShadow: "3px 3px 0 #0D1B2A" }}
-                    >
-                      Review
-                    </button>
-                  </div>
-                </article>
-              ))}
-            </div>
-          )}
-
-          {/* Sub-tab: Approvals (pending only) */}
-          {busSubTab === "approvals" && (
-            <div className="space-y-3">
-              {pendingBusRequests.length === 0 && (
-                <EmptyState
-                  title="No pending approvals"
-                  description="All bus requests have been processed."
-                />
-              )}
-              {pendingBusRequests.map((row) => (
-                <article
-                  key={row.request.id}
-                  className="rounded-none border-2 p-4"
-                  style={{ ...cardStyle, boxShadow: "4px 4px 0 #0D1B2A" }}
-                >
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <p
-                        className="text-xl font-extrabold"
-                        style={{
-                          fontFamily: "'Barlow Condensed', sans-serif",
-                          color: "var(--text-primary)",
-                        }}
-                      >
-                        {row.request.number}
-                      </p>
-                      <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-                        {row.request.origin} &#8594; {row.request.destination}
-                      </p>
-                      <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-                        {row.operator.companyName}
-                      </p>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      <button
-                        onClick={() => handleApproveRequest(row.request.id)}
-                        disabled={isPending}
-                        className="h-9 rounded-none border-2 border-emerald-700 bg-emerald-600 px-3 text-xs font-bold uppercase text-white hover:bg-emerald-700 disabled:opacity-50"
-                      >
-                        Approve
-                      </button>
-                      <button
-                        onClick={() =>
-                          setShowRejectInput(
-                            showRejectInput === row.request.id ? null : row.request.id
-                          )
-                        }
-                        disabled={isPending}
-                        className="h-9 rounded-none border-2 border-rose-700 bg-rose-600 px-3 text-xs font-bold uppercase text-white hover:bg-rose-700 disabled:opacity-50"
-                      >
-                        Reject
-                      </button>
-                      <button
-                        onClick={() => setReviewRequest(row)}
-                        className={btnSecondary}
-                        style={{ boxShadow: "3px 3px 0 #0D1B2A" }}
-                      >
-                        Full Review
-                      </button>
-                    </div>
-                  </div>
-                  {showRejectInput === row.request.id && (
-                    <div className="mt-4 flex gap-2">
-                      <textarea
-                        value={rejectNote}
-                        onChange={(e) => setRejectNote(e.target.value)}
-                        placeholder="Rejection reason (optional)"
-                        rows={2}
-                        className="flex-1 rounded-none border-2 px-3 py-2 text-sm outline-none"
-                        style={{
-                          background: "var(--input-bg)",
-                          borderColor: "var(--input-border)",
-                          color: "var(--input-text)",
-                        }}
-                      />
-                      <button
-                        onClick={() =>
-                          handleRejectRequest(row.request.id, rejectNote || undefined)
-                        }
-                        disabled={isPending}
-                        className="h-9 rounded-none border-2 border-rose-700 bg-rose-600 px-3 text-xs font-bold uppercase text-white"
-                      >
-                        Confirm Reject
-                      </button>
-                    </div>
-                  )}
-                </article>
-              ))}
-            </div>
+            ))
           )}
         </section>
       )}
 
-      {/* Complaints tab */}
-      {activeTab === "complaints" && (
+      {tab === "buses" && (
         <section className="space-y-3">
-          {complaints.length === 0 && (
-            <EmptyState
-              title="No complaints"
-              description="No complaints have been submitted yet."
-            />
-          )}
-          {complaints.map((c) => (
-            <article
-              key={c.id}
-              className="rounded-none border-2 p-4"
-              style={{ ...cardStyle, boxShadow: "4px 4px 0 #0D1B2A" }}
-            >
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <p
-                    className="font-mono text-xs uppercase tracking-wider"
-                    style={{ color: "var(--text-muted)" }}
-                  >
-                    #{c.id.slice(0, 8)}
-                  </p>
-                  <p
-                    className="mt-1 text-sm font-semibold"
-                    style={{ color: "var(--text-primary)" }}
-                  >
-                    {c.busNumber} &middot; {c.category}
-                  </p>
-                  <p
-                    className="mt-1 text-sm"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    {c.description}
-                  </p>
-                  <div className="mt-1.5 flex items-center gap-2">
-                    <p
-                      className="text-xs"
-                      style={{ color: "var(--text-muted)" }}
-                    >
-                      {new Date(c.createdAt).toLocaleString("en-IN")}
-                    </p>
-                    <StatusBadge status={c.status} />
-                  </div>
+          <button onClick={() => setAddBusOpen(true)} className="h-10 border-2 px-4 text-xs font-bold uppercase" style={{ background: "var(--cta-bg)", borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>+ ADD BUS</button>
+          {buses.map((bus) => (
+            <div key={bus.id} className="border-2 p-3" style={{ background: "var(--bg-surface)", borderColor: "var(--text-primary)" }}>
+              <div className="flex items-center justify-between gap-3">
+                <div><p className="text-2xl font-extrabold uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>{bus.number}</p><p className="text-xs" style={{ color: "var(--text-muted)" }}>{bus.origin} → {bus.destination}</p></div>
+                <div className="flex gap-2">
+                  <select defaultValue={bus.operatorId} onChange={(e) => startTransition(async () => { const r = await reassignBusAction(bus.id, e.target.value); r.success ? toast.success("Bus reassigned") : toast.error(r.error ?? "Failed"); })} className="h-9 border-2 px-2 text-xs" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }}>
+                    {operators.map(({ operator }) => <option key={operator.id} value={operator.id}>{operator.companyName}</option>)}
+                  </select>
+                  <Link href={`/bus/${bus.id}`} className="inline-flex h-9 items-center border-2 px-3 text-xs font-bold uppercase" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>VIEW</Link>
                 </div>
+              </div>
+            </div>
+          ))}
+          {busRequests.map((row) => (
+            <div key={row.request.id} className="border-2 p-3" style={{ borderColor: "var(--text-primary)", background: "var(--bg-surface)" }}>
+              <p className="font-bold" style={{ color: "var(--text-primary)" }}>{row.request.number}</p>
+              <p className="text-xs" style={{ color: "var(--text-muted)" }}>{row.operator.companyName}</p>
+              <div className="mt-2 flex gap-2">
+                <button disabled={isPending} onClick={() => startTransition(async () => { const r = await approveBusRequestAction(row.request.id); r.success ? toast.success("Bus request approved") : toast.error(r.error ?? "Failed"); })} className="h-8 border-2 px-2 text-xs font-bold uppercase" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>APPROVE</button>
+                <button disabled={isPending} onClick={() => startTransition(async () => { const r = await rejectBusRequestAction(row.request.id); r.success ? toast.success("Bus request rejected") : toast.error(r.error ?? "Failed"); })} className="h-8 border-2 px-2 text-xs font-bold uppercase" style={{ borderColor: "var(--status-stopped-border)", color: "var(--status-stopped-text)" }}>REJECT</button>
+              </div>
+            </div>
+          ))}
+        </section>
+      )}
+
+      {tab === "complaints" && (
+        <section className="space-y-2">
+          {complaints.map((c) => (
+            <article key={c.id} className="border-2 p-3" style={{ borderColor: "var(--text-primary)", background: "var(--bg-surface)" }}>
+              <p className="text-sm font-bold" style={{ color: "var(--text-primary)" }}>{c.busNumber} • {c.category}</p>
+              <p className="text-xs" style={{ color: "var(--text-muted)" }}>{c.description}</p>
+              <div className="mt-2 flex items-center gap-2">
+                <StatusBadge status={c.status} />
                 {c.status === "pending" && (
-                  <button
-                    onClick={() => handleResolve(c.id)}
-                    disabled={isPending}
-                    className="h-8 rounded-none border-2 border-emerald-700 bg-emerald-600 px-3 text-xs font-bold uppercase text-white transition-opacity hover:bg-emerald-700 disabled:opacity-50"
-                  >
-                    Resolve
-                  </button>
+                  <button onClick={() => startTransition(async () => { const r = await resolveComplaintAction(c.id); r.success ? toast.success("Complaint resolved") : toast.error(r.error ?? "Failed"); })} className="h-8 border-2 px-2 text-xs font-bold uppercase" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>RESOLVE</button>
                 )}
               </div>
             </article>
@@ -600,705 +276,93 @@ export function AdminDashboard({
         </section>
       )}
 
-      {/* Bus Request Detail Modal */}
-      {reviewRequest && (
-        <BusRequestDetailModal
-          row={reviewRequest}
-          stops={stops}
-          onClose={() => setReviewRequest(null)}
-          onApprove={() => handleApproveRequest(reviewRequest.request.id)}
-          onReject={(note) => handleRejectRequest(reviewRequest.request.id, note)}
-          isPending={isPending}
-        />
-      )}
-
-      {/* Admin Add Bus Modal */}
       {addBusOpen && (
         <AdminAddBusModal
           operators={operators.filter((o) => o.operator.approved)}
           stops={stops}
           onClose={() => setAddBusOpen(false)}
-          onSubmit={handleAddBus}
+          onSubmit={(data) => startTransition(async () => { const r = await adminAddBusAction(data); r.success ? (toast.success("Bus added"), setAddBusOpen(false)) : toast.error(r.error ?? "Failed"); })}
           isPending={isPending}
         />
       )}
+      {createOpOpen && <CreateOperatorModal onClose={() => setCreateOpOpen(false)} isPending={isPending} onSubmit={(data) => startTransition(async () => { const r = await createOperatorAction(data); r.success ? (toast.success("Operator account created"), setCreateOpOpen(false)) : toast.error(r.error ?? "Failed"); })} />}
+      {resetPwdUserId && <ResetPasswordModal userId={resetPwdUserId} onClose={() => setResetPwdUserId(null)} isPending={isPending} onSubmit={(pwd) => startTransition(async () => { const r = await resetOperatorPasswordAction(resetPwdUserId, pwd); r.success ? (toast.success("Temporary password reset"), setResetPwdUserId(null)) : toast.error(r.error ?? "Failed"); })} />}
+      {detailOpId && <OperatorDetailModal operatorRow={operatorById[detailOpId]} buses={busesByOperatorId[detailOpId] ?? []} complaints={complaints} onClose={() => setDetailOpId(null)} />}
+      {importPreview && <ImportPreviewModal data={importPreview} onClose={() => setImportPreview(null)} onConfirm={() => startTransition(async () => { const r = await importStopsAction(importPreview); r.success ? (toast.success(`Imported ${r.count ?? importPreview.length} stops`), setImportPreview(null)) : toast.error(r.error ?? "Failed"); })} isPending={isPending} />}
     </div>
   );
 }
 
-function BusRequestDetailModal({
-  row,
-  stops,
-  onClose,
-  onApprove,
-  onReject,
-  isPending,
-}: {
-  row: BusRequestRow;
-  stops: Stop[];
-  onClose: () => void;
-  onApprove: () => void;
-  onReject: (note?: string) => void;
-  isPending: boolean;
-}) {
-  const { request, operator, user } = row;
-  const [rejectNote, setRejectNote] = useState("");
-  const stopMap = Object.fromEntries(stops.map((s) => [s.id, s.name]));
-
+function ModalFrame({ title, onClose, children, max = "max-w-2xl" }: { title: string; onClose: () => void; children: React.ReactNode; max?: string }) {
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-      onClick={onClose}
-    >
-      <div
-        className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-none border-2 border-[#0D1B2A] bg-[var(--bg-surface)] p-6"
-        style={{ boxShadow: "6px 6px 0 #0D1B2A" }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="mb-4 flex items-center justify-between">
-          <h2
-            className="text-2xl font-extrabold uppercase tracking-wide"
-            style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}
-          >
-            Bus Request #{request.id.slice(0, 8)}
-          </h2>
-          <button
-            onClick={onClose}
-            className="flex h-9 w-9 items-center justify-center rounded-none border-2 border-[#0D1B2A]"
-            aria-label="Close"
-          >
-            <X className="h-4 w-4" />
-          </button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-40 bg-black/60" />
+      <div className={`z-50 w-full ${max} border-2 p-4`} style={{ background: "var(--bg-surface)", borderColor: "var(--text-primary)", boxShadow: "4px 4px 0 var(--text-primary)" }}>
+        <div className="mb-1 flex items-center justify-between">
+          <p className="text-2xl font-extrabold uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>{title}</p>
+          <button onClick={onClose} className="h-8 w-8 border-2 text-xs font-black" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>✕</button>
         </div>
-
-        {/* Section 1: Operator Details */}
-        <h3
-          className="text-xl font-extrabold uppercase tracking-wide"
-          style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}
-        >
-          Operator Details
-        </h3>
-        <div className="mt-3 grid grid-cols-2 gap-2">
-          <LabelValue label="Company Name" value={operator.companyName} />
-          <LabelValue label="Contact Email" value={user.email ?? "-"} />
-          <LabelValue label="Aadhar Number" value={request.operatorAadhaar ?? "-"} />
-          <LabelValue label="Driving License" value={request.operatorLicense ?? "-"} />
-          <LabelValue label="RC Number" value={request.rcNumber ?? "-"} />
-          <LabelValue label="Pollution Certificate No." value={request.pollutionCertNumber ?? "-"} />
-          <LabelValue label="Insurance Policy No." value={request.insurancePolicyNumber ?? "-"} />
-          <LabelValue
-            label="Approval Status"
-            value={
-              <StatusBadge status={operator.approved ? "approved" : "pending"} />
-            }
-          />
-        </div>
-
-        <div
-          className="my-6 border-t-2 border-dashed"
-          style={{ borderColor: "var(--border-medium)" }}
-        />
-
-        {/* Section 2: Bus Details */}
-        <h3
-          className="text-xl font-extrabold uppercase tracking-wide"
-          style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}
-        >
-          Bus Application Details
-        </h3>
-        <div className="mt-3 grid grid-cols-2 gap-2">
-          <LabelValue label="Bus Number" value={request.number} />
-          <LabelValue label="License Plate" value={request.licensePlate} />
-          <LabelValue
-            label="Route"
-            value={`${request.origin} \u2192 ${request.destination}`}
-          />
-          <LabelValue label="Full Fare" value={`\u20B9${request.fullFare}`} />
-          <LabelValue label="Total Seats" value={String(request.totalSeats)} />
-          <LabelValue label="Women Reserved Seats" value={String(request.womenReservedTotal)} />
-          <LabelValue
-            label="Student Card Accepted"
-            value={
-              request.studentCardAccepted
-                ? `Yes (${request.studentDiscountPercent}% discount)`
-                : "No"
-            }
-          />
-          <LabelValue
-            label="Submission Date"
-            value={new Date(request.createdAt).toLocaleString("en-IN")}
-          />
-        </div>
-        {request.schedule.length > 0 && (
-          <div className="mt-3">
-            <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-              Schedule
-            </p>
-            <div className="mt-1 flex flex-wrap gap-1">
-              {request.schedule.map((t) => (
-                <span
-                  key={t}
-                  className="rounded-none border px-2 py-1 text-xs font-semibold"
-                  style={{ borderColor: "var(--border-default)", color: "var(--text-secondary)" }}
-                >
-                  {t}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-        {request.routeStopIds.length > 0 && (
-          <div className="mt-3">
-            <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-              Route Stops
-            </p>
-            <ol className="mt-1 list-decimal pl-5 text-sm" style={{ color: "var(--text-secondary)" }}>
-              {request.routeStopIds.map((id, i) => (
-                <li key={id}>
-                  {stopMap[id] ?? id}
-                </li>
-              ))}
-            </ol>
-          </div>
-        )}
-
-        {/* Actions (only if pending) */}
-        {request.status === "pending" && (
-          <div className="mt-6 flex flex-wrap gap-3 border-t-2 pt-4" style={{ borderColor: "var(--border-default)" }}>
-            <div className="flex flex-1 flex-col gap-2">
-              <textarea
-                value={rejectNote}
-                onChange={(e) => setRejectNote(e.target.value)}
-                placeholder="Rejection reason (optional)"
-                rows={2}
-                className="rounded-none border-2 px-3 py-2 text-sm outline-none"
-                style={{
-                  background: "var(--input-bg)",
-                  borderColor: "var(--input-border)",
-                  color: "var(--input-text)",
-                }}
-              />
-              <button
-                onClick={() => onReject(rejectNote || undefined)}
-                disabled={isPending}
-                className={btnSecondary}
-                style={{ boxShadow: "3px 3px 0 #0D1B2A" }}
-              >
-                Reject
-              </button>
-            </div>
-            <button
-              onClick={onApprove}
-              disabled={isPending}
-              className={btnPrimary}
-              style={{ boxShadow: "3px 3px 0 #0D1B2A" }}
-            >
-              Approve
-            </button>
-          </div>
-        )}
+        <p className="mt-1 text-center text-[10px]" style={{ color: "var(--text-muted)" }}>Changes will be lost if you close</p>
+        {children}
       </div>
     </div>
   );
 }
 
-function AdminAddBusModal({
-  operators,
-  stops,
-  onClose,
-  onSubmit,
-  isPending,
-}: {
-  operators: OperatorRow[];
-  stops: Stop[];
-  onClose: () => void;
-  onSubmit: (data: {
-    number: string;
-    operatorId: string;
-    licensePlate: string;
-    origin: string;
-    destination: string;
-    fullFare: number;
-    driverName: string;
-    conductorName: string;
-    totalSeats: number;
-    schedule: string[];
-    womenReservedTotal: number;
-    studentCardAccepted: boolean;
-    studentDiscountPercent: number;
-    routeStopIds: string[];
-  }) => void;
-  isPending: boolean;
-}) {
-  const [number, setNumber] = useState("");
-  const [operatorId, setOperatorId] = useState(operators[0]?.operator.id ?? "");
-  const [licensePlate, setLicensePlate] = useState("");
-  const [origin, setOrigin] = useState("");
-  const [destination, setDestination] = useState("");
-  const [fullFare, setFullFare] = useState("");
-  const [driverName, setDriverName] = useState("");
-  const [conductorName, setConductorName] = useState("");
-  const [totalSeats, setTotalSeats] = useState("");
-  const [womenReservedTotal, setWomenReservedTotal] = useState("0");
-  const [studentCardAccepted, setStudentCardAccepted] = useState(false);
-  const [studentDiscountPercent, setStudentDiscountPercent] = useState("0");
-  const [schedule, setSchedule] = useState<string[]>([]);
-  const [newTime, setNewTime] = useState("");
-  const [routeStopIds, setRouteStopIds] = useState<string[]>([]);
-
-  const stopNames = stops.map((s) => s.name);
-
-  const handleAddTime = () => {
-    if (newTime.trim()) {
-      setSchedule((s) => [...s, newTime.trim()]);
-      setNewTime("");
-    }
-  };
-
-  const handleRemoveTime = (i: number) => {
-    setSchedule((s) => s.filter((_, idx) => idx !== i));
-  };
-
-  const toggleStop = (stopId: string) => {
-    setRouteStopIds((ids) =>
-      ids.includes(stopId) ? ids.filter((id) => id !== stopId) : [...ids, stopId]
-    );
-  };
-
-  const moveStop = (idx: number, dir: "up" | "down") => {
-    const next = [...routeStopIds];
-    const j = dir === "up" ? idx - 1 : idx + 1;
-    if (j < 0 || j >= next.length) return;
-    [next[idx], next[j]] = [next[j], next[idx]];
-    setRouteStopIds(next);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const fare = parseInt(fullFare, 10);
-    const seats = parseInt(totalSeats, 10);
-    const women = parseInt(womenReservedTotal, 10);
-    const discount = parseInt(studentDiscountPercent, 10);
-    if (
-      !number ||
-      !operatorId ||
-      !licensePlate ||
-      !origin ||
-      !destination ||
-      isNaN(fare) ||
-      !driverName ||
-      !conductorName ||
-      isNaN(seats)
-    ) {
-      return;
-    }
-    onSubmit({
-      number,
-      operatorId,
-      licensePlate,
-      origin,
-      destination,
-      fullFare: fare,
-      driverName,
-      conductorName,
-      totalSeats: seats,
-      schedule,
-      womenReservedTotal: women,
-      studentCardAccepted,
-      studentDiscountPercent: discount,
-      routeStopIds,
-    });
-  };
-
-  const inputClass =
-    "h-11 w-full rounded-none border-2 px-3 text-sm outline-none";
-  const inputStyle = {
-    background: "var(--input-bg)",
-    borderColor: "var(--input-border)",
-    color: "var(--input-text)",
-  };
-
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-      onClick={onClose}
-    >
-      <div
-        className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-none border-2 border-[#0D1B2A] bg-[var(--bg-surface)] p-6"
-        style={{ boxShadow: "6px 6px 0 #0D1B2A" }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="mb-4 flex items-center justify-between">
-          <h2
-            className="text-2xl font-extrabold uppercase tracking-wide"
-            style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}
-          >
-            Add Bus
-          </h2>
-          <button
-            onClick={onClose}
-            className="flex h-9 w-9 items-center justify-center rounded-none border-2 border-[#0D1B2A]"
-            aria-label="Close"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-                Bus Number
-              </label>
-              <input
-                type="text"
-                value={number}
-                onChange={(e) => setNumber(e.target.value)}
-                className={inputClass}
-                style={inputStyle}
-                required
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-                Assign to Operator
-              </label>
-              <select
-                value={operatorId}
-                onChange={(e) => setOperatorId(e.target.value)}
-                className={inputClass}
-                style={inputStyle}
-              >
-                {operators.map(({ operator }) => (
-                  <option key={operator.id} value={operator.id}>
-                    {operator.companyName}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-              License Plate
-            </label>
-            <input
-              type="text"
-              value={licensePlate}
-              onChange={(e) => setLicensePlate(e.target.value)}
-              className={inputClass}
-              style={inputStyle}
-              required
-            />
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-                Origin
-              </label>
-              <input
-                type="text"
-                list="stop-names"
-                value={origin}
-                onChange={(e) => setOrigin(e.target.value)}
-                className={inputClass}
-                style={inputStyle}
-                required
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-                Destination
-              </label>
-              <input
-                type="text"
-                list="stop-names"
-                value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-                className={inputClass}
-                style={inputStyle}
-                required
-              />
-            </div>
-          </div>
-          <datalist id="stop-names">
-            {stopNames.map((n) => (
-              <option key={n} value={n} />
-            ))}
-          </datalist>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-                Full Fare (&#8377;)
-              </label>
-              <input
-                type="number"
-                min={1}
-                value={fullFare}
-                onChange={(e) => setFullFare(e.target.value)}
-                className={inputClass}
-                style={inputStyle}
-                required
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-                Total Seats
-              </label>
-              <input
-                type="number"
-                min={1}
-                value={totalSeats}
-                onChange={(e) => setTotalSeats(e.target.value)}
-                className={inputClass}
-                style={inputStyle}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-                Driver Name
-              </label>
-              <input
-                type="text"
-                value={driverName}
-                onChange={(e) => setDriverName(e.target.value)}
-                className={inputClass}
-                style={inputStyle}
-                required
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-                Conductor Name
-              </label>
-              <input
-                type="text"
-                value={conductorName}
-                onChange={(e) => setConductorName(e.target.value)}
-                className={inputClass}
-                style={inputStyle}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-                Women Reserved Seats
-              </label>
-              <input
-                type="number"
-                min={0}
-                value={womenReservedTotal}
-                onChange={(e) => setWomenReservedTotal(e.target.value)}
-                className={inputClass}
-                style={inputStyle}
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-                Student Card Accepted
-              </label>
-              <label className="flex h-11 items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={studentCardAccepted}
-                  onChange={(e) => setStudentCardAccepted(e.target.checked)}
-                  className="h-4 w-4"
-                />
-                <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
-                  Yes
-                </span>
-              </label>
-              {studentCardAccepted && (
-                <input
-                  type="number"
-                  min={0}
-                  max={100}
-                  value={studentDiscountPercent}
-                  onChange={(e) => setStudentDiscountPercent(e.target.value)}
-                  placeholder="Discount %"
-                  className={`mt-2 ${inputClass}`}
-                  style={inputStyle}
-                />
-              )}
-            </div>
-          </div>
-
-          <div>
-            <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-              Schedule (HH:MM)
-            </label>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                placeholder="HH:MM"
-                value={newTime}
-                onChange={(e) => setNewTime(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddTime())}
-                className={inputClass}
-                style={inputStyle}
-              />
-              <button
-                type="button"
-                onClick={handleAddTime}
-                className="h-11 rounded-none border-2 border-[#0D1B2A] bg-[#0E7C86] px-4 text-sm font-bold text-white"
-              >
-                Add Time
-              </button>
-            </div>
-            <div className="mt-2 flex flex-wrap gap-1">
-              {schedule.map((t, i) => (
-                <span
-                  key={i}
-                  className="flex items-center gap-1 rounded-none border-2 px-2 py-1 text-xs"
-                  style={{ borderColor: "var(--border-default)" }}
-                >
-                  {t}
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveTime(i)}
-                    className="text-red-600 hover:underline"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
-                </span>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-              Route Stops (select and reorder)
-            </label>
-            <div className="flex flex-wrap gap-1">
-              {stops.map((s) => (
-                <button
-                  key={s.id}
-                  type="button"
-                  onClick={() => toggleStop(s.id)}
-                  className={`rounded-none border-2 px-2 py-1 text-xs font-semibold ${
-                    routeStopIds.includes(s.id)
-                      ? "border-[#0D1B2A] bg-[#F4A522] text-[#0D1B2A]"
-                      : "border-[var(--border-default)]"
-                  }`}
-                >
-                  {s.name}
-                </button>
-              ))}
-            </div>
-            <div className="mt-2 space-y-1">
-              {routeStopIds.map((id, i) => {
-                const s = stops.find((x) => x.id === id);
-                return (
-                  <div
-                    key={id}
-                    className="flex items-center gap-2 rounded-none border px-2 py-1"
-                    style={{ borderColor: "var(--border-default)" }}
-                  >
-                    <span className="text-xs font-bold" style={{ color: "var(--text-muted)" }}>
-                      {i + 1}.
-                    </span>
-                    <span className="text-sm">{s?.name ?? id}</span>
-                    <button
-                      type="button"
-                      onClick={() => moveStop(i, "up")}
-                      disabled={i === 0}
-                      className="ml-auto"
-                    >
-                      <ChevronUp className="h-4 w-4" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => moveStop(i, "down")}
-                      disabled={i === routeStopIds.length - 1}
-                    >
-                      <ChevronDown className="h-4 w-4" />
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-2 pt-4">
-            <button type="button" onClick={onClose} className={btnSecondary} style={{ boxShadow: "3px 3px 0 #0D1B2A" }}>
-              Cancel
-            </button>
-            <button type="submit" disabled={isPending} className={btnPrimary} style={{ boxShadow: "3px 3px 0 #0D1B2A" }}>
-              Add Bus
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
+function CreateOperatorModal({ onClose, onSubmit, isPending }: { onClose: () => void; onSubmit: (data: { companyName: string; email: string; password: string; phone?: string }) => void; isPending: boolean }) {
+  const [companyName, setCompanyName] = useState(""); const [email, setEmail] = useState(""); const [password, setPassword] = useState(""); const [phone, setPhone] = useState("");
+  return <ModalFrame title="CREATE OPERATOR ACCOUNT" onClose={onClose} max="max-w-lg"><form className="mt-3 space-y-2" onSubmit={(e) => { e.preventDefault(); onSubmit({ companyName, email, password, phone: phone || undefined }); }}>
+    <input required value={companyName} onChange={(e) => setCompanyName(e.target.value)} placeholder="Company / Operator Name" className="h-10 w-full border-2 px-2 text-sm" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }} />
+    <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email Address" className="h-10 w-full border-2 px-2 text-sm" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }} />
+    <input required type="text" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Temporary Password" className="h-10 w-full border-2 px-2 text-sm" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }} />
+    <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone (optional)" className="h-10 w-full border-2 px-2 text-sm" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }} />
+    <div className="flex justify-end gap-2"><button type="button" onClick={onClose} className="h-9 border-2 px-3 text-xs font-bold uppercase" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>Cancel</button><button disabled={isPending} className="h-9 border-2 px-3 text-xs font-bold uppercase" style={{ background: "var(--cta-bg)", borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>Create</button></div>
+  </form></ModalFrame>;
 }
 
-function LabelValue({
-  label,
-  value,
-}: {
-  label: string;
-  value: React.ReactNode;
-}) {
-  return (
-    <div
-      className="rounded-none border px-3 py-2"
-      style={{ borderColor: "var(--border-default)" }}
-    >
-      <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-        {label}
-      </p>
-      <p className="mt-0.5 text-sm font-bold" style={{ color: "var(--text-primary)" }}>
-        {value}
-      </p>
-    </div>
-  );
+function ResetPasswordModal({ userId: _userId, onClose, onSubmit, isPending }: { userId: string; onClose: () => void; onSubmit: (password: string) => void; isPending: boolean }) {
+  const [password, setPassword] = useState("");
+  return <ModalFrame title="RESET PASSWORD" onClose={onClose} max="max-w-md"><div className="mt-3 space-y-2"><input value={password} onChange={(e) => setPassword(e.target.value)} placeholder="New Temporary Password" className="h-10 w-full border-2 px-2 text-sm" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }} /><div className="flex justify-end gap-2"><button onClick={onClose} className="h-9 border-2 px-3 text-xs font-bold uppercase" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>Cancel</button><button disabled={isPending || !password} onClick={() => onSubmit(password)} className="h-9 border-2 px-3 text-xs font-bold uppercase" style={{ background: "var(--cta-bg)", borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>Reset</button></div></div></ModalFrame>;
 }
 
-function SummaryCard({
-  icon,
-  label,
-  value,
-  warn,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: number;
-  warn?: boolean;
-}) {
-  return (
-    <div
-      className="rounded-none border-2 p-5"
-      style={{
-        background: "var(--bg-surface)",
-        borderColor: "var(--border-default)",
-        boxShadow: "4px 4px 0 #0D1B2A",
-      }}
-    >
-      <div className="flex items-center gap-2">
-        {icon}
-        <p
-          className="text-xs font-semibold uppercase tracking-widest"
-          style={{ color: "var(--text-muted)" }}
-        >
-          {label}
-        </p>
-      </div>
-      <p
-        className={`mt-2 text-4xl font-extrabold ${warn ? "text-amber-500" : "text-[#0E7C86]"}`}
-        style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
-      >
-        {value}
-      </p>
+function OperatorDetailModal({ operatorRow, buses, complaints, onClose }: { operatorRow: OperatorRow; buses: BusType[]; complaints: Complaint[]; onClose: () => void }) {
+  const opComplaints = complaints.filter((c) => buses.some((b) => b.id === c.busId)).slice(0, 5);
+  return <ModalFrame title="OPERATOR DETAILS" onClose={onClose}>
+    <div className="mt-3 space-y-4 max-h-[70vh] overflow-y-auto">
+      <section className="space-y-1">
+        <p className="font-bold uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>Operator Info</p>
+        <p className="text-sm" style={{ color: "var(--text-secondary)" }}>{operatorRow.operator.companyName}</p>
+        <p className="text-xs" style={{ color: "var(--text-muted)" }}>{operatorRow.user.email} {operatorRow.operator.phone ? `• ${operatorRow.operator.phone}` : ""}</p>
+      </section>
+      <div className="border-t-2 border-dashed" style={{ borderColor: "var(--border-default)" }} />
+      <section className="space-y-1"><p className="font-bold uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>Their Buses</p>{buses.length === 0 ? <p className="text-xs" style={{ color: "var(--text-muted)" }}>No buses registered yet.</p> : buses.map((b) => <div key={b.id} className="flex items-center justify-between text-sm"><Link href={`/bus/${b.id}`} style={{ color: "var(--text-primary)" }}>{b.number} • {b.origin}→{b.destination}</Link><StatusBadge status={b.status} /></div>)}</section>
+      <div className="border-t-2 border-dashed" style={{ borderColor: "var(--border-default)" }} />
+      <section className="space-y-1"><p className="font-bold uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>Recent Complaints</p>{opComplaints.length === 0 ? <p className="text-xs" style={{ color: "var(--text-muted)" }}>No complaints on record.</p> : opComplaints.map((c) => <div key={c.id} className="text-xs" style={{ color: "var(--text-secondary)" }}>{c.busNumber} • {c.category} • {c.description.slice(0, 60)}...</div>)}</section>
     </div>
-  );
+  </ModalFrame>;
+}
+
+function ImportPreviewModal({ data, onClose, onConfirm, isPending }: { data: Stop[]; onClose: () => void; onConfirm: () => void; isPending: boolean }) {
+  return <ModalFrame title="IMPORT STOPS PREVIEW" onClose={onClose}><p className="mt-2 text-xs" style={{ color: "var(--text-muted)" }}>{data.length} stops found in file</p><div className="mt-2 max-h-72 overflow-y-auto border-2" style={{ borderColor: "var(--border-default)" }}><table className="w-full text-xs"><thead><tr><th>#</th><th>ID</th><th>Name</th><th>Lat</th><th>Lng</th></tr></thead><tbody>{data.map((s, i) => <tr key={`${s.id}-${i}`}><td>{i + 1}</td><td>{s.id}</td><td>{s.name}</td><td>{s.lat}</td><td>{s.lng}</td></tr>)}</tbody></table></div><p className="mt-2 text-xs" style={{ color: "var(--status-delayed-text)" }}>Existing stops with the same ID will be overwritten</p><div className="mt-3 flex justify-end gap-2"><button onClick={onClose} className="h-9 border-2 px-3 text-xs font-bold uppercase" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>Cancel</button><button disabled={isPending} onClick={onConfirm} className="h-9 border-2 px-3 text-xs font-bold uppercase" style={{ background: "var(--cta-bg)", borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>CONFIRM IMPORT ({data.length} stops)</button></div></ModalFrame>;
+}
+
+function AdminAddBusModal({ operators, stops, onClose, onSubmit, isPending }: { operators: OperatorRow[]; stops: Stop[]; onClose: () => void; onSubmit: (data: { number: string; operatorId: string; licensePlate: string; origin: string; destination: string; fullFare: number; driverName: string; conductorName: string; totalSeats: number; schedule: string[]; womenReservedTotal: number; studentCardAccepted: boolean; studentDiscountPercent: number; routeStopIds: string[] }) => void; isPending: boolean }) {
+  const [number, setNumber] = useState(""); const [operatorId, setOperatorId] = useState(operators[0]?.operator.id ?? ""); const [licensePlate, setLicensePlate] = useState(""); const [origin, setOrigin] = useState(""); const [destination, setDestination] = useState(""); const [fullFare, setFullFare] = useState(""); const [driverName, setDriverName] = useState(""); const [conductorName, setConductorName] = useState(""); const [totalSeats, setTotalSeats] = useState(""); const [womenReservedTotal, setWomenReservedTotal] = useState("0"); const [studentCardAccepted, setStudentCardAccepted] = useState(false); const [studentDiscountPercent, setStudentDiscountPercent] = useState("0"); const [scheduleRaw, setScheduleRaw] = useState(""); const [routeStopIds, setRouteStopIds] = useState<string[]>([]);
+  return <ModalFrame title="ADD BUS" onClose={onClose}><form className="mt-3 grid gap-2 md:grid-cols-2" onSubmit={(e) => { e.preventDefault(); onSubmit({ number, operatorId, licensePlate, origin, destination, fullFare: Number(fullFare), driverName, conductorName, totalSeats: Number(totalSeats), schedule: scheduleRaw.split(",").map((s) => s.trim()).filter(Boolean), womenReservedTotal: Number(womenReservedTotal), studentCardAccepted, studentDiscountPercent: Number(studentDiscountPercent), routeStopIds }); }}>
+    <input required value={number} onChange={(e) => setNumber(e.target.value)} placeholder="Bus Number" className="h-10 border-2 px-2 text-sm" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }} />
+    <select value={operatorId} onChange={(e) => setOperatorId(e.target.value)} className="h-10 border-2 px-2 text-sm" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }}>{operators.map(({ operator }) => <option key={operator.id} value={operator.id}>{operator.companyName}</option>)}</select>
+    <input required value={licensePlate} onChange={(e) => setLicensePlate(e.target.value)} placeholder="License Plate" className="h-10 border-2 px-2 text-sm md:col-span-2" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }} />
+    <input required value={origin} onChange={(e) => setOrigin(e.target.value)} placeholder="Origin" className="h-10 border-2 px-2 text-sm" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }} />
+    <input required value={destination} onChange={(e) => setDestination(e.target.value)} placeholder="Destination" className="h-10 border-2 px-2 text-sm" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }} />
+    <input required type="number" value={fullFare} onChange={(e) => setFullFare(e.target.value)} placeholder="Full Fare" className="h-10 border-2 px-2 text-sm" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }} />
+    <input required type="number" value={totalSeats} onChange={(e) => setTotalSeats(e.target.value)} placeholder="Total Seats" className="h-10 border-2 px-2 text-sm" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }} />
+    <input required value={driverName} onChange={(e) => setDriverName(e.target.value)} placeholder="Driver Name" className="h-10 border-2 px-2 text-sm" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }} />
+    <input required value={conductorName} onChange={(e) => setConductorName(e.target.value)} placeholder="Conductor Name" className="h-10 border-2 px-2 text-sm" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }} />
+    <input value={womenReservedTotal} onChange={(e) => setWomenReservedTotal(e.target.value)} type="number" placeholder="Women Reserved Seats" className="h-10 border-2 px-2 text-sm" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }} />
+    <input value={studentDiscountPercent} onChange={(e) => setStudentDiscountPercent(e.target.value)} type="number" placeholder="Student Discount %" className="h-10 border-2 px-2 text-sm" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }} />
+    <label className="md:col-span-2 text-xs"><input type="checkbox" checked={studentCardAccepted} onChange={(e) => setStudentCardAccepted(e.target.checked)} /> Student card accepted</label>
+    <input value={scheduleRaw} onChange={(e) => setScheduleRaw(e.target.value)} placeholder="Schedule comma-separated" className="h-10 border-2 px-2 text-sm md:col-span-2" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }} />
+    <div className="md:col-span-2"><StopBuilder stops={stops} value={routeStopIds} onChange={setRouteStopIds} /></div>
+    <div className="md:col-span-2 flex justify-end gap-2"><button type="button" onClick={onClose} className="h-9 border-2 px-3 text-xs font-bold uppercase" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>Cancel</button><button disabled={isPending} className="h-9 border-2 px-3 text-xs font-bold uppercase" style={{ background: "var(--cta-bg)", borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>Add Bus</button></div>
+  </form></ModalFrame>;
 }

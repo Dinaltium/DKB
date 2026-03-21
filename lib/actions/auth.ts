@@ -1,6 +1,8 @@
 "use server";
 
 import bcrypt from "bcryptjs";
+import { eq } from "drizzle-orm";
+import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { users, loyaltyAccounts } from "@/lib/db/schema";
 import { getUserByEmail } from "@/lib/db/queries";
@@ -42,4 +44,27 @@ export async function registerUser(data: {
     console.error("[registerUser]", err);
     return { success: false, error: "Something went wrong. Please try again." };
   }
+}
+
+export async function changePasswordAction(
+  newPassword: string,
+): Promise<{ success: boolean; error?: string }> {
+  const session = await auth();
+  if (!session) return { success: false, error: "Not authenticated" };
+  if (newPassword.length < 8) {
+    return { success: false, error: "Password must be at least 8 characters" };
+  }
+
+  const hashed = await bcrypt.hash(newPassword, 12);
+  await db
+    .update(users)
+    .set({
+      password: hashed,
+      mustChangePassword: false,
+      passwordChangedAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .where(eq(users.id, session.user.id));
+
+  return { success: true };
 }

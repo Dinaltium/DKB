@@ -52,6 +52,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           email: user.email,
           image: user.image,
           role: user.role,
+          mustChangePassword: user.mustChangePassword ?? false,
         };
       },
     }),
@@ -64,6 +65,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (user) {
         token.id = user.id;
         token.role = (user as { role?: string }).role ?? "passenger";
+        token.mustChangePassword =
+          (user as { mustChangePassword?: boolean }).mustChangePassword ??
+          false;
       }
 
       // On subsequent requests the DB user record may have been updated
@@ -76,6 +80,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (fresh) {
           token.role = fresh.role;
           token.id = fresh.id;
+          token.mustChangePassword = fresh.mustChangePassword ?? false;
           token.roleCheckedAt = Date.now();
         }
       }
@@ -89,6 +94,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.id = (token.id as string) ?? "";
         session.user.role =
           (token.role as "passenger" | "operator" | "admin") ?? "passenger";
+        (session.user as { mustChangePassword?: boolean }).mustChangePassword =
+          (token.mustChangePassword as boolean) ?? false;
       }
       return session;
     },

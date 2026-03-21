@@ -103,10 +103,6 @@ export function PaymentDrawer({
     <>
       <div
         className="fixed inset-0 z-40 bg-black/40"
-        onClick={() => {
-          setOpen(false);
-          reset();
-        }}
       />
       <div
         className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-xl rounded-t-2xl border-2 px-4 pb-8 pt-6 shadow-2xl"
@@ -137,6 +133,9 @@ export function PaymentDrawer({
             ✕
           </button>
         </div>
+        <p className="mt-1 text-center text-[10px]" style={{ color: "var(--text-muted)" }}>
+          Changes will be lost if you close
+        </p>
         <p
           className="mb-4 text-sm"
           style={{ color: "var(--text-muted)" }}

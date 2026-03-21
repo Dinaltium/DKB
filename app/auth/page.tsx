@@ -133,6 +133,11 @@ export default function AuthPage() {
             </button>
           ))}
         </div>
+        {mode === "register" && (
+          <p className="mt-2 text-center text-xs" style={{ color: "var(--text-muted)" }}>
+            Operator accounts are created by the admin — not available here.
+          </p>
+        )}
 
         {/* Error banner */}
         {error && (

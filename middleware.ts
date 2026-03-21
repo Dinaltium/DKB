@@ -4,11 +4,22 @@ import { NextResponse } from "next/server";
 export default auth((req) => {
   const { pathname } = req.nextUrl;
   const session = req.auth;
-  const role = session?.user?.role;
+  const mustChangePwd = (session?.user as { mustChangePassword?: boolean } | undefined)
+    ?.mustChangePassword;
 
   // ── Redirect old standalone routes to unified dashboard ───────────────────
   if (pathname.startsWith("/operator") || pathname.startsWith("/admin")) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
+  }
+
+  if (
+    session &&
+    mustChangePwd === true &&
+    !pathname.startsWith("/change-password") &&
+    !pathname.startsWith("/api/auth") &&
+    !pathname.startsWith("/api/")
+  ) {
+    return NextResponse.redirect(new URL("/change-password", req.url));
   }
 
   // ── Dashboard — must be authenticated ────────────────────────────────────

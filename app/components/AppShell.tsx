@@ -8,6 +8,7 @@ import {
   Bus, LayoutDashboard, LogIn, LogOut,
   Moon, Search, ShieldCheck, Sun, User,
 } from "lucide-react";
+import { toast } from "sonner";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { useTheme } from "@/app/context/ThemeContext";
 import { LANGUAGE_OPTIONS } from "@/lib/i18n";
@@ -44,6 +45,21 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
     const interval = setInterval(fetchCount, 30000);
     return () => clearInterval(interval);
   }, [role]);
+
+  useEffect(() => {
+    const user = session?.user as { mustChangePassword?: boolean } | undefined;
+    if (
+      user?.mustChangePassword &&
+      typeof window !== "undefined" &&
+      !sessionStorage.getItem("buslink-pwd-toast-shown")
+    ) {
+      toast.warning(
+        "⚠ Please update your temporary password. You have 5 minutes (test mode) before access is blocked.",
+        { duration: 10000 },
+      );
+      sessionStorage.setItem("buslink-pwd-toast-shown", "true");
+    }
+  }, [session]);
 
   // ── Mobile bottom nav — always visible items ───────────────────────────────
   const mobileNavItems = [
