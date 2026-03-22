@@ -15,6 +15,7 @@
 
 # next.js
 /.next/
+/.nextwin/
 /out/
 
 # production
@@ -47,3 +48,5 @@ app.py
 geocode_log.csv
 fix_csv.py
 
+pnpm-lock.yaml
+pnpm-workspace.yaml
