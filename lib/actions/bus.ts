@@ -313,11 +313,23 @@ export async function adminAddBusAction(data: {
   return { success: true };
 }
 
-export async function reassignBusAction(busId: string, newOperatorId: string) {
+export async function reassignBusAction(
+  busId: string,
+  newOperatorId: string | null,
+) {
   const session = await auth();
   if (session?.user?.role !== "admin") return { success: false, error: "Unauthorised" };
 
-  await db.update(buses)
+  if (newOperatorId !== null) {
+    const [op] = await db
+      .select({ id: operators.id })
+      .from(operators)
+      .where(eq(operators.id, newOperatorId));
+    if (!op) return { success: false, error: "Operator not found" };
+  }
+
+  await db
+    .update(buses)
     .set({ operatorId: newOperatorId, updatedAt: new Date() })
     .where(eq(buses.id, busId));
 
@@ -469,29 +481,60 @@ export async function createOperatorAction(data: {
   return { success: true };
 }
 
-export async function resetOperatorPasswordAction(
-  userId: string,
-  newPassword: string,
+export async function updateOperatorAction(
+  operatorId: string,
+  data: { companyName?: string; phone?: string; approved?: boolean },
 ) {
   const session = await auth();
   if (session?.user?.role !== "admin") {
     return { success: false, error: "Unauthorised" };
   }
 
-  const hashed = await bcrypt.hash(newPassword, 12);
-  const now = new Date();
-  // ⚠ TEST MODE (5 min). Change to 7*24*60*60*1000 for production.
-  const expiresAt = new Date(now.getTime() + 5 * 60 * 1000);
+  const [op] = await db
+    .select()
+    .from(operators)
+    .where(eq(operators.id, operatorId));
+  if (!op) return { success: false, error: "Not found" };
 
   await db
-    .update(users)
+    .update(operators)
     .set({
-      password: hashed,
-      mustChangePassword: true,
-      passwordExpiresAt: expiresAt,
+      ...(data.companyName !== undefined && { companyName: data.companyName }),
+      ...(data.phone !== undefined && { phone: data.phone || null }),
+      ...(data.approved !== undefined && { approved: data.approved }),
       updatedAt: new Date(),
     })
-    .where(eq(users.id, userId));
+    .where(eq(operators.id, operatorId));
+
+  if (data.companyName !== undefined) {
+    await db
+      .update(users)
+      .set({ name: data.companyName, updatedAt: new Date() })
+      .where(eq(users.id, op.userId));
+  }
+
+  revalidatePath("/dashboard");
+  return { success: true };
+}
+
+export async function deleteOperatorAction(operatorId: string) {
+  const session = await auth();
+  if (session?.user?.role !== "admin") {
+    return { success: false, error: "Unauthorised" };
+  }
+
+  const [op] = await db
+    .select()
+    .from(operators)
+    .where(eq(operators.id, operatorId));
+  if (!op) return { success: false, error: "Not found" };
+
+  await db
+    .update(buses)
+    .set({ operatorId: null, updatedAt: new Date() })
+    .where(eq(buses.operatorId, operatorId));
+
+  await db.delete(users).where(eq(users.id, op.userId));
 
   revalidatePath("/dashboard");
   return { success: true };

@@ -62,6 +62,7 @@ export async function changePasswordAction(
       password: hashed,
       mustChangePassword: false,
       passwordChangedAt: new Date(),
+      passwordExpiresAt: null,
       updatedAt: new Date(),
     })
     .where(eq(users.id, session.user.id));

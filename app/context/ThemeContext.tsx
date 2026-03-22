@@ -16,21 +16,22 @@ const ThemeContext = createContext<ThemeCtx>({
   isDark: false,
 });
 
-function getInitialTheme(): Theme {
-  if (typeof window === "undefined") return "light"; // SSR guard
-  try {
-    const saved = localStorage.getItem("buslink-theme") as Theme | null;
-    if (saved === "dark" || saved === "light") return saved;
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches)
-      return "dark";
-  } catch {}
-  return "light";
-}
-
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(getInitialTheme);
+  const [theme, setTheme] = useState<Theme>("light");
+  const [mounted, setMounted] = useState(false);
 
-  // Apply theme to <html> element so Tailwind dark: variants + CSS vars both work
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("buslink-theme") as Theme | null;
+      if (saved === "dark" || saved === "light") {
+        setTheme(saved);
+      } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        setTheme("dark");
+      }
+    } catch {}
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     const root = document.documentElement;
     if (theme === "dark") {
@@ -40,10 +41,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       root.setAttribute("data-theme", "light");
       root.classList.remove("dark");
     }
+    if (!mounted) return;
     try {
       localStorage.setItem("buslink-theme", theme);
     } catch {}
-  }, [theme]);
+  }, [theme, mounted]);
 
   const toggleTheme = () =>
     setTheme((prev) => (prev === "light" ? "dark" : "light"));

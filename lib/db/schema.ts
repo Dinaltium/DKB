@@ -134,9 +134,7 @@ export const stops = pgTable("stops", {
 export const buses = pgTable("buses", {
   id: text("id").primaryKey(), // e.g. "MNG-101"
   number: text("number").notNull().unique(),
-  operatorId: uuid("operator_id")
-    .notNull()
-    .references(() => operators.id),
+  operatorId: uuid("operator_id").references(() => operators.id),
   licensePlate: text("license_plate").notNull(),
   origin: text("origin").notNull(),
   destination: text("destination").notNull(),

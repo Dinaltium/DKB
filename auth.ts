@@ -70,18 +70,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           false;
       }
 
-      // On subsequent requests the DB user record may have been updated
-      // (e.g. admin promotes someone to operator). Re-read role every ~5 min.
-      if (
-        !token.roleCheckedAt ||
-        Date.now() - (token.roleCheckedAt as number) > 5 * 60 * 1000
-      ) {
+      if (token.email) {
         const fresh = await getUserByEmail(token.email as string);
         if (fresh) {
-          token.role = fresh.role;
-          token.id = fresh.id;
           token.mustChangePassword = fresh.mustChangePassword ?? false;
-          token.roleCheckedAt = Date.now();
+          if (
+            !token.roleCheckedAt ||
+            Date.now() - (token.roleCheckedAt as number) > 5 * 60 * 1000
+          ) {
+            token.role = fresh.role;
+            token.id = fresh.id;
+            token.roleCheckedAt = Date.now();
+          }
         }
       }
 

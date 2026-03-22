@@ -100,7 +100,9 @@ export function SearchClient({ buses, stops, operators }: Props) {
           busNumber: bus.number,
           origin: fromStop.name,
           destination: toStop.name,
-          operatorName: operatorMap[bus.operatorId] ?? "Unknown Operator",
+          operatorName:
+            (bus.operatorId && operatorMap[bus.operatorId]) ??
+            "Unassigned operator",
           departureTime,
           fare,
           availableSeats,

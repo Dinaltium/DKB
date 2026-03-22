@@ -121,7 +121,13 @@ export async function getAllOperators() {
   return db
     .select({
       operator: operators,
-      user: { name: users.name, email: users.email },
+      user: {
+        name: users.name,
+        email: users.email,
+        mustChangePassword: users.mustChangePassword,
+        passwordExpiresAt: users.passwordExpiresAt,
+        createdAt: users.createdAt,
+      },
     })
     .from(operators)
     .innerJoin(users, eq(operators.userId, users.id))

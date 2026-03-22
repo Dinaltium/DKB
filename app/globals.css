@@ -16,6 +16,7 @@
   --color-navy:     #0D1B2A;
   --color-amber:    #F4A522;
   --color-teal:     #0E7C86;
+  --cta-bg:         var(--color-amber);
 
   /* Text */
   --text-primary:   #0D1B2A;
@@ -93,6 +94,7 @@
 
 /* ── Dark theme ── */
 [data-theme="dark"] {
+  --cta-bg:         var(--color-amber);
   --bg-page:        #0f1923;
   --bg-surface:     #1a2535;
   --bg-surface-2:   #243044;

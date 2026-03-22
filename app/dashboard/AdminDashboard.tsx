@@ -2,28 +2,37 @@
 
 import { useMemo, useRef, useState, useTransition } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { EmptyState } from "@/app/components/ui/EmptyState";
 import { StatusBadge } from "@/app/components/ui/StatusBadge";
 import { StopBuilder } from "@/app/components/StopBuilder";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Bus as BusType, BusRequest, Complaint, Operator, Stop } from "@/lib/db/schema";
 import {
   addStopAction,
   adminAddBusAction,
   approveBusRequestAction,
   createOperatorAction,
+  deleteOperatorAction,
   deleteStopAction,
   importStopsAction,
   reassignBusAction,
   rejectBusRequestAction,
-  resetOperatorPasswordAction,
   resolveComplaintAction,
   setOperatorApprovalAction,
+  updateOperatorAction,
 } from "@/lib/actions/bus";
 
 interface OperatorRow {
   operator: Operator;
-  user: { name: string | null; email: string | null };
+  user: {
+    name: string | null;
+    email: string | null;
+    mustChangePassword: boolean;
+    passwordExpiresAt: Date | null;
+    createdAt: Date;
+  };
 }
 interface BusRequestRow {
   request: BusRequest;
@@ -43,12 +52,12 @@ const slugify = (name: string) =>
   name.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-");
 
 export function AdminDashboard({ buses, operators, complaints, busRequests, stops }: Props) {
+  const router = useRouter();
   const [tab, setTab] = useState<Tab>("operators");
   const [isPending, startTransition] = useTransition();
   const [addBusOpen, setAddBusOpen] = useState(false);
   const [createOpOpen, setCreateOpOpen] = useState(false);
   const [detailOpId, setDetailOpId] = useState<string | null>(null);
-  const [resetPwdUserId, setResetPwdUserId] = useState<string | null>(null);
   const [importPreview, setImportPreview] = useState<Stop[] | null>(null);
   const [stopSearch, setStopSearch] = useState("");
   const [showAddStop, setShowAddStop] = useState(false);
@@ -69,6 +78,7 @@ export function AdminDashboard({ buses, operators, complaints, busRequests, stop
   const busesByOperatorId = useMemo(() => {
     const map: Record<string, BusType[]> = {};
     for (const b of buses) {
+      if (!b.operatorId) continue;
       map[b.operatorId] = map[b.operatorId] ?? [];
       map[b.operatorId].push(b);
     }
@@ -161,9 +171,6 @@ export function AdminDashboard({ buses, operators, complaints, busRequests, stop
                   <button disabled={isPending} onClick={() => startTransition(async () => { const r = await setOperatorApprovalAction(operator.id, !operator.approved); r.success ? toast.success(operator.approved ? "Operator revoked" : "Operator approved") : toast.error(r.error ?? "Failed"); })} className="h-9 border-2 px-3 text-xs font-bold uppercase" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>
                     {operator.approved ? "REVOKE" : "APPROVE"}
                   </button>
-                  <button disabled={isPending} onClick={() => setResetPwdUserId(operator.userId)} className="h-9 border-2 px-3 text-xs font-bold uppercase" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>
-                    RESET PASSWORD
-                  </button>
                   <button onClick={() => setDetailOpId(operator.id)} className="h-9 border-2 px-3 text-xs font-bold uppercase" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>
                     VIEW DETAILS →
                   </button>
@@ -238,8 +245,33 @@ export function AdminDashboard({ buses, operators, complaints, busRequests, stop
               <div className="flex items-center justify-between gap-3">
                 <div><p className="text-2xl font-extrabold uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>{bus.number}</p><p className="text-xs" style={{ color: "var(--text-muted)" }}>{bus.origin} → {bus.destination}</p></div>
                 <div className="flex gap-2">
-                  <select defaultValue={bus.operatorId} onChange={(e) => startTransition(async () => { const r = await reassignBusAction(bus.id, e.target.value); r.success ? toast.success("Bus reassigned") : toast.error(r.error ?? "Failed"); })} className="h-9 border-2 px-2 text-xs" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }}>
-                    {operators.map(({ operator }) => <option key={operator.id} value={operator.id}>{operator.companyName}</option>)}
+                  <select
+                    defaultValue={bus.operatorId ?? ""}
+                    onChange={(e) =>
+                      startTransition(async () => {
+                        const v = e.target.value;
+                        const r = await reassignBusAction(
+                          bus.id,
+                          v === "" ? null : v,
+                        );
+                        r.success
+                          ? toast.success("Bus reassigned")
+                          : toast.error(r.error ?? "Failed");
+                      })
+                    }
+                    className="h-9 border-2 px-2 text-xs"
+                    style={{
+                      background: "var(--input-bg)",
+                      borderColor: "var(--input-border)",
+                      color: "var(--input-text)",
+                    }}
+                  >
+                    <option value="">— Unassigned —</option>
+                    {operators.map(({ operator }) => (
+                      <option key={operator.id} value={operator.id}>
+                        {operator.companyName}
+                      </option>
+                    ))}
                   </select>
                   <Link href={`/bus/${bus.id}`} className="inline-flex h-9 items-center border-2 px-3 text-xs font-bold uppercase" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>VIEW</Link>
                 </div>
@@ -286,8 +318,16 @@ export function AdminDashboard({ buses, operators, complaints, busRequests, stop
         />
       )}
       {createOpOpen && <CreateOperatorModal onClose={() => setCreateOpOpen(false)} isPending={isPending} onSubmit={(data) => startTransition(async () => { const r = await createOperatorAction(data); r.success ? (toast.success("Operator account created"), setCreateOpOpen(false)) : toast.error(r.error ?? "Failed"); })} />}
-      {resetPwdUserId && <ResetPasswordModal userId={resetPwdUserId} onClose={() => setResetPwdUserId(null)} isPending={isPending} onSubmit={(pwd) => startTransition(async () => { const r = await resetOperatorPasswordAction(resetPwdUserId, pwd); r.success ? (toast.success("Temporary password reset"), setResetPwdUserId(null)) : toast.error(r.error ?? "Failed"); })} />}
-      {detailOpId && <OperatorDetailModal operatorRow={operatorById[detailOpId]} buses={busesByOperatorId[detailOpId] ?? []} complaints={complaints} onClose={() => setDetailOpId(null)} />}
+      {detailOpId && (
+        <OperatorDetailModal
+          operatorRow={operatorById[detailOpId]}
+          buses={busesByOperatorId[detailOpId] ?? []}
+          onClose={() => setDetailOpId(null)}
+          isPending={isPending}
+          startTransition={startTransition}
+          router={router}
+        />
+      )}
       {importPreview && <ImportPreviewModal data={importPreview} onClose={() => setImportPreview(null)} onConfirm={() => startTransition(async () => { const r = await importStopsAction(importPreview); r.success ? (toast.success(`Imported ${r.count ?? importPreview.length} stops`), setImportPreview(null)) : toast.error(r.error ?? "Failed"); })} isPending={isPending} />}
     </div>
   );
@@ -302,7 +342,6 @@ function ModalFrame({ title, onClose, children, max = "max-w-2xl" }: { title: st
           <p className="text-2xl font-extrabold uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>{title}</p>
           <button onClick={onClose} className="h-8 w-8 border-2 text-xs font-black" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>✕</button>
         </div>
-        <p className="mt-1 text-center text-[10px]" style={{ color: "var(--text-muted)" }}>Changes will be lost if you close</p>
         {children}
       </div>
     </div>
@@ -320,26 +359,347 @@ function CreateOperatorModal({ onClose, onSubmit, isPending }: { onClose: () => 
   </form></ModalFrame>;
 }
 
-function ResetPasswordModal({ userId: _userId, onClose, onSubmit, isPending }: { userId: string; onClose: () => void; onSubmit: (password: string) => void; isPending: boolean }) {
-  const [password, setPassword] = useState("");
-  return <ModalFrame title="RESET PASSWORD" onClose={onClose} max="max-w-md"><div className="mt-3 space-y-2"><input value={password} onChange={(e) => setPassword(e.target.value)} placeholder="New Temporary Password" className="h-10 w-full border-2 px-2 text-sm" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }} /><div className="flex justify-end gap-2"><button onClick={onClose} className="h-9 border-2 px-3 text-xs font-bold uppercase" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>Cancel</button><button disabled={isPending || !password} onClick={() => onSubmit(password)} className="h-9 border-2 px-3 text-xs font-bold uppercase" style={{ background: "var(--cta-bg)", borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>Reset</button></div></div></ModalFrame>;
+function operatorInitials(companyName: string) {
+  const parts = companyName.trim().split(/\s+/).filter(Boolean);
+  if (parts.length >= 2)
+    return `${parts[0][0] ?? ""}${parts[1][0] ?? ""}`.toUpperCase();
+  return companyName.slice(0, 2).toUpperCase() || "OP";
 }
 
-function OperatorDetailModal({ operatorRow, buses, complaints, onClose }: { operatorRow: OperatorRow; buses: BusType[]; complaints: Complaint[]; onClose: () => void }) {
-  const opComplaints = complaints.filter((c) => buses.some((b) => b.id === c.busId)).slice(0, 5);
-  return <ModalFrame title="OPERATOR DETAILS" onClose={onClose}>
-    <div className="mt-3 space-y-4 max-h-[70vh] overflow-y-auto">
-      <section className="space-y-1">
-        <p className="font-bold uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>Operator Info</p>
-        <p className="text-sm" style={{ color: "var(--text-secondary)" }}>{operatorRow.operator.companyName}</p>
-        <p className="text-xs" style={{ color: "var(--text-muted)" }}>{operatorRow.user.email} {operatorRow.operator.phone ? `• ${operatorRow.operator.phone}` : ""}</p>
-      </section>
-      <div className="border-t-2 border-dashed" style={{ borderColor: "var(--border-default)" }} />
-      <section className="space-y-1"><p className="font-bold uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>Their Buses</p>{buses.length === 0 ? <p className="text-xs" style={{ color: "var(--text-muted)" }}>No buses registered yet.</p> : buses.map((b) => <div key={b.id} className="flex items-center justify-between text-sm"><Link href={`/bus/${b.id}`} style={{ color: "var(--text-primary)" }}>{b.number} • {b.origin}→{b.destination}</Link><StatusBadge status={b.status} /></div>)}</section>
-      <div className="border-t-2 border-dashed" style={{ borderColor: "var(--border-default)" }} />
-      <section className="space-y-1"><p className="font-bold uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>Recent Complaints</p>{opComplaints.length === 0 ? <p className="text-xs" style={{ color: "var(--text-muted)" }}>No complaints on record.</p> : opComplaints.map((c) => <div key={c.id} className="text-xs" style={{ color: "var(--text-secondary)" }}>{c.busNumber} • {c.category} • {c.description.slice(0, 60)}...</div>)}</section>
+function OperatorDetailModal({
+  operatorRow,
+  buses,
+  onClose,
+  isPending,
+  startTransition,
+  router,
+}: {
+  operatorRow: OperatorRow;
+  buses: BusType[];
+  onClose: () => void;
+  isPending: boolean;
+  startTransition: (fn: () => void) => void;
+  router: ReturnType<typeof useRouter>;
+}) {
+  const { operator, user } = operatorRow;
+  const [companyName, setCompanyName] = useState(operator.companyName);
+  const [phone, setPhone] = useState(operator.phone ?? "");
+  const [approved, setApproved] = useState(operator.approved);
+  const [deleteConfirm, setDeleteConfirm] = useState("");
+
+  const created = new Date(user.createdAt);
+  const busListInner = (
+    <div className="space-y-2 pr-2">
+      {buses.length === 0 ? (
+        <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+          No buses registered yet.
+        </p>
+      ) : (
+        buses.map((b) => (
+          <div
+            key={b.id}
+            className="flex flex-wrap items-center justify-between gap-2 border-b pb-2 last:border-b-0"
+            style={{ borderColor: "var(--border-default)" }}
+          >
+            <span
+              className="border-2 px-2 py-0.5 text-[10px] font-black"
+              style={{
+                background: "var(--cta-bg)",
+                borderColor: "var(--text-primary)",
+                color: "var(--text-primary)",
+              }}
+            >
+              {b.number}
+            </span>
+            <span
+              className="min-w-0 flex-1 text-sm font-semibold"
+              style={{ color: "var(--text-primary)" }}
+            >
+              {b.origin} → {b.destination}
+            </span>
+            <StatusBadge status={b.status} />
+            <Link
+              href={`/bus/${b.id}`}
+              className="text-xs font-bold uppercase"
+              style={{ color: "var(--color-teal)" }}
+            >
+              View →
+            </Link>
+          </div>
+        ))
+      )}
     </div>
-  </ModalFrame>;
+  );
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-40 bg-black/60" onClick={onClose} />
+      <div
+        className="z-50 max-h-[90vh] w-full max-w-2xl overflow-y-auto border-2 p-5"
+        style={{
+          background: "var(--bg-surface)",
+          borderColor: "var(--text-primary)",
+          boxShadow: "4px 4px 0 var(--text-primary)",
+        }}
+      >
+        <div className="mb-4 flex items-center justify-between">
+          <p
+            className="text-2xl font-extrabold uppercase"
+            style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              color: "var(--text-primary)",
+            }}
+          >
+            OPERATOR DETAILS
+          </p>
+          <button
+            type="button"
+            onClick={onClose}
+            className="h-8 w-8 border-2 text-xs font-black"
+            style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Section 1 */}
+        <section className="flex flex-col gap-4 sm:flex-row sm:items-start">
+          <div
+            className="flex h-24 w-24 shrink-0 items-center justify-center border-2 text-2xl font-black text-white"
+            style={{
+              background: "var(--text-primary)",
+              borderColor: "var(--text-primary)",
+              fontFamily: "'Barlow Condensed', sans-serif",
+            }}
+          >
+            {operatorInitials(operator.companyName)}
+          </div>
+          <div className="min-w-0 flex-1 space-y-2">
+            <h2
+              className="text-3xl font-extrabold uppercase leading-tight"
+              style={{
+                fontFamily: "'Barlow Condensed', sans-serif",
+                color: "var(--text-primary)",
+              }}
+            >
+              {operator.companyName}
+            </h2>
+            <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+              {user.email ?? "—"}
+            </p>
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+              {operator.phone?.trim()
+                ? operator.phone
+                : "No phone on record"}
+            </p>
+            <div className="flex flex-wrap items-center gap-2">
+              <StatusBadge status={operator.approved ? "approved" : "pending"} />
+              <span className="text-xs" style={{ color: "var(--text-muted)" }}>
+                Account created: {created.toLocaleDateString()}
+              </span>
+            </div>
+            {user.mustChangePassword && (
+              <p
+                className="text-sm font-bold"
+                style={{ color: "var(--color-amber)" }}
+              >
+                ⚠ Must change password
+              </p>
+            )}
+          </div>
+        </section>
+
+        <div
+          className="my-6 border-t-2 border-dashed"
+          style={{ borderColor: "var(--border-default)" }}
+        />
+
+        {/* Section 2 */}
+        <section>
+          <p
+            className="mb-3 text-lg font-extrabold uppercase"
+            style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              color: "var(--text-primary)",
+            }}
+          >
+            Their buses
+          </p>
+          {buses.length > 3 ? (
+            <ScrollArea
+              className="h-64 rounded-md border-2 p-3"
+              style={{ borderColor: "var(--border-default)" }}
+            >
+              {busListInner}
+            </ScrollArea>
+          ) : (
+            <div className="rounded-md border-2 p-3" style={{ borderColor: "var(--border-default)" }}>
+              {busListInner}
+            </div>
+          )}
+        </section>
+
+        <div
+          className="my-6 border-t-2 border-dashed"
+          style={{ borderColor: "var(--border-default)" }}
+        />
+
+        {/* Section 3 */}
+        <section className="space-y-4">
+          <p
+            className="text-lg font-extrabold uppercase"
+            style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              color: "var(--text-primary)",
+            }}
+          >
+            Edit operator details
+          </p>
+          <div className="grid gap-3">
+            <label className="block text-xs font-bold uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>
+              Company name
+              <input
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+                className="mt-1 h-11 w-full border-2 px-3 text-sm"
+                style={{
+                  background: "var(--input-bg)",
+                  borderColor: "var(--input-border)",
+                  color: "var(--input-text)",
+                }}
+              />
+            </label>
+            <label className="block text-xs font-bold uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>
+              Phone
+              <input
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="mt-1 h-11 w-full border-2 px-3 text-sm"
+                style={{
+                  background: "var(--input-bg)",
+                  borderColor: "var(--input-border)",
+                  color: "var(--input-text)",
+                }}
+              />
+            </label>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                disabled={isPending}
+                onClick={() => setApproved(true)}
+                className="h-10 border-2 px-4 text-xs font-bold uppercase"
+                style={{
+                  background: approved ? "var(--cta-bg)" : "var(--bg-surface-2)",
+                  borderColor: "var(--text-primary)",
+                  color: "var(--text-primary)",
+                }}
+              >
+                Approve
+              </button>
+              <button
+                type="button"
+                disabled={isPending}
+                onClick={() => setApproved(false)}
+                className="h-10 border-2 px-4 text-xs font-bold uppercase"
+                style={{
+                  background: !approved ? "var(--status-stopped-bg)" : "var(--bg-surface-2)",
+                  borderColor: "var(--text-primary)",
+                  color: "var(--text-primary)",
+                }}
+              >
+                Revoke
+              </button>
+            </div>
+            <button
+              type="button"
+              disabled={isPending}
+              onClick={() =>
+                startTransition(async () => {
+                  const r = await updateOperatorAction(operator.id, {
+                    companyName: companyName.trim() || undefined,
+                    phone: phone.trim(),
+                    approved,
+                  });
+                  if (r.success) {
+                    toast.success("Operator updated");
+                    router.refresh();
+                    onClose();
+                  } else toast.error(r.error ?? "Failed");
+                })
+              }
+              className="h-11 w-full border-2 text-sm font-bold uppercase"
+              style={{
+                background: "var(--cta-bg)",
+                borderColor: "var(--text-primary)",
+                color: "var(--text-primary)",
+                boxShadow: "3px 3px 0 var(--text-primary)",
+              }}
+            >
+              Save changes
+            </button>
+          </div>
+
+          <div
+            className="my-6 border-t-4 border-dashed"
+            style={{ borderColor: "var(--status-stopped-text)" }}
+          />
+          <p
+            className="text-center text-xs font-black uppercase tracking-widest"
+            style={{ color: "var(--status-stopped-text)" }}
+          >
+            Danger zone
+          </p>
+
+          <div
+            className="mt-4 space-y-3 border-2 p-4"
+            style={{ borderColor: "var(--status-stopped-text)" }}
+          >
+            <p className="text-sm font-bold uppercase" style={{ color: "var(--status-stopped-text)" }}>
+              Delete operator account
+            </p>
+            <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+              This permanently removes the operator, their account, and dissociates their buses. This cannot be undone.
+            </p>
+            <label className="block text-xs font-bold uppercase" style={{ color: "var(--text-muted)" }}>
+              Type the company name to confirm:
+              <input
+                value={deleteConfirm}
+                onChange={(e) => setDeleteConfirm(e.target.value)}
+                className="mt-1 h-11 w-full border-2 px-3 text-sm"
+                style={{
+                  background: "var(--input-bg)",
+                  borderColor: "var(--input-border)",
+                  color: "var(--input-text)",
+                }}
+              />
+            </label>
+            <button
+              type="button"
+              disabled={isPending || deleteConfirm !== operator.companyName}
+              onClick={() =>
+                startTransition(async () => {
+                  const r = await deleteOperatorAction(operator.id);
+                  if (r.success) {
+                    toast.success("Operator removed");
+                    onClose();
+                    router.refresh();
+                  } else toast.error(r.error ?? "Failed");
+                })
+              }
+              className="h-11 w-full border-2 text-sm font-bold uppercase text-white disabled:opacity-40"
+              style={{
+                background: "var(--destructive)",
+                borderColor: "rgb(153 27 27)",
+                boxShadow: "3px 3px 0 rgb(153 27 27)",
+              }}
+            >
+              Delete operator
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+  );
 }
 
 function ImportPreviewModal({ data, onClose, onConfirm, isPending }: { data: Stop[]; onClose: () => void; onConfirm: () => void; isPending: boolean }) {

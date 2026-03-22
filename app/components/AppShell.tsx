@@ -50,16 +50,20 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
     const user = session?.user as { mustChangePassword?: boolean } | undefined;
     if (
       user?.mustChangePassword &&
-      typeof window !== "undefined" &&
       !sessionStorage.getItem("buslink-pwd-toast-shown")
     ) {
-      toast.warning(
-        "⚠ Please update your temporary password. You have 5 minutes (test mode) before access is blocked.",
-        { duration: 10000 },
-      );
-      sessionStorage.setItem("buslink-pwd-toast-shown", "true");
+      toast.warning("⚠ Temporary password — please update it soon.", {
+        duration: Infinity,
+        action: {
+          label: "Change Now →",
+          onClick: () => router.push("/change-password"),
+        },
+        onDismiss: () => {
+          sessionStorage.setItem("buslink-pwd-toast-shown", "true");
+        },
+      });
     }
-  }, [session]);
+  }, [session, router]);
 
   // ── Mobile bottom nav — always visible items ───────────────────────────────
   const mobileNavItems = [
