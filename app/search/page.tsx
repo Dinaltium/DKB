@@ -10,7 +10,7 @@
 
 export const dynamic = "force-dynamic";
 
-import { AppShell } from "@/app/components/AppShell";
+import { AppShell } from "@/components/layout/AppShell";
 import {
   getAllBusesWithRouteIds,
   getAllStops,

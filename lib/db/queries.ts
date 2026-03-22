@@ -19,6 +19,7 @@ import {
   type Complaint,
   type NewComplaint,
   type NewPayment,
+  type Payment,
   type NewTravelHistory,
 } from "./schema";
 
@@ -188,6 +189,10 @@ export async function getPaymentsForUser(userId: string) {
     .from(payments)
     .where(eq(payments.userId, userId))
     .orderBy(desc(payments.createdAt));
+}
+
+export async function getAllPayments(): Promise<Payment[]> {
+  return db.select().from(payments).orderBy(desc(payments.createdAt));
 }
 
 // ── Users ─────────────────────────────────────────────────────────────────────

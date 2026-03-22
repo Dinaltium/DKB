@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { auth } from "@/auth";
-import { AppShell } from "@/app/components/AppShell";
+import { AppShell } from "@/components/layout/AppShell";
 import { getBusById, getStopsForBus, getRouteStopIds } from "@/lib/db/queries";
 import { calcFare } from "@/lib/db/fare";
 import { BusDetailClient } from "./BusDetailClient";

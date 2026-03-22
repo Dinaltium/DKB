@@ -4,13 +4,13 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { Clock4, QrCode, Users } from "lucide-react";
 import { toast } from "sonner";
 import dynamic from "next/dynamic";
-import { PaymentDrawer } from "@/app/components/PaymentDrawer";
-import { ComplaintDialog } from "@/app/components/ComplaintDialog";
+import { PaymentDrawer } from "@/components/modals/PaymentDrawer";
+import { ComplaintDialog } from "@/components/modals/ComplaintDialog";
 import { castVoteAction } from "@/lib/actions/bus";
 import { useLiveBus } from "@/app/context/LiveBusContext";
 import type { Bus, Stop } from "@/lib/db/schema";
 
-const BusMap = dynamic(() => import("@/app/components/BusMap"), { ssr: false });
+const BusMap = dynamic(() => import("@/components/maps/BusMap"), { ssr: false });
 
 const VOTE_ITEMS = [
   { key: "onTime",      label: "On Time"      },

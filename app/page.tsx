@@ -4,14 +4,14 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Bus, MapPin, Users, AlertCircle } from "lucide-react";
-import { AppShell } from "@/app/components/AppShell";
-import { EmptyState } from "@/app/components/ui/EmptyState";
-import { StatusBadge } from "@/app/components/ui/StatusBadge";
+import { AppShell } from "@/components/layout/AppShell";
+import { EmptyState } from "@/components/shared/EmptyState";
+import { StatusBadge } from "@/components/shared/StatusBadge";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { useLiveBus } from "@/app/context/LiveBusContext";
 import type { PlatformStats } from "@/app/api/stats/route";
 
-const FleetMap = dynamic(() => import("@/app/components/FleetMap"), {
+const FleetMap = dynamic(() => import("@/components/maps/FleetMap"), {
   ssr: false,
 });
 

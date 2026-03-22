@@ -146,6 +146,32 @@ export async function updateBusStatusAction(
   return { success: true };
 }
 
+export async function updateBusDetailsAction(
+  busId: string,
+  data: {
+    driverName?: string;
+    conductorName?: string;
+    status?: "Running" | "Not Running" | "Delayed";
+    statusNote?: string;
+    occupiedSeats?: number;
+    womenReservedAvailable?: number;
+  },
+) {
+  const session = await auth();
+  if (session?.user?.role !== "admin") {
+    return { success: false, error: "Unauthorised" };
+  }
+
+  await db
+    .update(buses)
+    .set({ ...data, updatedAt: new Date() })
+    .where(eq(buses.id, busId));
+
+  revalidatePath("/dashboard");
+  revalidatePath(`/bus/${busId}`);
+  return { success: true };
+}
+
 // ── Operator approval (admin only) ────────────────────────────────────────────
 
 export async function setOperatorApprovalAction(operatorId: string, approved: boolean) {

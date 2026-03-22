@@ -21,5 +21,7 @@
   },
   "menuColor": "default",
   "menuAccent": "subtle",
-  "registries": {}
+  "registries": {
+    "@boldkit": "https://boldkit.dev/r/{name}.json"
+  }
 }

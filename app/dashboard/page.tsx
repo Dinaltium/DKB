@@ -1,11 +1,12 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { AppShell } from "@/app/components/AppShell";
+import { AppShell } from "@/components/layout/AppShell";
 import {
-  getAllBuses,
+  getAllBusesWithRouteIds,
   getAllComplaints,
   getAllOperators,
   getAllBusRequests,
+  getAllPayments,
   getAllStops,
   getBusesForOperator,
   getComplaintsForOperator,
@@ -103,13 +104,15 @@ export default async function DashboardPage() {
 
   // ── Admin ──────────────────────────────────────────────────────────────────
   if (role === "admin") {
-    const [allBuses, allOperators, allComplaints, allBusRequests, allStops] = await Promise.all([
-      getAllBuses(),
-      getAllOperators(),
-      getAllComplaints(),
-      getAllBusRequests(),
-      getAllStops(),
-    ]);
+    const [allBuses, allOperators, allComplaints, allBusRequests, allStops, allPayments] =
+      await Promise.all([
+        getAllBusesWithRouteIds(),
+        getAllOperators(),
+        getAllComplaints(),
+        getAllBusRequests(),
+        getAllStops(),
+        getAllPayments(),
+      ]);
 
     return (
       <AppShell
@@ -122,6 +125,7 @@ export default async function DashboardPage() {
           complaints={allComplaints}
           busRequests={allBusRequests}
           stops={allStops}
+          payments={allPayments}
         />
       </AppShell>
     );
