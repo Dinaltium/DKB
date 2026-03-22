@@ -509,7 +509,16 @@ export async function createOperatorAction(data: {
 
 export async function updateOperatorAction(
   operatorId: string,
-  data: { companyName?: string; phone?: string; approved?: boolean },
+  data: {
+    companyName?: string;
+    phone?: string;
+    approved?: boolean;
+    aadhar?: string;
+    drivingLicense?: string;
+    rcNumber?: string;
+    pollutionCertNo?: string;
+    insurancePolicyNo?: string;
+  },
 ) {
   const session = await auth();
   if (session?.user?.role !== "admin") {
@@ -528,6 +537,17 @@ export async function updateOperatorAction(
       ...(data.companyName !== undefined && { companyName: data.companyName }),
       ...(data.phone !== undefined && { phone: data.phone || null }),
       ...(data.approved !== undefined && { approved: data.approved }),
+      ...(data.aadhar !== undefined && { aadhar: data.aadhar || null }),
+      ...(data.drivingLicense !== undefined && {
+        drivingLicense: data.drivingLicense || null,
+      }),
+      ...(data.rcNumber !== undefined && { rcNumber: data.rcNumber || null }),
+      ...(data.pollutionCertNo !== undefined && {
+        pollutionCertNo: data.pollutionCertNo || null,
+      }),
+      ...(data.insurancePolicyNo !== undefined && {
+        insurancePolicyNo: data.insurancePolicyNo || null,
+      }),
       updatedAt: new Date(),
     })
     .where(eq(operators.id, operatorId));

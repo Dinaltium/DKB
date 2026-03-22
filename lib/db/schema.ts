@@ -116,6 +116,11 @@ export const operators = pgTable("operators", {
   companyName: text("company_name").notNull(),
   phone: text("phone"),
   approved: boolean("approved").notNull().default(false),
+  aadhar: text("aadhar"),
+  drivingLicense: text("driving_license"),
+  rcNumber: text("rc_number"),
+  pollutionCertNo: text("pollution_cert_no"),
+  insurancePolicyNo: text("insurance_policy_no"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
