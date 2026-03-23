@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { StatusBadge } from "@/components/shared/StatusBadge";
+import { DocUploadField } from "@/components/shared/DocUploadField";
 import type { BusWithRouteIds } from "@/lib/db/queries";
 import type { Complaint, Operator, Payment } from "@/lib/db/schema";
 import {
@@ -62,23 +63,49 @@ type DocFieldKey =
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const DOC_FIELDS: { key: DocFieldKey; label: string; placeholder: string }[] = [
-  { key: "aadhar", label: "Aadhar Number", placeholder: "XXXX XXXX XXXX" },
+const DOC_FIELDS: {
+  key: DocFieldKey;
+  label: string;
+  placeholder: string;
+  /** docType sent to /api/ocr */
+  docType: "aadhaar" | "driving_license" | "rc" | "puc" | "insurance";
+  /** primary key in OCR response fields */
+  primaryKey: string;
+}[] = [
   {
-    key: "drivingLicense",
-    label: "Driving License",
+    key:        "aadhar",
+    label:      "Aadhar Number",
+    placeholder: "XXXX XXXX XXXX",
+    docType:    "aadhaar",
+    primaryKey: "aadhaar_number",
+  },
+  {
+    key:        "drivingLicense",
+    label:      "Driving License",
     placeholder: "DL-XXXX-XXXXXXX",
+    docType:    "driving_license",
+    primaryKey: "dl_number",
   },
-  { key: "rcNumber", label: "RC Number", placeholder: "KA-XX-XXXX-XXXXXX" },
   {
-    key: "pollutionCertNo",
-    label: "Pollution Cert No.",
+    key:        "rcNumber",
+    label:      "RC Number",
+    placeholder: "KA-XX-XXXX-XXXXXX",
+    docType:    "rc",
+    primaryKey: "rc_number",
+  },
+  {
+    key:        "pollutionCertNo",
+    label:      "Pollution Cert No.",
     placeholder: "PUC/XXXX/XX",
+    docType:    "puc",
+    primaryKey: "puc_number",
   },
   {
-    key: "insurancePolicyNo",
-    label: "Insurance Policy No.",
+    key:        "insurancePolicyNo",
+    label:      "Insurance Policy No.",
     placeholder: "Policy number",
+    docType:    "insurance",
+    primaryKey: "policy_number",
   },
 ];
 
@@ -92,11 +119,9 @@ function operatorInitials(name: string): string {
 }
 
 function pooledRating(buses: BusWithRouteIds[]): string {
-  let on = 0,
-    late = 0,
-    very = 0;
+  let on = 0, late = 0, very = 0;
   for (const b of buses) {
-    on += b.votes.onTime;
+    on   += b.votes.onTime;
     late += b.votes.slightlyLate;
     very += b.votes.veryLate;
   }
@@ -107,21 +132,15 @@ function pooledRating(buses: BusWithRouteIds[]): string {
 
 function docValue(op: Operator, key: DocFieldKey): string | null {
   switch (key) {
-    case "aadhar":
-      return op.aadhar ?? null;
-    case "drivingLicense":
-      return op.drivingLicense ?? null;
-    case "rcNumber":
-      return op.rcNumber ?? null;
-    case "pollutionCertNo":
-      return op.pollutionCertNo ?? null;
-    case "insurancePolicyNo":
-      return op.insurancePolicyNo ?? null;
+    case "aadhar":           return op.aadhar            ?? null;
+    case "drivingLicense":   return op.drivingLicense    ?? null;
+    case "rcNumber":         return op.rcNumber          ?? null;
+    case "pollutionCertNo":  return op.pollutionCertNo   ?? null;
+    case "insurancePolicyNo":return op.insurancePolicyNo ?? null;
   }
 }
 
 // ── Tab button shared style ───────────────────────────────────────────────────
-// ToggleGroupItem uses data-[state=on] for active, data-[state=off] for inactive.
 
 const TAB_ITEM_CLASS = [
   "h-10 rounded-none border-2 border-foreground px-6",
@@ -149,34 +168,29 @@ export function OperatorModal({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  // Tab state — driven by ToggleGroup, content rendered conditionally
-  const [tab, setTab] = useState<ModalTab>("info");
-
-  // Bus drill-down
+  const [tab, setTab]               = useState<ModalTab>("info");
   const [busPanelId, setBusPanelId] = useState<string | null>(null);
-  const [busSubTab, setBusSubTab] = useState<BusSubTab>("info");
+  const [busSubTab, setBusSubTab]   = useState<BusSubTab>("info");
 
   // Edit form
   const [companyName, setCompanyName] = useState(operator.companyName);
-  const [phone, setPhone] = useState(operator.phone ?? "");
-  const [docForm, setDocForm] = useState<Record<DocFieldKey, string>>({
-    aadhar: operator.aadhar ?? "",
-    drivingLicense: operator.drivingLicense ?? "",
-    rcNumber: operator.rcNumber ?? "",
-    pollutionCertNo: operator.pollutionCertNo ?? "",
-    insurancePolicyNo: operator.insurancePolicyNo ?? "",
+  const [phone, setPhone]             = useState(operator.phone ?? "");
+  const [docForm, setDocForm]         = useState<Record<DocFieldKey, string>>({
+    aadhar:           operator.aadhar            ?? "",
+    drivingLicense:   operator.drivingLicense    ?? "",
+    rcNumber:         operator.rcNumber          ?? "",
+    pollutionCertNo:  operator.pollutionCertNo   ?? "",
+    insurancePolicyNo:operator.insurancePolicyNo ?? "",
   });
 
   // Danger zone
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [deleteConfirm, setDeleteConfirm] = useState("");
+  const [deleteConfirm, setDeleteConfirm]         = useState("");
 
-  // Doc field show/hide (per-field independent)
-  const [shownFields, setShownFields] = useState<Set<DocFieldKey>>(
-    () => new Set(),
-  );
+  // Doc field show/hide (info tab)
+  const [shownFields, setShownFields] = useState<Set<DocFieldKey>>(() => new Set());
 
-  // Reset everything when the modal opens or the operator changes
+  // Reset when modal opens / operator changes
   useEffect(() => {
     if (!open) return;
     setTab("info");
@@ -185,11 +199,11 @@ export function OperatorModal({
     setCompanyName(operator.companyName);
     setPhone(operator.phone ?? "");
     setDocForm({
-      aadhar: operator.aadhar ?? "",
-      drivingLicense: operator.drivingLicense ?? "",
-      rcNumber: operator.rcNumber ?? "",
-      pollutionCertNo: operator.pollutionCertNo ?? "",
-      insurancePolicyNo: operator.insurancePolicyNo ?? "",
+      aadhar:           operator.aadhar            ?? "",
+      drivingLicense:   operator.drivingLicense    ?? "",
+      rcNumber:         operator.rcNumber          ?? "",
+      pollutionCertNo:  operator.pollutionCertNo   ?? "",
+      insurancePolicyNo:operator.insurancePolicyNo ?? "",
     });
     setDeleteConfirm("");
     setShowDeleteConfirm(false);
@@ -261,13 +275,13 @@ export function OperatorModal({
   const handleSave = () => {
     startTransition(async () => {
       const r = await updateOperatorAction(operator.id, {
-        companyName: companyName.trim() || undefined,
-        phone: phone.trim(),
-        aadhar: docForm.aadhar || undefined,
-        drivingLicense: docForm.drivingLicense || undefined,
-        rcNumber: docForm.rcNumber || undefined,
-        pollutionCertNo: docForm.pollutionCertNo || undefined,
-        insurancePolicyNo: docForm.insurancePolicyNo || undefined,
+        companyName:      companyName.trim() || undefined,
+        phone:            phone.trim(),
+        aadhar:           docForm.aadhar           || undefined,
+        drivingLicense:   docForm.drivingLicense   || undefined,
+        rcNumber:         docForm.rcNumber         || undefined,
+        pollutionCertNo:  docForm.pollutionCertNo  || undefined,
+        insurancePolicyNo:docForm.insurancePolicyNo|| undefined,
       });
       if (r.success) {
         toast.success("Operator updated");
@@ -293,7 +307,7 @@ export function OperatorModal({
   };
 
   const handleTabChange = (value: string) => {
-    if (!value) return; // ToggleGroup fires empty string on deselect — ignore
+    if (!value) return;
     setTab(value as ModalTab);
     setBusPanelId(null);
     setBusSubTab("info");
@@ -305,51 +319,36 @@ export function OperatorModal({
 
   return (
     <>
-      {/* Backdrop — no click-to-close */}
       <div className="fixed inset-0 z-40 bg-black/60" />
 
-      {/* Modal container — 3-layer flex column */}
       <div
         className="fixed left-1/2 top-1/2 z-50 flex w-full max-w-2xl
           -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden
           border-2 border-foreground"
         style={{
           background: "var(--bg-surface)",
-          maxHeight: "90vh",
-          boxShadow: "6px 6px 0 hsl(var(--shadow-color))",
+          maxHeight:  "90vh",
+          boxShadow:  "6px 6px 0 hsl(var(--shadow-color))",
         }}
       >
-        {/* ── Layer 1: Header — shrink-0, never scrolls ── */}
-        <div
-          className="flex shrink-0 items-center justify-between border-b-2
-          border-foreground px-4 py-3"
-        >
+        {/* ── Layer 1: Header ── */}
+        <div className="flex shrink-0 items-center justify-between border-b-2 border-foreground px-4 py-3">
           <p
             className="text-xl font-black uppercase tracking-wide"
-            style={{
-              fontFamily: "'Barlow Condensed', sans-serif",
-              color: "var(--text-primary)",
-            }}
+            style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}
           >
             {operator.companyName}
           </p>
           <button
             type="button"
             onClick={() => onOpenChange(false)}
-            className="flex h-8 w-8 items-center justify-center border-2
-              border-foreground font-black text-sm hover:bg-foreground
-              hover:text-background transition-colors"
+            className="flex h-8 w-8 items-center justify-center border-2 border-foreground font-black text-sm hover:bg-foreground hover:text-background transition-colors"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
 
-        {/* ── Layer 2: Tab bar — shrink-0, never scrolls ── */}
-        {/*
-          KEY: ToggleGroup is the ONLY thing controlling tab state.
-          Content is rendered conditionally below based on `tab` state.
-          No Tabs/TabsList/TabsContent anywhere — those were the bug.
-        */}
+        {/* ── Layer 2: Tab bar ── */}
         <div className="shrink-0 border-b-2 border-foreground px-3 py-2">
           <ToggleGroup
             type="single"
@@ -357,41 +356,21 @@ export function OperatorModal({
             onValueChange={handleTabChange}
             className="flex w-full gap-2 rounded-none bg-transparent p-0"
           >
-            <ToggleGroupItem
-              value="info"
-              className={TAB_ITEM_CLASS}
-              style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
-            >
-              INFO
-            </ToggleGroupItem>
-            <ToggleGroupItem
-              value="bus-info"
-              className={TAB_ITEM_CLASS}
-              style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
-            >
-              BUS INFO
-            </ToggleGroupItem>
+            <ToggleGroupItem value="info"     className={TAB_ITEM_CLASS} style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>INFO</ToggleGroupItem>
+            <ToggleGroupItem value="bus-info" className={TAB_ITEM_CLASS} style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>BUS INFO</ToggleGroupItem>
             {mode === "admin" && (
-              <ToggleGroupItem
-                value="edit"
-                className={TAB_ITEM_CLASS}
-                style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
-              >
-                EDIT
-              </ToggleGroupItem>
+              <ToggleGroupItem value="edit" className={TAB_ITEM_CLASS} style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>EDIT</ToggleGroupItem>
             )}
           </ToggleGroup>
         </div>
 
-        {/* ── Layer 3: Content — flex-1 min-h-0 overflow-y-auto = scrolls ── */}
+        {/* ── Layer 3: Scrollable content ── */}
         <div
           className="flex-1 min-h-0 overflow-y-auto"
-          style={{
-            scrollbarWidth: "thin",
-            scrollbarColor: "var(--text-primary) transparent",
-          }}
+          style={{ scrollbarWidth: "thin", scrollbarColor: "var(--text-primary) transparent" }}
         >
-          {/* ── INFO tab ── */}
+
+          {/* ══════════════════════ INFO TAB ══════════════════════ */}
           {tab === "info" && (
             <div>
               {/* Identity block */}
@@ -400,44 +379,18 @@ export function OperatorModal({
                 style={{ background: "var(--bg-surface-2)" }}
               >
                 <div
-                  className="flex h-24 w-24 shrink-0 items-center justify-center
-                    border-3 border-foreground bg-primary text-2xl font-black
-                    text-primary-foreground shadow-[4px_4px_0_hsl(var(--shadow-color))]"
+                  className="flex h-24 w-24 shrink-0 items-center justify-center border-3 border-foreground bg-primary text-2xl font-black text-primary-foreground shadow-[4px_4px_0_hsl(var(--shadow-color))]"
                   style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
                 >
                   {operatorInitials(operator.companyName)}
                 </div>
                 <div className="min-w-0 flex-1 space-y-1">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                    Name
-                  </p>
-                  <p
-                    className="text-xl font-extrabold uppercase"
-                    style={{
-                      fontFamily: "'Barlow Condensed', sans-serif",
-                      color: "var(--text-primary)",
-                    }}
-                  >
-                    {operator.companyName}
-                  </p>
-                  <p className="mt-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                    Email ID
-                  </p>
-                  <p
-                    className="text-sm font-semibold"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    {user.email ?? "—"}
-                  </p>
-                  <p className="mt-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                    Phone Number
-                  </p>
-                  <p
-                    className="text-sm font-semibold"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    {operator.phone?.trim() || "—"}
-                  </p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Name</p>
+                  <p className="text-xl font-extrabold uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>{operator.companyName}</p>
+                  <p className="mt-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Email ID</p>
+                  <p className="text-sm font-semibold" style={{ color: "var(--text-secondary)" }}>{user.email ?? "—"}</p>
+                  <p className="mt-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Phone Number</p>
+                  <p className="text-sm font-semibold" style={{ color: "var(--text-secondary)" }}>{operator.phone?.trim() || "—"}</p>
                 </div>
               </div>
 
@@ -446,106 +399,51 @@ export function OperatorModal({
                 <div className="grid grid-cols-3">
                   {(
                     [
-                      ["Total Buses", String(buses.length)],
-                      ["Locations Covering", String(locationsCount)],
-                      ["Fines", String(finesTotal)],
-                      ["Complaints", String(opComplaints.length)],
-                      ["Warnings", String(warningsCount)],
-                      ["Ratings", pooledRating(buses)],
+                      ["Total Buses",       String(buses.length)],
+                      ["Locations Covering",String(locationsCount)],
+                      ["Fines",             String(finesTotal)],
+                      ["Complaints",        String(opComplaints.length)],
+                      ["Warnings",          String(warningsCount)],
+                      ["Ratings",           pooledRating(buses)],
                     ] as const
                   ).map(([label, value], i) => (
                     <div
                       key={label}
                       className="border-2 border-foreground p-3 text-center"
-                      style={{
-                        marginRight: i % 3 !== 2 ? "-2px" : 0,
-                        marginBottom: i < 3 ? "-2px" : 0,
-                      }}
+                      style={{ marginRight: i % 3 !== 2 ? "-2px" : 0, marginBottom: i < 3 ? "-2px" : 0 }}
                     >
-                      <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">
-                        {label}
-                      </p>
-                      <p
-                        className="text-2xl font-black"
-                        style={{
-                          fontFamily: "'Barlow Condensed', sans-serif",
-                          color: "var(--text-primary)",
-                        }}
-                      >
-                        {value}
-                      </p>
+                      <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">{label}</p>
+                      <p className="text-2xl font-black" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>{value}</p>
                     </div>
                   ))}
                 </div>
 
                 {/* Document fields — collapsible rows */}
                 <div>
-                  <p className="mb-1 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                    Operator Documents
-                  </p>
-                  <p className="mb-2 text-[10px] text-muted-foreground">
-                    Click Show to reveal a field
-                  </p>
+                  <p className="mb-1 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Operator Documents</p>
+                  <p className="mb-2 text-[10px] text-muted-foreground">Click Show to reveal a field</p>
                   <div>
                     {DOC_FIELDS.map(({ key, label }) => {
-                      const value = docValue(operator, key);
+                      const value   = docValue(operator, key);
                       const isShown = shownFields.has(key);
                       const hasValue = Boolean(value?.trim());
                       return (
                         <div
                           key={key}
-                          className="flex items-center justify-between border-2
-                            border-foreground px-4 py-3"
-                          style={{
-                            marginBottom: "-2px",
-                            background: "var(--bg-surface)",
-                          }}
+                          className="flex items-center justify-between border-2 border-foreground px-4 py-3"
+                          style={{ marginBottom: "-2px", background: "var(--bg-surface)" }}
                         >
-                          {/* Label */}
-                          <p
-                            className="w-40 shrink-0 text-xs font-black uppercase tracking-widest"
-                            style={{
-                              fontFamily: "'Barlow Condensed', sans-serif",
-                              color: "var(--text-primary)",
-                            }}
-                          >
-                            {label}
-                          </p>
-                          {/* Value */}
-                          <p
-                            className="flex-1 text-center font-mono text-sm"
-                            style={{ color: "var(--text-primary)" }}
-                          >
+                          <p className="w-40 shrink-0 text-xs font-black uppercase tracking-widest" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>{label}</p>
+                          <p className="flex-1 text-center font-mono text-sm" style={{ color: "var(--text-primary)" }}>
                             {!hasValue ? (
-                              <span className="text-muted-foreground">
-                                Not provided
-                              </span>
-                            ) : isShown ? (
-                              value
-                            ) : (
-                              "•••• •••• ••••"
-                            )}
+                              <span className="text-muted-foreground">Not provided</span>
+                            ) : isShown ? value : "•••• •••• ••••"}
                           </p>
-                          {/* Actions */}
                           <div className="flex items-center gap-2">
                             {hasValue && (
-                              <button
-                                type="button"
-                                onClick={() => copyToClipboard(value!)}
-                                className="h-7 border-2 border-foreground px-2 text-[10px]
-                                  font-black uppercase hover:bg-[#F4A522] hover:text-[#0D1B2A]
-                                  transition-colors"
-                              >
-                                COPY
-                              </button>
+                              <button type="button" onClick={() => copyToClipboard(value!)} className="h-7 border-2 border-foreground px-2 text-[10px] font-black uppercase hover:bg-[#F4A522] hover:text-[#0D1B2A] transition-colors">COPY</button>
                             )}
-                            <button
-                              type="button"
-                              onClick={() => toggleFieldShow(key)}
-                              className="h-7 border-2 border-foreground px-2 text-[10px]
-                                font-black uppercase hover:bg-foreground hover:text-background
-                                transition-colors"
-                            >
+                            <button type="button" onClick={() => toggleFieldShow(key)} className="h-7 border-2 border-foreground px-2 text-[10px] font-black uppercase hover:bg-foreground hover:text-background transition-colors">
                               {isShown ? "HIDE" : "SHOW"}
                             </button>
                           </div>
@@ -559,7 +457,7 @@ export function OperatorModal({
             </div>
           )}
 
-          {/* ── BUS INFO tab ── */}
+          {/* ══════════════════════ BUS INFO TAB ══════════════════════ */}
           {tab === "bus-info" && (
             <div className="p-4">
               {busPanelId !== null && selectedBus !== null ? (
@@ -569,56 +467,25 @@ export function OperatorModal({
                   mode={mode}
                   busSubTab={busSubTab}
                   setBusSubTab={setBusSubTab}
-                  onBack={() => {
-                    setBusPanelId(null);
-                    setBusSubTab("info");
-                  }}
-                  onSaved={() => {
-                    toast.success("Bus updated");
-                    router.refresh();
-                  }}
+                  onBack={() => { setBusPanelId(null); setBusSubTab("info"); }}
+                  onSaved={() => { toast.success("Bus updated"); router.refresh(); }}
                 />
               ) : (
                 <ScrollArea className="max-h-[400px]">
                   <div className="pr-3">
                     {buses.length === 0 ? (
-                      <p className="py-8 text-center text-sm text-muted-foreground">
-                        No buses registered yet.
-                      </p>
+                      <p className="py-8 text-center text-sm text-muted-foreground">No buses registered yet.</p>
                     ) : (
                       <div>
                         {buses.map((b) => (
                           <div
                             key={b.id}
-                            className="flex items-center justify-between border-2
-                              border-foreground px-4 py-3"
-                            style={{
-                              marginBottom: "-2px",
-                              background: "var(--bg-surface)",
-                            }}
+                            className="flex items-center justify-between border-2 border-foreground px-4 py-3"
+                            style={{ marginBottom: "-2px", background: "var(--bg-surface)" }}
                           >
-                            <span
-                              className="text-xl font-extrabold uppercase tracking-wide"
-                              style={{
-                                fontFamily: "'Barlow Condensed', sans-serif",
-                                color: "var(--text-primary)",
-                              }}
-                            >
-                              {b.licensePlate}
-                            </span>
+                            <span className="text-xl font-extrabold uppercase tracking-wide" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>{b.licensePlate}</span>
                             <StatusBadge status={b.status} />
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setBusPanelId(b.id);
-                                setBusSubTab("info");
-                              }}
-                              className="h-8 border-2 border-foreground px-3 text-xs font-bold
-                                uppercase tracking-wide hover:bg-foreground
-                                hover:text-background transition-colors"
-                            >
-                              VIEW →
-                            </button>
+                            <button type="button" onClick={() => { setBusPanelId(b.id); setBusSubTab("info"); }} className="h-8 border-2 border-foreground px-3 text-xs font-bold uppercase tracking-wide hover:bg-foreground hover:text-background transition-colors">VIEW →</button>
                           </div>
                         ))}
                         <div className="border-b-2 border-foreground" />
@@ -630,172 +497,109 @@ export function OperatorModal({
             </div>
           )}
 
-          {/* ── EDIT tab (admin only) ── */}
+          {/* ══════════════════════ EDIT TAB ══════════════════════ */}
           {tab === "edit" && mode === "admin" && (
             <div className="space-y-4 p-4">
-              {/* Edit form card */}
+
+              {/* ── Basic details card ── */}
               <Card className="rounded-none border-3 border-foreground shadow-[4px_4px_0_hsl(var(--shadow-color))]">
                 <CardHeader className="border-b-3 border-foreground">
-                  <CardTitle
-                    className="font-black uppercase"
-                    style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
-                  >
+                  <CardTitle className="font-black uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
                     Edit Operator
                   </CardTitle>
-                  <CardDescription>
-                    Update company details and document references
+                  <CardDescription>Update company details and document references</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4 pt-6">
+                  {/* Company name */}
+                  <div>
+                    <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Name</Label>
+                    <Input value={companyName} onChange={(e) => setCompanyName(e.target.value)} className="mt-1 rounded-none border-2 border-foreground" />
+                  </div>
+                  {/* Email (read-only) */}
+                  <div>
+                    <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Email ID</Label>
+                    <Input value={user.email ?? ""} readOnly disabled className="mt-1 rounded-none border-2 border-foreground opacity-70" />
+                  </div>
+                  {/* Phone */}
+                  <div>
+                    <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Phone No</Label>
+                    <Input value={phone} onChange={(e) => setPhone(e.target.value)} className="mt-1 rounded-none border-2 border-foreground" />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* ── OCR Documents card ── */}
+              <Card className="rounded-none border-3 border-foreground shadow-[4px_4px_0_hsl(var(--shadow-color))]">
+                <CardHeader className="border-b-3 border-foreground">
+                  <CardTitle className="font-black uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+                    Operator Documents
+                  </CardTitle>
+                  <CardDescription className="flex items-center gap-1.5">
+                    Upload a photo of each document — Claude vision will auto-fill the number
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-3 pt-6">
-                  <div>
-                    <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-                      Name
-                    </Label>
-                    <Input
-                      value={companyName}
-                      onChange={(e) => setCompanyName(e.target.value)}
-                      className="mt-1 rounded-none border-2 border-foreground"
+                <CardContent className="space-y-5 pt-6">
+                  {DOC_FIELDS.map(({ key, label, placeholder, docType, primaryKey }) => (
+                    <DocUploadField
+                      key={key}
+                      label={label}
+                      placeholder={placeholder}
+                      value={docForm[key]}
+                      onChange={(val) =>
+                        setDocForm((prev) => ({ ...prev, [key]: val }))
+                      }
+                      docType={docType}
+                      primaryKey={primaryKey}
+                      // No cross-field fill needed here (each doc has one key)
                     />
-                  </div>
-                  <div>
-                    <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-                      Email ID
-                    </Label>
-                    <Input
-                      value={user.email ?? ""}
-                      readOnly
-                      disabled
-                      className="mt-1 rounded-none border-2 border-foreground opacity-70"
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-                      Phone No
-                    </Label>
-                    <Input
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="mt-1 rounded-none border-2 border-foreground"
-                    />
-                  </div>
-                  <div className="mt-2 space-y-3">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                      Operator Documents
-                    </p>
-                    {DOC_FIELDS.map(({ key, label, placeholder }) => (
-                      <div key={key}>
-                        <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-                          {label}
-                        </Label>
-                        <Input
-                          value={docForm[key]}
-                          onChange={(e) =>
-                            setDocForm((prev) => ({
-                              ...prev,
-                              [key]: e.target.value,
-                            }))
-                          }
-                          placeholder={placeholder}
-                          className="mt-1 rounded-none border-2 border-foreground"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex justify-end pt-4">
+                  ))}
+
+                  <div className="flex justify-end pt-2">
                     <Button
                       type="button"
                       disabled={isPending}
                       onClick={handleSave}
-                      className="rounded-none border-2 border-foreground font-bold
-                        uppercase shadow-[3px_3px_0_hsl(var(--foreground))]"
+                      className="rounded-none border-2 border-foreground font-bold uppercase shadow-[3px_3px_0_hsl(var(--foreground))]"
                     >
-                      Save Changes
+                      {isPending ? "Saving…" : "Save Changes"}
                     </Button>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Danger Zone — separate card */}
+              {/* ── Danger Zone card ── */}
               <Card className="rounded-none border-2 border-destructive">
                 <CardHeader className="border-b-2 border-destructive/50">
-                  <CardTitle
-                    className="flex items-center gap-2 font-black uppercase text-destructive"
-                    style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
-                  >
+                  <CardTitle className="flex items-center gap-2 font-black uppercase text-destructive" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
                     <AlertTriangle className="h-5 w-5" />
                     Danger Zone
                   </CardTitle>
-                  <CardDescription>
-                    Irreversible and destructive actions
-                  </CardDescription>
+                  <CardDescription>Irreversible and destructive actions</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4 pt-4">
                   <div
-                    className="flex items-center justify-between border-2
-                      border-destructive/50 p-4"
+                    className="flex items-center justify-between border-2 border-destructive/50 p-4"
                     style={{ background: "hsl(var(--destructive) / 0.05)" }}
                   >
                     <div className="min-w-0 pr-4">
-                      <p className="font-bold text-destructive text-sm">
-                        Delete Operator Account
-                      </p>
-                      <p className="mt-0.5 text-xs text-muted-foreground">
-                        Permanently removes the operator, their account, and
-                        dissociates their buses. This cannot be undone.
-                      </p>
+                      <p className="font-bold text-destructive text-sm">Delete Operator Account</p>
+                      <p className="mt-0.5 text-xs text-muted-foreground">Permanently removes the operator, their account, and dissociates their buses. This cannot be undone.</p>
                     </div>
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      onClick={() => setShowDeleteConfirm(true)}
-                      className="shrink-0 rounded-none border-2 border-foreground"
-                    >
-                      <Trash2 className="mr-2 h-4 w-4" />
-                      Delete
+                    <Button type="button" variant="destructive" onClick={() => setShowDeleteConfirm(true)} className="shrink-0 rounded-none border-2 border-foreground">
+                      <Trash2 className="mr-2 h-4 w-4" />Delete
                     </Button>
                   </div>
 
                   {showDeleteConfirm && (
-                    <div
-                      className="space-y-3 border-2 border-destructive p-4"
-                      style={{ background: "hsl(var(--destructive) / 0.05)" }}
-                    >
-                      <Label
-                        className="block text-[10px] font-bold uppercase
-                        tracking-wide text-muted-foreground"
-                      >
+                    <div className="space-y-3 border-2 border-destructive p-4" style={{ background: "hsl(var(--destructive) / 0.05)" }}>
+                      <Label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
                         Type the company name to confirm:
                       </Label>
-                      <Input
-                        value={deleteConfirm}
-                        onChange={(e) => setDeleteConfirm(e.target.value)}
-                        placeholder={operator.companyName}
-                        className="rounded-none border-2 border-foreground"
-                      />
+                      <Input value={deleteConfirm} onChange={(e) => setDeleteConfirm(e.target.value)} placeholder={operator.companyName} className="rounded-none border-2 border-foreground" />
                       <div className="flex gap-2">
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => {
-                            setShowDeleteConfirm(false);
-                            setDeleteConfirm("");
-                          }}
-                          className="flex-1 rounded-none border-2 border-foreground"
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          disabled={
-                            deleteConfirm !== operator.companyName || isPending
-                          }
-                          onClick={handleDelete}
-                          className="flex-1 rounded-none border-2 border-foreground
-                            shadow-[3px_3px_0_hsl(var(--destructive))]"
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          Confirm Delete
+                        <Button type="button" variant="outline" onClick={() => { setShowDeleteConfirm(false); setDeleteConfirm(""); }} className="flex-1 rounded-none border-2 border-foreground">Cancel</Button>
+                        <Button type="button" variant="destructive" disabled={deleteConfirm !== operator.companyName || isPending} onClick={handleDelete} className="flex-1 rounded-none border-2 border-foreground shadow-[3px_3px_0_hsl(var(--destructive))]">
+                          <Trash2 className="mr-2 h-4 w-4" />Confirm Delete
                         </Button>
                       </div>
                     </div>
@@ -824,128 +628,70 @@ const BUS_SUB_TAB_CLASS = [
 ].join(" ");
 
 function BusDetailPanel({
-  bus,
-  mode,
-  busSubTab,
-  setBusSubTab,
-  onBack,
-  onSaved,
+  bus, mode, busSubTab, setBusSubTab, onBack, onSaved,
 }: {
-  bus: BusWithRouteIds;
-  mode: "admin" | "view";
-  busSubTab: BusSubTab;
-  setBusSubTab: (t: BusSubTab) => void;
-  onBack: () => void;
-  onSaved: () => void;
+  bus:         BusWithRouteIds;
+  mode:        "admin" | "view";
+  busSubTab:   BusSubTab;
+  setBusSubTab:(t: BusSubTab) => void;
+  onBack:      () => void;
+  onSaved:     () => void;
 }) {
-  const [st, setSt] = useState(bus.status);
-  const [note, setNote] = useState(bus.statusNote);
-  const [driver, setDriver] = useState(bus.driverName);
+  const [st, setSt]           = useState(bus.status);
+  const [note, setNote]       = useState(bus.statusNote);
+  const [driver, setDriver]   = useState(bus.driverName);
   const [conductor, setConductor] = useState(bus.conductorName);
-  const [occ, setOcc] = useState(String(bus.occupiedSeats));
-  const [women, setWomen] = useState(String(bus.womenReservedAvailable));
+  const [occ, setOcc]         = useState(String(bus.occupiedSeats));
+  const [women, setWomen]     = useState(String(bus.womenReservedAvailable));
   const [savePending, startSave] = useTransition();
-
-  const handleSubTabChange = (value: string) => {
-    if (!value) return;
-    setBusSubTab(value as BusSubTab);
-  };
 
   return (
     <div className="space-y-3">
-      {/* Back button */}
-      <button
-        type="button"
-        onClick={onBack}
-        className="flex items-center gap-1 text-xs font-bold uppercase
-          tracking-wide hover:opacity-70"
-        style={{ color: "var(--text-muted)" }}
-      >
+      <button type="button" onClick={onBack} className="flex items-center gap-1 text-xs font-bold uppercase tracking-wide hover:opacity-70" style={{ color: "var(--text-muted)" }}>
         ← Back to buses
       </button>
 
-      {/* Sub-tab bar — also ToggleGroup, same pattern */}
       <div>
         <ToggleGroup
           type="single"
           value={busSubTab}
-          onValueChange={handleSubTabChange}
+          onValueChange={(v) => { if (v) setBusSubTab(v as BusSubTab); }}
           className="flex w-full gap-2 rounded-none bg-transparent p-0"
         >
-          <ToggleGroupItem
-            value="info"
-            className={BUS_SUB_TAB_CLASS}
-            style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
-          >
-            INFO
-          </ToggleGroupItem>
+          <ToggleGroupItem value="info" className={BUS_SUB_TAB_CLASS} style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>INFO</ToggleGroupItem>
           {mode === "admin" && (
-            <ToggleGroupItem
-              value="edit"
-              className={BUS_SUB_TAB_CLASS}
-              style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
-            >
-              EDIT
-            </ToggleGroupItem>
+            <ToggleGroupItem value="edit" className={BUS_SUB_TAB_CLASS} style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>EDIT</ToggleGroupItem>
           )}
         </ToggleGroup>
       </div>
 
-      {/* Sub-tab content — conditional rendering, no Tabs */}
       {busSubTab === "info" && (
         <div className="space-y-2 mt-2">
           {(
             [
-              ["Bus Number", bus.number],
-              ["License Plate", bus.licensePlate],
-              ["Route", `${bus.origin} → ${bus.destination}`],
-              ["Full Fare", `₹${bus.fullFare}`],
-              ["Driver", bus.driverName],
-              ["Conductor", bus.conductorName],
-              ["Total Seats", String(bus.totalSeats)],
+              ["Bus Number",   bus.number],
+              ["License Plate",bus.licensePlate],
+              ["Route",        `${bus.origin} → ${bus.destination}`],
+              ["Full Fare",    `₹${bus.fullFare}`],
+              ["Driver",       bus.driverName],
+              ["Conductor",    bus.conductorName],
+              ["Total Seats",  String(bus.totalSeats)],
             ] as [string, string][]
           ).map(([k, v]) => (
-            <div
-              key={k}
-              className="border-2 border-foreground px-4 py-2"
-              style={{ background: "var(--bg-surface)" }}
-            >
-              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {k}
-              </p>
-              <p
-                className="text-sm font-semibold"
-                style={{ color: "var(--text-primary)" }}
-              >
-                {v}
-              </p>
+            <div key={k} className="border-2 border-foreground px-4 py-2" style={{ background: "var(--bg-surface)" }}>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{k}</p>
+              <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>{v}</p>
             </div>
           ))}
-          <div
-            className="border-2 border-foreground px-4 py-2"
-            style={{ background: "var(--bg-surface)" }}
-          >
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
-              Status
-            </p>
+          <div className="border-2 border-foreground px-4 py-2" style={{ background: "var(--bg-surface)" }}>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Status</p>
             <StatusBadge status={bus.status} />
           </div>
-          <div
-            className="border-2 border-foreground px-4 py-2"
-            style={{ background: "var(--bg-surface)" }}
-          >
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
-              Schedule
-            </p>
+          <div className="border-2 border-foreground px-4 py-2" style={{ background: "var(--bg-surface)" }}>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Schedule</p>
             <div className="flex flex-wrap gap-1">
               {bus.schedule.map((t) => (
-                <span
-                  key={t}
-                  className="border-2 border-foreground px-2 py-0.5 text-xs font-bold"
-                  style={{ background: "var(--bg-surface-2)" }}
-                >
-                  {t}
-                </span>
+                <span key={t} className="border-2 border-foreground px-2 py-0.5 text-xs font-bold" style={{ background: "var(--bg-surface-2)" }}>{t}</span>
               ))}
             </div>
           </div>
@@ -956,68 +702,31 @@ function BusDetailPanel({
         <div className="space-y-3 mt-2">
           <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
             Status
-            <select
-              value={st}
-              onChange={(e) => setSt(e.target.value as typeof bus.status)}
-              className="mt-1 h-10 w-full rounded-none border-2 border-foreground
-                bg-background px-2 text-sm shadow-[4px_4px_0_hsl(var(--foreground))]"
-            >
+            <select value={st} onChange={(e) => setSt(e.target.value as typeof bus.status)} className="mt-1 h-10 w-full rounded-none border-2 border-foreground bg-background px-2 text-sm shadow-[4px_4px_0_hsl(var(--foreground))]">
               <option>Running</option>
               <option>Not Running</option>
               <option>Delayed</option>
             </select>
           </label>
           <div>
-            <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-              Status Note
-            </Label>
-            <Input
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              className="mt-1 rounded-none border-2 border-foreground"
-            />
+            <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Status Note</Label>
+            <Input value={note} onChange={(e) => setNote(e.target.value)} className="mt-1 rounded-none border-2 border-foreground" />
           </div>
           <div>
-            <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-              Driver Name
-            </Label>
-            <Input
-              value={driver}
-              onChange={(e) => setDriver(e.target.value)}
-              className="mt-1 rounded-none border-2 border-foreground"
-            />
+            <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Driver Name</Label>
+            <Input value={driver} onChange={(e) => setDriver(e.target.value)} className="mt-1 rounded-none border-2 border-foreground" />
           </div>
           <div>
-            <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-              Conductor Name
-            </Label>
-            <Input
-              value={conductor}
-              onChange={(e) => setConductor(e.target.value)}
-              className="mt-1 rounded-none border-2 border-foreground"
-            />
+            <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Conductor Name</Label>
+            <Input value={conductor} onChange={(e) => setConductor(e.target.value)} className="mt-1 rounded-none border-2 border-foreground" />
           </div>
           <div>
-            <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-              Occupied Seats
-            </Label>
-            <Input
-              type="number"
-              value={occ}
-              onChange={(e) => setOcc(e.target.value)}
-              className="mt-1 rounded-none border-2 border-foreground"
-            />
+            <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Occupied Seats</Label>
+            <Input type="number" value={occ} onChange={(e) => setOcc(e.target.value)} className="mt-1 rounded-none border-2 border-foreground" />
           </div>
           <div>
-            <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-              Women Reserved Available
-            </Label>
-            <Input
-              type="number"
-              value={women}
-              onChange={(e) => setWomen(e.target.value)}
-              className="mt-1 rounded-none border-2 border-foreground"
-            />
+            <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Women Reserved Available</Label>
+            <Input type="number" value={women} onChange={(e) => setWomen(e.target.value)} className="mt-1 rounded-none border-2 border-foreground" />
           </div>
           <Button
             type="button"
@@ -1025,19 +734,18 @@ function BusDetailPanel({
             onClick={() =>
               startSave(async () => {
                 const r = await updateBusDetailsAction(bus.id, {
-                  status: st,
-                  statusNote: note,
-                  driverName: driver,
-                  conductorName: conductor,
-                  occupiedSeats: Number(occ),
-                  womenReservedAvailable: Number(women),
+                  status:                st,
+                  statusNote:            note,
+                  driverName:            driver,
+                  conductorName:         conductor,
+                  occupiedSeats:         Number(occ),
+                  womenReservedAvailable:Number(women),
                 });
                 if (r.success) onSaved();
                 else toast.error(r.error ?? "Failed");
               })
             }
-            className="w-full rounded-none border-2 border-foreground font-bold
-              uppercase shadow-[3px_3px_0_hsl(var(--foreground))]"
+            className="w-full rounded-none border-2 border-foreground font-bold uppercase shadow-[3px_3px_0_hsl(var(--foreground))]"
           >
             Save
           </Button>

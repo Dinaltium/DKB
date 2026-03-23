@@ -24,7 +24,6 @@ import {
   reassignBusAction,
   rejectBusRequestAction,
   resolveComplaintAction,
-  setOperatorApprovalAction,
 } from "@/lib/actions/bus";
 
 export interface OperatorRow {
@@ -186,25 +185,8 @@ export function AdminDashboard({
                   )}
                   <span className="ml-auto"><StatusBadge status={operator.approved ? "approved" : "pending"} /></span>
                 </div>
+                {/* Only VIEW DETAILS — delete lives inside the modal's Edit tab */}
                 <div className="mt-4 flex flex-wrap gap-2">
-                  <Button
-                    type="button"
-                    disabled={isPending}
-                    variant="outline"
-                    onClick={() =>
-                      startTransition(async () => {
-                        const r = await setOperatorApprovalAction(operator.id, !operator.approved);
-                        if (r.success) {
-                          toast.success(operator.approved ? "Operator revoked" : "Operator approved");
-                        } else {
-                          toast.error(r.error ?? "Failed");
-                        }
-                      })
-                    }
-                    className="h-9 rounded-none border-2 border-foreground font-bold uppercase shadow-[2px_2px_0_hsl(var(--foreground))]"
-                  >
-                    {operator.approved ? "REVOKE" : "APPROVE"}
-                  </Button>
                   <Button
                     type="button"
                     variant="outline"

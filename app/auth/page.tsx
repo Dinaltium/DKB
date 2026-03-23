@@ -192,7 +192,7 @@ export default function AuthPage() {
             placeholder="Email address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="h-12 w-full border-2 px-3 text-sm outline-none"
+            className="h-12 w-full rounded-none border-2 border-foreground bg-background px-3 text-sm outline-none shadow-[4px_4px_0_hsl(var(--foreground))] focus-visible:translate-x-[4px] focus-visible:translate-y-[4px] focus-visible:shadow-none"
             style={inputStyle}
             autoComplete="email"
           />
