@@ -186,7 +186,11 @@ export function AddBusModal({
           className="md:col-span-2 rounded-none border-2 border-foreground"
         />
         <div className="md:col-span-2">
-          <StopBuilder stops={stops} value={routeStopIds} onChange={setRouteStopIds} />
+          <StopBuilder
+            stops={stops}
+            value={routeStopIds}
+            onChange={setRouteStopIds}
+          />
         </div>
         <div className="flex justify-end gap-2 md:col-span-2">
           <Button
