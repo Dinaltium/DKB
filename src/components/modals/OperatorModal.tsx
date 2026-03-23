@@ -9,14 +9,7 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { AlertTriangle, Trash2 } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AlertTriangle, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,6 +21,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import type { BusWithRouteIds } from "@/lib/db/queries";
 import type { Complaint, Operator, Payment } from "@/lib/db/schema";
@@ -36,6 +30,8 @@ import {
   updateBusDetailsAction,
   updateOperatorAction,
 } from "@/lib/actions/bus";
+
+// ── Types ─────────────────────────────────────────────────────────────────────
 
 export interface OperatorModalUser {
   name: string | null;
@@ -55,64 +51,58 @@ export interface OperatorModalProps {
   mode: "admin" | "view";
 }
 
-const TAB_TRIGGER_CLASS =
-  "rounded-none border-r-2 border-foreground px-6 py-2.5 text-xs font-bold uppercase tracking-wide last:border-r-0 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none data-[state=inactive]:bg-transparent data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:bg-accent data-[state=inactive]:hover:text-accent-foreground";
+type ModalTab = "info" | "bus-info" | "edit";
+type BusSubTab = "info" | "edit";
+type DocFieldKey =
+  | "aadhar"
+  | "drivingLicense"
+  | "rcNumber"
+  | "pollutionCertNo"
+  | "insurancePolicyNo";
 
-const DOC_FIELDS = [
-  { key: "aadhar", label: "Aadhar Number" },
-  { key: "drivingLicense", label: "Driving License" },
-  { key: "rcNumber", label: "RC Number" },
-  { key: "pollutionCertNo", label: "Pollution Cert No." },
-  { key: "insurancePolicyNo", label: "Insurance Policy" },
-] as const;
+// ── Constants ─────────────────────────────────────────────────────────────────
 
-type DocFieldKey = (typeof DOC_FIELDS)[number]["key"];
-
-const EDIT_DOC_INPUTS: {
-  label: string;
-  field: DocFieldKey;
-  placeholder: string;
-}[] = [
-  { label: "Aadhar Number", field: "aadhar", placeholder: "XXXX XXXX XXXX" },
+const DOC_FIELDS: { key: DocFieldKey; label: string; placeholder: string }[] = [
+  { key: "aadhar", label: "Aadhar Number", placeholder: "XXXX XXXX XXXX" },
   {
+    key: "drivingLicense",
     label: "Driving License",
-    field: "drivingLicense",
     placeholder: "DL-XXXX-XXXXXXX",
   },
-  { label: "RC Number", field: "rcNumber", placeholder: "KA-XX-XXXX-XXXXXX" },
+  { key: "rcNumber", label: "RC Number", placeholder: "KA-XX-XXXX-XXXXXX" },
   {
+    key: "pollutionCertNo",
     label: "Pollution Cert No.",
-    field: "pollutionCertNo",
     placeholder: "PUC/XXXX/XX",
   },
   {
+    key: "insurancePolicyNo",
     label: "Insurance Policy No.",
-    field: "insurancePolicyNo",
     placeholder: "Policy number",
   },
 ];
 
-function operatorInitials(companyName: string) {
-  const parts = companyName.trim().split(/\s+/).filter(Boolean);
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function operatorInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
   if (parts.length >= 2)
     return `${parts[0][0] ?? ""}${parts[1][0] ?? ""}`.toUpperCase();
-  return companyName.slice(0, 2).toUpperCase() || "OP";
+  return name.slice(0, 2).toUpperCase() || "OP";
 }
 
 function pooledRating(buses: BusWithRouteIds[]): string {
-  let onTime = 0;
-  let slightlyLate = 0;
-  let veryLate = 0;
+  let on = 0,
+    late = 0,
+    very = 0;
   for (const b of buses) {
-    const v = b.votes;
-    onTime += v.onTime;
-    slightlyLate += v.slightlyLate;
-    veryLate += v.veryLate;
+    on += b.votes.onTime;
+    late += b.votes.slightlyLate;
+    very += b.votes.veryLate;
   }
-  const n = onTime + slightlyLate + veryLate;
+  const n = on + late + very;
   if (n === 0) return "—";
-  const score = (onTime * 5 + slightlyLate * 3 + veryLate * 1) / n;
-  return score.toFixed(1);
+  return ((on * 5 + late * 3 + very) / n).toFixed(1);
 }
 
 function docValue(op: Operator, key: DocFieldKey): string | null {
@@ -127,10 +117,24 @@ function docValue(op: Operator, key: DocFieldKey): string | null {
       return op.pollutionCertNo ?? null;
     case "insurancePolicyNo":
       return op.insurancePolicyNo ?? null;
-    default:
-      return null;
   }
 }
+
+// ── Tab button shared style ───────────────────────────────────────────────────
+// ToggleGroupItem uses data-[state=on] for active, data-[state=off] for inactive.
+
+const TAB_ITEM_CLASS = [
+  "h-10 rounded-none border-2 border-foreground px-6",
+  "text-xs font-black uppercase tracking-widest",
+  "shadow-[4px_4px_0_hsl(var(--shadow-color))]",
+  "transition-all duration-200",
+  "hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none",
+  "data-[state=on]:bg-foreground data-[state=on]:text-background",
+  "data-[state=on]:translate-x-[4px] data-[state=on]:translate-y-[4px] data-[state=on]:shadow-none",
+  "data-[state=off]:bg-background data-[state=off]:text-foreground",
+].join(" ");
+
+// ── Main Modal ────────────────────────────────────────────────────────────────
 
 export function OperatorModal({
   open,
@@ -144,43 +148,35 @@ export function OperatorModal({
 }: OperatorModalProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [tab, setTab] = useState("info");
-  const [busPanelId, setBusPanelId] = useState<string | null>(null);
-  const [busSubTab, setBusSubTab] = useState<"info" | "edit">("info");
 
+  // Tab state — driven by ToggleGroup, content rendered conditionally
+  const [tab, setTab] = useState<ModalTab>("info");
+
+  // Bus drill-down
+  const [busPanelId, setBusPanelId] = useState<string | null>(null);
+  const [busSubTab, setBusSubTab] = useState<BusSubTab>("info");
+
+  // Edit form
   const [companyName, setCompanyName] = useState(operator.companyName);
   const [phone, setPhone] = useState(operator.phone ?? "");
-  const [docForm, setDocForm] = useState({
-    aadhar: "",
-    drivingLicense: "",
-    rcNumber: "",
-    pollutionCertNo: "",
-    insurancePolicyNo: "",
+  const [docForm, setDocForm] = useState<Record<DocFieldKey, string>>({
+    aadhar: operator.aadhar ?? "",
+    drivingLicense: operator.drivingLicense ?? "",
+    rcNumber: operator.rcNumber ?? "",
+    pollutionCertNo: operator.pollutionCertNo ?? "",
+    insurancePolicyNo: operator.insurancePolicyNo ?? "",
   });
-  const [deleteConfirm, setDeleteConfirm] = useState("");
+
+  // Danger zone
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [shownDocFields, setShownDocFields] = useState<Set<string>>(
+  const [deleteConfirm, setDeleteConfirm] = useState("");
+
+  // Doc field show/hide (per-field independent)
+  const [shownFields, setShownFields] = useState<Set<DocFieldKey>>(
     () => new Set(),
   );
 
-  const copyToClipboard = useCallback(async (value: string) => {
-    try {
-      await navigator.clipboard.writeText(value);
-      toast.success("Copied!", { duration: 1500 });
-    } catch {
-      toast.error("Copy failed");
-    }
-  }, []);
-
-  const toggleDocShow = useCallback((field: string) => {
-    setShownDocFields((prev) => {
-      const next = new Set(prev);
-      if (next.has(field)) next.delete(field);
-      else next.add(field);
-      return next;
-    });
-  }, []);
-
+  // Reset everything when the modal opens or the operator changes
   useEffect(() => {
     if (!open) return;
     setTab("info");
@@ -197,7 +193,7 @@ export function OperatorModal({
     });
     setDeleteConfirm("");
     setShowDeleteConfirm(false);
-    setShownDocFields(new Set());
+    setShownFields(new Set());
   }, [
     open,
     operator.id,
@@ -209,6 +205,8 @@ export function OperatorModal({
     operator.pollutionCertNo,
     operator.insurancePolicyNo,
   ]);
+
+  // ── Derived stats ──────────────────────────────────────────────────────────
 
   const busIds = useMemo(() => new Set(buses.map((b) => b.id)), [buses]);
 
@@ -240,6 +238,47 @@ export function OperatorModal({
 
   const selectedBus = buses.find((b) => b.id === busPanelId) ?? null;
 
+  // ── Handlers ──────────────────────────────────────────────────────────────
+
+  const copyToClipboard = useCallback(async (value: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      toast.success("Copied!", { duration: 1500 });
+    } catch {
+      toast.error("Copy failed");
+    }
+  }, []);
+
+  const toggleFieldShow = useCallback((key: DocFieldKey) => {
+    setShownFields((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }, []);
+
+  const handleSave = () => {
+    startTransition(async () => {
+      const r = await updateOperatorAction(operator.id, {
+        companyName: companyName.trim() || undefined,
+        phone: phone.trim(),
+        aadhar: docForm.aadhar || undefined,
+        drivingLicense: docForm.drivingLicense || undefined,
+        rcNumber: docForm.rcNumber || undefined,
+        pollutionCertNo: docForm.pollutionCertNo || undefined,
+        insurancePolicyNo: docForm.insurancePolicyNo || undefined,
+      });
+      if (r.success) {
+        toast.success("Operator updated");
+        router.refresh();
+        onOpenChange(false);
+      } else {
+        toast.error(r.error ?? "Failed");
+      }
+    });
+  };
+
   const handleDelete = () => {
     startTransition(async () => {
       const r = await deleteOperatorAction(operator.id);
@@ -247,258 +286,361 @@ export function OperatorModal({
         toast.success("Operator removed");
         onOpenChange(false);
         router.refresh();
-      } else toast.error(r.error ?? "Failed");
+      } else {
+        toast.error(r.error ?? "Failed");
+      }
     });
   };
 
+  const handleTabChange = (value: string) => {
+    if (!value) return; // ToggleGroup fires empty string on deselect — ignore
+    setTab(value as ModalTab);
+    setBusPanelId(null);
+    setBusSubTab("info");
+  };
+
+  if (!open) return null;
+
+  // ── Render ─────────────────────────────────────────────────────────────────
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange} modal>
-      <DialogContent
-        className="max-h-[90vh] max-w-2xl overflow-hidden rounded-none border-2 border-foreground p-0 sm:max-w-2xl"
-        onPointerDownOutside={(e) => e.preventDefault()}
-        onEscapeKeyDown={(e) => e.preventDefault()}
+    <>
+      {/* Backdrop — no click-to-close */}
+      <div className="fixed inset-0 z-40 bg-black/60" />
+
+      {/* Modal container — 3-layer flex column */}
+      <div
+        className="fixed left-1/2 top-1/2 z-50 flex w-full max-w-2xl
+          -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden
+          border-2 border-foreground"
+        style={{
+          background: "var(--bg-surface)",
+          maxHeight: "90vh",
+          boxShadow: "6px 6px 0 hsl(var(--shadow-color))",
+        }}
       >
-        <DialogHeader className="sr-only">
-          <DialogTitle>Operator</DialogTitle>
-        </DialogHeader>
-        <div className="border-b-2 border-foreground px-4 py-3">
+        {/* ── Layer 1: Header — shrink-0, never scrolls ── */}
+        <div
+          className="flex shrink-0 items-center justify-between border-b-2
+          border-foreground px-4 py-3"
+        >
           <p
-            className="text-xl font-black uppercase tracking-wide text-foreground"
-            style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+            className="text-xl font-black uppercase tracking-wide"
+            style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              color: "var(--text-primary)",
+            }}
           >
             {operator.companyName}
           </p>
+          <button
+            type="button"
+            onClick={() => onOpenChange(false)}
+            className="flex h-8 w-8 items-center justify-center border-2
+              border-foreground font-black text-sm hover:bg-foreground
+              hover:text-background transition-colors"
+          >
+            <X className="h-4 w-4" />
+          </button>
         </div>
 
-        <Tabs
-          value={tab}
-          onValueChange={(v) => {
-            setTab(v);
-            setBusPanelId(null);
-            setBusSubTab("info");
-          }}
-          className="flex flex-col gap-0"
-        >
-          <TabsList className="flex h-auto w-full flex-wrap rounded-none border-b-2 border-foreground bg-transparent p-0">
-            <TabsTrigger
+        {/* ── Layer 2: Tab bar — shrink-0, never scrolls ── */}
+        {/*
+          KEY: ToggleGroup is the ONLY thing controlling tab state.
+          Content is rendered conditionally below based on `tab` state.
+          No Tabs/TabsList/TabsContent anywhere — those were the bug.
+        */}
+        <div className="shrink-0 border-b-2 border-foreground px-3 py-2">
+          <ToggleGroup
+            type="single"
+            value={tab}
+            onValueChange={handleTabChange}
+            className="flex w-full gap-2 rounded-none bg-transparent p-0"
+          >
+            <ToggleGroupItem
               value="info"
-              className={TAB_TRIGGER_CLASS}
+              className={TAB_ITEM_CLASS}
               style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
             >
               INFO
-            </TabsTrigger>
-            <TabsTrigger
+            </ToggleGroupItem>
+            <ToggleGroupItem
               value="bus-info"
-              className={TAB_TRIGGER_CLASS}
+              className={TAB_ITEM_CLASS}
               style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
             >
               BUS INFO
-            </TabsTrigger>
+            </ToggleGroupItem>
             {mode === "admin" && (
-              <TabsTrigger
+              <ToggleGroupItem
                 value="edit"
-                className={`${TAB_TRIGGER_CLASS} border-r-0`}
+                className={TAB_ITEM_CLASS}
                 style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
               >
                 EDIT
-              </TabsTrigger>
+              </ToggleGroupItem>
             )}
-          </TabsList>
+          </ToggleGroup>
+        </div>
 
-          <TabsContent value="info" className="mt-0">
-            <div
-              className="flex items-start gap-5 border-b-2 border-foreground p-5"
-              style={{ background: "var(--bg-surface-2)" }}
-            >
+        {/* ── Layer 3: Content — flex-1 min-h-0 overflow-y-auto = scrolls ── */}
+        <div
+          className="flex-1 min-h-0 overflow-y-auto"
+          style={{
+            scrollbarWidth: "thin",
+            scrollbarColor: "var(--text-primary) transparent",
+          }}
+        >
+          {/* ── INFO tab ── */}
+          {tab === "info" && (
+            <div>
+              {/* Identity block */}
               <div
-                className="flex h-24 w-24 shrink-0 items-center justify-center border-3 border-foreground bg-primary text-2xl font-black text-primary-foreground shadow-[4px_4px_0_hsl(var(--shadow-color))]"
-                style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+                className="flex items-start gap-5 border-b-2 border-foreground p-5"
+                style={{ background: "var(--bg-surface-2)" }}
               >
-                {operatorInitials(operator.companyName)}
-              </div>
-              <div className="min-w-0 flex-1 space-y-1">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                  Name
-                </p>
-                <p
-                  className="text-xl font-extrabold uppercase"
-                  style={{
-                    fontFamily: "'Barlow Condensed', sans-serif",
-                    color: "var(--text-primary)",
-                  }}
+                <div
+                  className="flex h-24 w-24 shrink-0 items-center justify-center
+                    border-3 border-foreground bg-primary text-2xl font-black
+                    text-primary-foreground shadow-[4px_4px_0_hsl(var(--shadow-color))]"
+                  style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
                 >
-                  {operator.companyName}
-                </p>
-                <p className="mt-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                  Email ID
-                </p>
-                <p
-                  className="text-sm font-semibold"
-                  style={{ color: "var(--text-secondary)" }}
-                >
-                  {user.email ?? "—"}
-                </p>
-                <p className="mt-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                  Phone Number
-                </p>
-                <p
-                  className="text-sm font-semibold"
-                  style={{ color: "var(--text-secondary)" }}
-                >
-                  {operator.phone?.trim() ? operator.phone : "—"}
-                </p>
-              </div>
-            </div>
-
-            <div className="p-4">
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                {(
-                  [
-                    ["Total buses", String(buses.length)],
-                    ["Locations covering", String(locationsCount)],
-                    ["Fines", String(finesTotal)],
-                    ["Complaints", String(opComplaints.length)],
-                    ["Warnings", String(warningsCount)],
-                    ["Ratings", pooledRating(buses)],
-                  ] as const
-                ).map(([label, value]) => (
-                  <div
-                    key={label}
-                    className="border-2 border-foreground p-3 text-center"
+                  {operatorInitials(operator.companyName)}
+                </div>
+                <div className="min-w-0 flex-1 space-y-1">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    Name
+                  </p>
+                  <p
+                    className="text-xl font-extrabold uppercase"
+                    style={{
+                      fontFamily: "'Barlow Condensed', sans-serif",
+                      color: "var(--text-primary)",
+                    }}
                   >
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                      {label}
-                    </p>
-                    <p
-                      className="text-2xl font-black text-foreground"
-                      style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
-                    >
-                      {value}
-                    </p>
-                  </div>
-                ))}
+                    {operator.companyName}
+                  </p>
+                  <p className="mt-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    Email ID
+                  </p>
+                  <p
+                    className="text-sm font-semibold"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    {user.email ?? "—"}
+                  </p>
+                  <p className="mt-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    Phone Number
+                  </p>
+                  <p
+                    className="text-sm font-semibold"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    {operator.phone?.trim() || "—"}
+                  </p>
+                </div>
               </div>
 
-              <div className="mt-6 space-y-0">
-                {DOC_FIELDS.map(({ key, label }) => {
-                  const value = docValue(operator, key);
-                  const isShown = shownDocFields.has(key);
-                  const display = !value
-                    ? "Not provided"
-                    : isShown
-                      ? value
-                      : "•••• •••• ••••";
-                  return (
+              <div className="p-4 space-y-4">
+                {/* Stats grid */}
+                <div className="grid grid-cols-3">
+                  {(
+                    [
+                      ["Total Buses", String(buses.length)],
+                      ["Locations Covering", String(locationsCount)],
+                      ["Fines", String(finesTotal)],
+                      ["Complaints", String(opComplaints.length)],
+                      ["Warnings", String(warningsCount)],
+                      ["Ratings", pooledRating(buses)],
+                    ] as const
+                  ).map(([label, value], i) => (
                     <div
-                      key={key}
-                      className="mb-1 flex items-center justify-between border-2 border-foreground px-4 py-3"
-                      style={{ background: "var(--bg-surface)" }}
+                      key={label}
+                      className="border-2 border-foreground p-3 text-center"
+                      style={{
+                        marginRight: i % 3 !== 2 ? "-2px" : 0,
+                        marginBottom: i < 3 ? "-2px" : 0,
+                      }}
                     >
-                      <p
-                        className="text-xs font-bold uppercase tracking-widest"
-                        style={{ color: "var(--text-muted)" }}
-                      >
+                      <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">
                         {label}
                       </p>
                       <p
-                        className="flex-1 text-center text-sm font-mono font-semibold"
-                        style={{ color: "var(--text-primary)" }}
+                        className="text-2xl font-black"
+                        style={{
+                          fontFamily: "'Barlow Condensed', sans-serif",
+                          color: "var(--text-primary)",
+                        }}
                       >
-                        {display}
+                        {value}
                       </p>
-                      <div className="flex items-center gap-2">
-                        {value ? (
-                          <button
-                            type="button"
-                            onClick={() => copyToClipboard(value)}
-                            className="h-7 border-2 border-foreground px-2 text-[10px] font-bold uppercase transition-colors hover:bg-accent hover:text-accent-foreground"
-                          >
-                            Copy
-                          </button>
-                        ) : null}
-                        <button
-                          type="button"
-                          onClick={() => toggleDocShow(key)}
-                          className="h-7 border-2 border-foreground px-2 text-[10px] font-bold uppercase transition-colors hover:bg-accent hover:text-accent-foreground"
-                        >
-                          {isShown ? "Hide" : "Show"}
-                        </button>
-                      </div>
                     </div>
-                  );
-                })}
+                  ))}
+                </div>
+
+                {/* Document fields — collapsible rows */}
+                <div>
+                  <p className="mb-1 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                    Operator Documents
+                  </p>
+                  <p className="mb-2 text-[10px] text-muted-foreground">
+                    Click Show to reveal a field
+                  </p>
+                  <div>
+                    {DOC_FIELDS.map(({ key, label }) => {
+                      const value = docValue(operator, key);
+                      const isShown = shownFields.has(key);
+                      const hasValue = Boolean(value?.trim());
+                      return (
+                        <div
+                          key={key}
+                          className="flex items-center justify-between border-2
+                            border-foreground px-4 py-3"
+                          style={{
+                            marginBottom: "-2px",
+                            background: "var(--bg-surface)",
+                          }}
+                        >
+                          {/* Label */}
+                          <p
+                            className="w-40 shrink-0 text-xs font-black uppercase tracking-widest"
+                            style={{
+                              fontFamily: "'Barlow Condensed', sans-serif",
+                              color: "var(--text-primary)",
+                            }}
+                          >
+                            {label}
+                          </p>
+                          {/* Value */}
+                          <p
+                            className="flex-1 text-center font-mono text-sm"
+                            style={{ color: "var(--text-primary)" }}
+                          >
+                            {!hasValue ? (
+                              <span className="text-muted-foreground">
+                                Not provided
+                              </span>
+                            ) : isShown ? (
+                              value
+                            ) : (
+                              "•••• •••• ••••"
+                            )}
+                          </p>
+                          {/* Actions */}
+                          <div className="flex items-center gap-2">
+                            {hasValue && (
+                              <button
+                                type="button"
+                                onClick={() => copyToClipboard(value!)}
+                                className="h-7 border-2 border-foreground px-2 text-[10px]
+                                  font-black uppercase hover:bg-[#F4A522] hover:text-[#0D1B2A]
+                                  transition-colors"
+                              >
+                                COPY
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => toggleFieldShow(key)}
+                              className="h-7 border-2 border-foreground px-2 text-[10px]
+                                font-black uppercase hover:bg-foreground hover:text-background
+                                transition-colors"
+                            >
+                              {isShown ? "HIDE" : "SHOW"}
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                    <div className="border-b-2 border-foreground" />
+                  </div>
+                </div>
               </div>
             </div>
-          </TabsContent>
+          )}
 
-          <TabsContent value="bus-info" className="mt-0 p-4">
-            {busPanelId && selectedBus ? (
-              <BusDetailPanel
-                key={selectedBus.id}
-                bus={selectedBus}
-                mode={mode}
-                busSubTab={busSubTab}
-                setBusSubTab={setBusSubTab}
-                onBack={() => {
-                  setBusPanelId(null);
-                  setBusSubTab("info");
-                }}
-                onSaved={() => {
-                  toast.success("Bus updated");
-                  router.refresh();
-                }}
-              />
-            ) : (
-              <ScrollArea className="max-h-[320px] pr-3">
-                <div className="pb-2">
-                  {buses.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">
-                      No buses registered yet.
-                    </p>
-                  ) : (
-                    buses.map((b) => (
-                      <div
-                        key={b.id}
-                        className="mb-2 flex items-center justify-between border-2 border-foreground px-4 py-3 shadow-[2px_2px_0_hsl(var(--shadow-color))]"
-                        style={{ background: "var(--bg-surface)" }}
-                      >
-                        <span
-                          className="text-xl font-extrabold uppercase tracking-wide"
-                          style={{
-                            fontFamily: "'Barlow Condensed', sans-serif",
-                            color: "var(--text-primary)",
-                          }}
-                        >
-                          {b.licensePlate}
-                        </span>
-                        <StatusBadge status={b.status} />
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setBusPanelId(b.id);
-                            setBusSubTab("info");
-                          }}
-                          className="h-8 border-2 border-foreground px-3 text-xs font-bold uppercase tracking-wide transition-colors hover:bg-foreground hover:text-background"
-                        >
-                          VIEW →
-                        </button>
+          {/* ── BUS INFO tab ── */}
+          {tab === "bus-info" && (
+            <div className="p-4">
+              {busPanelId !== null && selectedBus !== null ? (
+                <BusDetailPanel
+                  key={selectedBus.id}
+                  bus={selectedBus}
+                  mode={mode}
+                  busSubTab={busSubTab}
+                  setBusSubTab={setBusSubTab}
+                  onBack={() => {
+                    setBusPanelId(null);
+                    setBusSubTab("info");
+                  }}
+                  onSaved={() => {
+                    toast.success("Bus updated");
+                    router.refresh();
+                  }}
+                />
+              ) : (
+                <ScrollArea className="max-h-[400px]">
+                  <div className="pr-3">
+                    {buses.length === 0 ? (
+                      <p className="py-8 text-center text-sm text-muted-foreground">
+                        No buses registered yet.
+                      </p>
+                    ) : (
+                      <div>
+                        {buses.map((b) => (
+                          <div
+                            key={b.id}
+                            className="flex items-center justify-between border-2
+                              border-foreground px-4 py-3"
+                            style={{
+                              marginBottom: "-2px",
+                              background: "var(--bg-surface)",
+                            }}
+                          >
+                            <span
+                              className="text-xl font-extrabold uppercase tracking-wide"
+                              style={{
+                                fontFamily: "'Barlow Condensed', sans-serif",
+                                color: "var(--text-primary)",
+                              }}
+                            >
+                              {b.licensePlate}
+                            </span>
+                            <StatusBadge status={b.status} />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setBusPanelId(b.id);
+                                setBusSubTab("info");
+                              }}
+                              className="h-8 border-2 border-foreground px-3 text-xs font-bold
+                                uppercase tracking-wide hover:bg-foreground
+                                hover:text-background transition-colors"
+                            >
+                              VIEW →
+                            </button>
+                          </div>
+                        ))}
+                        <div className="border-b-2 border-foreground" />
                       </div>
-                    ))
-                  )}
-                </div>
-              </ScrollArea>
-            )}
-          </TabsContent>
+                    )}
+                  </div>
+                </ScrollArea>
+              )}
+            </div>
+          )}
 
-          {mode === "admin" && (
-            <TabsContent value="edit" className="mt-0 space-y-0 p-4">
+          {/* ── EDIT tab (admin only) ── */}
+          {tab === "edit" && mode === "admin" && (
+            <div className="space-y-4 p-4">
+              {/* Edit form card */}
               <Card className="rounded-none border-3 border-foreground shadow-[4px_4px_0_hsl(var(--shadow-color))]">
                 <CardHeader className="border-b-3 border-foreground">
                   <CardTitle
                     className="font-black uppercase"
                     style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
                   >
-                    Edit operator
+                    Edit Operator
                   </CardTitle>
                   <CardDescription>
                     Update company details and document references
@@ -528,7 +670,7 @@ export function OperatorModal({
                   </div>
                   <div>
                     <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-                      Phone no
+                      Phone No
                     </Label>
                     <Input
                       value={phone}
@@ -536,25 +678,21 @@ export function OperatorModal({
                       className="mt-1 rounded-none border-2 border-foreground"
                     />
                   </div>
-
-                  <div className="mt-4 space-y-3">
-                    <p
-                      className="text-xs font-bold uppercase tracking-widest"
-                      style={{ color: "var(--text-muted)" }}
-                    >
+                  <div className="mt-2 space-y-3">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                       Operator Documents
                     </p>
-                    {EDIT_DOC_INPUTS.map(({ label, field, placeholder }) => (
-                      <div key={field}>
+                    {DOC_FIELDS.map(({ key, label, placeholder }) => (
+                      <div key={key}>
                         <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
                           {label}
                         </Label>
                         <Input
-                          value={docForm[field]}
+                          value={docForm[key]}
                           onChange={(e) =>
                             setDocForm((prev) => ({
                               ...prev,
-                              [field]: e.target.value,
+                              [key]: e.target.value,
                             }))
                           }
                           placeholder={placeholder}
@@ -563,40 +701,27 @@ export function OperatorModal({
                       </div>
                     ))}
                   </div>
-
                   <div className="flex justify-end pt-4">
                     <Button
                       type="button"
                       disabled={isPending}
-                      className="rounded-none border-2 border-foreground font-bold uppercase shadow-[3px_3px_0_hsl(var(--foreground))]"
-                      onClick={() =>
-                        startTransition(async () => {
-                          const r = await updateOperatorAction(operator.id, {
-                            companyName: companyName.trim() || undefined,
-                            phone: phone.trim(),
-                            aadhar: docForm.aadhar,
-                            drivingLicense: docForm.drivingLicense,
-                            rcNumber: docForm.rcNumber,
-                            pollutionCertNo: docForm.pollutionCertNo,
-                            insurancePolicyNo: docForm.insurancePolicyNo,
-                          });
-                          if (r.success) {
-                            toast.success("Operator updated");
-                            router.refresh();
-                            onOpenChange(false);
-                          } else toast.error(r.error ?? "Failed");
-                        })
-                      }
+                      onClick={handleSave}
+                      className="rounded-none border-2 border-foreground font-bold
+                        uppercase shadow-[3px_3px_0_hsl(var(--foreground))]"
                     >
-                      Save changes
+                      Save Changes
                     </Button>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="mt-6 rounded-none border-destructive border-3 shadow-[4px_4px_0_hsl(var(--shadow-color))]">
-                <CardHeader className="border-b-3 border-destructive/50">
-                  <CardTitle className="flex items-center gap-2 font-black uppercase text-destructive">
+              {/* Danger Zone — separate card */}
+              <Card className="rounded-none border-2 border-destructive">
+                <CardHeader className="border-b-2 border-destructive/50">
+                  <CardTitle
+                    className="flex items-center gap-2 font-black uppercase text-destructive"
+                    style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+                  >
                     <AlertTriangle className="h-5 w-5" />
                     Danger Zone
                   </CardTitle>
@@ -604,13 +729,17 @@ export function OperatorModal({
                     Irreversible and destructive actions
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4 pt-6">
-                  <div className="flex items-center justify-between border-2 border-destructive/50 bg-destructive/5 p-4">
+                <CardContent className="space-y-4 pt-4">
+                  <div
+                    className="flex items-center justify-between border-2
+                      border-destructive/50 p-4"
+                    style={{ background: "hsl(var(--destructive) / 0.05)" }}
+                  >
                     <div className="min-w-0 pr-4">
-                      <p className="font-bold text-destructive">
+                      <p className="font-bold text-destructive text-sm">
                         Delete Operator Account
                       </p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="mt-0.5 text-xs text-muted-foreground">
                         Permanently removes the operator, their account, and
                         dissociates their buses. This cannot be undone.
                       </p>
@@ -627,8 +756,14 @@ export function OperatorModal({
                   </div>
 
                   {showDeleteConfirm && (
-                    <div className="space-y-3 border-2 border-destructive bg-destructive/5 p-4">
-                      <Label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                    <div
+                      className="space-y-3 border-2 border-destructive p-4"
+                      style={{ background: "hsl(var(--destructive) / 0.05)" }}
+                    >
+                      <Label
+                        className="block text-[10px] font-bold uppercase
+                        tracking-wide text-muted-foreground"
+                      >
                         Type the company name to confirm:
                       </Label>
                       <Input
@@ -656,7 +791,8 @@ export function OperatorModal({
                             deleteConfirm !== operator.companyName || isPending
                           }
                           onClick={handleDelete}
-                          className="flex-1 rounded-none border-2 border-foreground shadow-[3px_3px_0_hsl(var(--destructive))]"
+                          className="flex-1 rounded-none border-2 border-foreground
+                            shadow-[3px_3px_0_hsl(var(--destructive))]"
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
                           Confirm Delete
@@ -666,16 +802,26 @@ export function OperatorModal({
                   )}
                 </CardContent>
               </Card>
-            </TabsContent>
+            </div>
           )}
-        </Tabs>
-      </DialogContent>
-    </Dialog>
+        </div>
+      </div>
+    </>
   );
 }
 
-const NESTED_TAB_TRIGGER =
-  "flex-1 rounded-none border-r-2 border-foreground py-2 text-xs font-bold uppercase last:border-r-0 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:bg-transparent data-[state=inactive]:text-muted-foreground";
+// ── BusDetailPanel ────────────────────────────────────────────────────────────
+
+const BUS_SUB_TAB_CLASS = [
+  "h-9 rounded-none border-2 border-foreground px-4",
+  "text-xs font-bold uppercase tracking-wide",
+  "shadow-[4px_4px_0_hsl(var(--shadow-color))]",
+  "transition-all duration-200",
+  "hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none",
+  "data-[state=on]:bg-foreground data-[state=on]:text-background",
+  "data-[state=on]:translate-x-[4px] data-[state=on]:translate-y-[4px] data-[state=on]:shadow-none",
+  "data-[state=off]:bg-background data-[state=off]:text-foreground",
+].join(" ");
 
 function BusDetailPanel({
   bus,
@@ -687,12 +833,11 @@ function BusDetailPanel({
 }: {
   bus: BusWithRouteIds;
   mode: "admin" | "view";
-  busSubTab: "info" | "edit";
-  setBusSubTab: (t: "info" | "edit") => void;
+  busSubTab: BusSubTab;
+  setBusSubTab: (t: BusSubTab) => void;
   onBack: () => void;
   onSaved: () => void;
 }) {
-  const router = useRouter();
   const [st, setSt] = useState(bus.status);
   const [note, setNote] = useState(bus.statusNote);
   const [driver, setDriver] = useState(bus.driverName);
@@ -701,148 +846,203 @@ function BusDetailPanel({
   const [women, setWomen] = useState(String(bus.womenReservedAvailable));
   const [savePending, startSave] = useTransition();
 
+  const handleSubTabChange = (value: string) => {
+    if (!value) return;
+    setBusSubTab(value as BusSubTab);
+  };
+
   return (
     <div className="space-y-3">
-      <Button
+      {/* Back button */}
+      <button
         type="button"
-        variant="ghost"
-        className="rounded-none px-0 font-bold uppercase"
         onClick={onBack}
+        className="flex items-center gap-1 text-xs font-bold uppercase
+          tracking-wide hover:opacity-70"
+        style={{ color: "var(--text-muted)" }}
       >
         ← Back to buses
-      </Button>
-      <Tabs
-        value={busSubTab}
-        onValueChange={(v) => setBusSubTab(v as "info" | "edit")}
-      >
-        <TabsList className="h-auto w-full rounded-none border-2 border-foreground bg-transparent p-0">
-          <TabsTrigger value="info" className={NESTED_TAB_TRIGGER}>
-            Info
-          </TabsTrigger>
+      </button>
+
+      {/* Sub-tab bar — also ToggleGroup, same pattern */}
+      <div>
+        <ToggleGroup
+          type="single"
+          value={busSubTab}
+          onValueChange={handleSubTabChange}
+          className="flex w-full gap-2 rounded-none bg-transparent p-0"
+        >
+          <ToggleGroupItem
+            value="info"
+            className={BUS_SUB_TAB_CLASS}
+            style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+          >
+            INFO
+          </ToggleGroupItem>
           {mode === "admin" && (
-            <TabsTrigger value="edit" className={NESTED_TAB_TRIGGER}>
-              Edit
-            </TabsTrigger>
+            <ToggleGroupItem
+              value="edit"
+              className={BUS_SUB_TAB_CLASS}
+              style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+            >
+              EDIT
+            </ToggleGroupItem>
           )}
-        </TabsList>
-        <TabsContent value="info" className="mt-3 space-y-2">
-          {[
-            ["Bus number", bus.number],
-            ["License plate", bus.licensePlate],
-            ["RC number", "—"],
-            ["Pollution certificate", "—"],
-            ["Insurance policy", "—"],
-            ["Route", `${bus.origin} → ${bus.destination}`],
-            ["Full fare", String(bus.fullFare)],
-            ["Driver", bus.driverName],
-            ["Conductor", bus.conductorName],
-          ].map(([k, v]) => (
-            <div key={k} className="border-2 border-foreground p-2">
-              <p className="text-[10px] font-bold uppercase text-muted-foreground">
+        </ToggleGroup>
+      </div>
+
+      {/* Sub-tab content — conditional rendering, no Tabs */}
+      {busSubTab === "info" && (
+        <div className="space-y-2 mt-2">
+          {(
+            [
+              ["Bus Number", bus.number],
+              ["License Plate", bus.licensePlate],
+              ["Route", `${bus.origin} → ${bus.destination}`],
+              ["Full Fare", `₹${bus.fullFare}`],
+              ["Driver", bus.driverName],
+              ["Conductor", bus.conductorName],
+              ["Total Seats", String(bus.totalSeats)],
+            ] as [string, string][]
+          ).map(([k, v]) => (
+            <div
+              key={k}
+              className="border-2 border-foreground px-4 py-2"
+              style={{ background: "var(--bg-surface)" }}
+            >
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                 {k}
               </p>
-              <p className="font-semibold text-foreground">{v}</p>
+              <p
+                className="text-sm font-semibold"
+                style={{ color: "var(--text-primary)" }}
+              >
+                {v}
+              </p>
             </div>
           ))}
-          <div className="border-2 border-foreground p-2">
-            <p className="text-[10px] font-bold uppercase text-muted-foreground">
+          <div
+            className="border-2 border-foreground px-4 py-2"
+            style={{ background: "var(--bg-surface)" }}
+          >
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
               Status
             </p>
             <StatusBadge status={bus.status} />
           </div>
-          <div className="flex flex-wrap gap-1">
-            {bus.schedule.map((t) => (
-              <span
-                key={t}
-                className="border-2 border-foreground px-2 py-0.5 text-xs font-bold"
-              >
-                {t}
-              </span>
-            ))}
+          <div
+            className="border-2 border-foreground px-4 py-2"
+            style={{ background: "var(--bg-surface)" }}
+          >
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
+              Schedule
+            </p>
+            <div className="flex flex-wrap gap-1">
+              {bus.schedule.map((t) => (
+                <span
+                  key={t}
+                  className="border-2 border-foreground px-2 py-0.5 text-xs font-bold"
+                  style={{ background: "var(--bg-surface-2)" }}
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
           </div>
-        </TabsContent>
-        {mode === "admin" && (
-          <TabsContent value="edit" className="mt-3 space-y-3">
-            <label className="text-[10px] font-bold uppercase text-muted-foreground">
-              Status
-              <select
-                value={st}
-                onChange={(e) => setSt(e.target.value as typeof bus.status)}
-                className="mt-1 h-10 w-full rounded-none border-2 border-foreground bg-background px-2 text-sm"
-              >
-                <option>Running</option>
-                <option>Not Running</option>
-                <option>Delayed</option>
-              </select>
-            </label>
-            <label className="text-[10px] font-bold uppercase text-muted-foreground">
-              Status note
-              <Input
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                className="mt-1 rounded-none border-2 border-foreground"
-              />
-            </label>
-            <label className="text-[10px] font-bold uppercase text-muted-foreground">
-              Driver name
-              <Input
-                value={driver}
-                onChange={(e) => setDriver(e.target.value)}
-                className="mt-1 rounded-none border-2 border-foreground"
-              />
-            </label>
-            <label className="text-[10px] font-bold uppercase text-muted-foreground">
-              Conductor name
-              <Input
-                value={conductor}
-                onChange={(e) => setConductor(e.target.value)}
-                className="mt-1 rounded-none border-2 border-foreground"
-              />
-            </label>
-            <label className="text-[10px] font-bold uppercase text-muted-foreground">
-              Occupied seats
-              <Input
-                type="number"
-                value={occ}
-                onChange={(e) => setOcc(e.target.value)}
-                className="mt-1 rounded-none border-2 border-foreground"
-              />
-            </label>
-            <label className="text-[10px] font-bold uppercase text-muted-foreground">
-              Women reserved available
-              <Input
-                type="number"
-                value={women}
-                onChange={(e) => setWomen(e.target.value)}
-                className="mt-1 rounded-none border-2 border-foreground"
-              />
-            </label>
-            <Button
-              type="button"
-              disabled={savePending}
-              className="w-full rounded-none border-2 border-foreground font-bold uppercase shadow-[3px_3px_0_hsl(var(--foreground))]"
-              onClick={() =>
-                startSave(async () => {
-                  const r = await updateBusDetailsAction(bus.id, {
-                    status: st,
-                    statusNote: note,
-                    driverName: driver,
-                    conductorName: conductor,
-                    occupiedSeats: Number(occ),
-                    womenReservedAvailable: Number(women),
-                  });
-                  if (r.success) {
-                    onSaved();
-                    router.refresh();
-                  } else toast.error(r.error ?? "Failed");
-                })
-              }
+        </div>
+      )}
+
+      {busSubTab === "edit" && mode === "admin" && (
+        <div className="space-y-3 mt-2">
+          <label className="block text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+            Status
+            <select
+              value={st}
+              onChange={(e) => setSt(e.target.value as typeof bus.status)}
+              className="mt-1 h-10 w-full rounded-none border-2 border-foreground
+                bg-background px-2 text-sm"
             >
-              Save
-            </Button>
-          </TabsContent>
-        )}
-      </Tabs>
+              <option>Running</option>
+              <option>Not Running</option>
+              <option>Delayed</option>
+            </select>
+          </label>
+          <div>
+            <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+              Status Note
+            </Label>
+            <Input
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              className="mt-1 rounded-none border-2 border-foreground"
+            />
+          </div>
+          <div>
+            <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+              Driver Name
+            </Label>
+            <Input
+              value={driver}
+              onChange={(e) => setDriver(e.target.value)}
+              className="mt-1 rounded-none border-2 border-foreground"
+            />
+          </div>
+          <div>
+            <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+              Conductor Name
+            </Label>
+            <Input
+              value={conductor}
+              onChange={(e) => setConductor(e.target.value)}
+              className="mt-1 rounded-none border-2 border-foreground"
+            />
+          </div>
+          <div>
+            <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+              Occupied Seats
+            </Label>
+            <Input
+              type="number"
+              value={occ}
+              onChange={(e) => setOcc(e.target.value)}
+              className="mt-1 rounded-none border-2 border-foreground"
+            />
+          </div>
+          <div>
+            <Label className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+              Women Reserved Available
+            </Label>
+            <Input
+              type="number"
+              value={women}
+              onChange={(e) => setWomen(e.target.value)}
+              className="mt-1 rounded-none border-2 border-foreground"
+            />
+          </div>
+          <Button
+            type="button"
+            disabled={savePending}
+            onClick={() =>
+              startSave(async () => {
+                const r = await updateBusDetailsAction(bus.id, {
+                  status: st,
+                  statusNote: note,
+                  driverName: driver,
+                  conductorName: conductor,
+                  occupiedSeats: Number(occ),
+                  womenReservedAvailable: Number(women),
+                });
+                if (r.success) onSaved();
+                else toast.error(r.error ?? "Failed");
+              })
+            }
+            className="w-full rounded-none border-2 border-foreground font-bold
+              uppercase shadow-[3px_3px_0_hsl(var(--foreground))]"
+          >
+            Save
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
