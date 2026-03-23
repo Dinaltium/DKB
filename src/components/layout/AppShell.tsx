@@ -21,7 +21,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Button } from '@/components/ui/button'
 
 interface AppShellProps {
   title:     string;
@@ -37,7 +36,7 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
   const { data: session, status }     = useSession();
   const role = session?.user?.role;
 
-  const [menuOpen, setMenuOpen] = useState(false);
+  // menuOpen removed — DropdownMenu manages its own open state
   const [pendingCount, setPendingCount] = useState(0);
 
   useEffect(() => {
@@ -75,12 +74,6 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
     }
   }, [session, router]);
 
-  // ── Mobile bottom nav — always visible items ───────────────────────────────
-  const mobileNavItems = [
-    { to: "/search", label: tr("routeSearch"), icon: Search },
-    { to: "/auth",   label: "Sign In",         icon: LogIn   },
-  ];
-
   return (
     <ScrollArea className="h-screen w-full">
     <div className="buslink-page">
@@ -113,7 +106,7 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value as typeof language)}
-              className="h-10 border-2 px-2 text-sm rounded-none px-2 shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-100"
+              className="h-10 border-2 px-2 text-sm rounded-none shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-100"
               style={{ background: "var(--select-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)" }}
             >
               {LANGUAGE_OPTIONS.map((opt) => (
@@ -125,7 +118,7 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
             <button
               onClick={toggleTheme}
               aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-              className="h-10 border-2 px-2 text-sm focus:outline-none rounded-none border-2 px-2 shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-100"
+              className="h-10 border-2 px-2 text-sm focus:outline-none rounded-none shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-100"
               style={{ background: isDark ? "var(--bg-surface-2)" : "var(--bg-surface)", borderColor: "var(--input-border)", color: "var(--text-primary)" }}
             >
               {isDark
@@ -135,92 +128,89 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
 
             {/* Auth button / user menu */}
             {status === "loading" ? (
-              <div className="h-10 w-24 animate-pulse rounded-none border-2 shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-100" style={{ borderColor: "var(--border-default)", background: "var(--bg-surface-2)" }} />
+              <div className="h-10 w-24 animate-pulse rounded-none border-2 shadow-[4px_4px_0_hsl(var(--foreground))]" style={{ borderColor: "var(--border-default)", background: "var(--bg-surface-2)" }} />
             ) : session ? (
-              <div className="relative">
-                <button
-                  onClick={() => setMenuOpen((o) => !o)}
-                  className="relative flex h-10 items-center gap-2 border-2 px-3 text-sm font-bold uppercase tracking-wide hover:opacity-80 rounded-none border-2 shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-100"
-                  style={{ background: "var(--bg-surface-2)", borderColor: "var(--input-border)", color: "var(--text-primary)" }}
-                >
-                  {/* Avatar initials */}
-                  <span
-                    className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white"
-                    style={{ background: "#0E7C86" }}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  {/* Same trigger button as before — visually identical */}
+                  <button
+                    className="relative flex h-10 items-center gap-2 rounded-none border-2 px-3 text-sm font-bold uppercase tracking-wide shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-100"
+                    style={{ background: "var(--bg-surface-2)", borderColor: "var(--input-border)", color: "var(--text-primary)" }}
                   >
-                    {session.user?.name?.[0]?.toUpperCase() ?? "U"}
-                  </span>
-                  <span className="hidden md:inline max-w-[120px] truncate">
-                    {session.user?.name ?? session.user?.email}
-                  </span>
-                  {role === "admin" && pendingCount > 0 && (
+                    {/* Avatar initials */}
                     <span
-                      className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-none border-2 border-[#0D1B2A] bg-[#F4A522] text-[9px] font-black text-[#0D1B2A]"
-                      style={{ boxShadow: "1px 1px 0 #0D1B2A" }}
+                      className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white"
+                      style={{ background: "#0E7C86" }}
                     >
-                      {pendingCount > 99 ? "99+" : pendingCount}
+                      {session.user?.name?.[0]?.toUpperCase() ?? "U"}
                     </span>
-                  )}
-                </button>
-
-                {/* Dropdown menu */}
-
-                {menuOpen && (
-                  <>
-                    <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
-                    <div
-                      className="absolute right-0 top-12 z-50 w-52 rounded-none border-2 border-foreground py-1 shadow-[4px_4px_0_hsl(var(--foreground))]"
-                      style={{ background: "var(--bg-surface)" }}
-                    >
-                      {/* Role badge */}
-                      <div className="border-b-2 border-foreground px-4 py-2">
-                        <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                          {role}
-                        </p>
-                        <p className="truncate text-xs" style={{ color: "var(--text-secondary)" }}>
-                          {session.user?.email}
-                        </p>
-                      </div>
-
-                      {/* Operator dashboard */}
-                      {(role === "operator" || role === "admin") && (
-                        <Link
-                          href="/operator"
-                          onClick={() => setMenuOpen(false)}
-                          className="flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wide hover:opacity-80"
-                          style={{ color: "var(--text-primary)" }}
-                        >
-                          <LayoutDashboard className="h-4 w-4" />
-                          Operator Dashboard
-                        </Link>
-                      )}
-
-                      {/* Admin panel */}
-                      {role === "admin" && (
-                        <Link
-                          href="/admin"
-                          onClick={() => setMenuOpen(false)}
-                          className="flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wide hover:opacity-80"
-                          style={{ color: "var(--text-primary)" }}
-                        >
-                          <ShieldCheck className="h-4 w-4" />
-                          Admin Panel
-                        </Link>
-                      )}
-
-                      {/* Sign out */}
-                      <button
-                        onClick={() => { setMenuOpen(false); signOut({ callbackUrl: "/" }); }}
-                        className="flex w-full items-center gap-2 border-t-2 border-foreground px-4 py-2 text-xs font-bold uppercase tracking-wide hover:opacity-80"
-                        style={{ color: "var(--status-stopped-text)" }}
+                    <span className="hidden md:inline max-w-[120px] truncate">
+                      {session.user?.name ?? session.user?.email}
+                    </span>
+                    {role === "admin" && pendingCount > 0 && (
+                      <span
+                        className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-none border-2 border-[#0D1B2A] bg-[#F4A522] text-[9px] font-black text-[#0D1B2A]"
+                        style={{ boxShadow: "1px 1px 0 #0D1B2A" }}
                       >
-                        <LogOut className="h-4 w-4" />
-                        Sign Out
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
+                        {pendingCount > 99 ? "99+" : pendingCount}
+                      </span>
+                    )}
+                  </button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent align="end" className="w-52">
+                  {/* Role + email */}
+                  <DropdownMenuLabel className="flex flex-col gap-0.5">
+                    <span className="text-xs font-black uppercase tracking-widest">
+                      {role}
+                    </span>
+                    <span className="truncate text-xs font-normal normal-case tracking-normal text-muted-foreground">
+                      {session.user?.email}
+                    </span>
+                  </DropdownMenuLabel>
+
+                  <DropdownMenuSeparator />
+
+                  {/* Operator / Admin dashboard */}
+                  {(role === "operator" || role === "admin") && (
+                    <DropdownMenuItem asChild>
+                      <Link href="/operator" className="flex cursor-pointer items-center gap-2">
+                        <LayoutDashboard className="h-4 w-4" />
+                        Operator Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+
+                  {/* Admin panel */}
+                  {role === "admin" && (
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin" className="flex cursor-pointer items-center gap-2">
+                        <ShieldCheck className="h-4 w-4" />
+                        Admin Panel
+                        {pendingCount > 0 && (
+                          <span
+                            className="ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-none border border-[#0D1B2A] bg-[#F4A522] px-1 text-[9px] font-black text-[#0D1B2A]"
+                          >
+                            {pendingCount}
+                          </span>
+                        )}
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+
+                  <DropdownMenuSeparator />
+
+                  {/* Sign out */}
+                  <DropdownMenuItem
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    className="flex cursor-pointer items-center gap-2 focus:bg-destructive/10 focus:text-destructive"
+                    style={{ color: "var(--status-stopped-text)" }}
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <Link
                 href="/auth"
