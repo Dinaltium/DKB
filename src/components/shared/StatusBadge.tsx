@@ -77,7 +77,7 @@ export function StatusBadge({ status, className = "" }: StatusBadgeProps) {
   return (
     <Badge
       variant="outline"
-      className={`rounded-full border-2 px-2.5 py-0.5 text-[10px] tracking-wider shadow-none hover:translate-x-0 hover:translate-y-0 hover:shadow-none ${className}`}
+      className={`rounded-full border-2 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest shadow-none hover:translate-x-0 hover:translate-y-0 hover:shadow-none ${className}`}
       style={style}
     >
       {status}

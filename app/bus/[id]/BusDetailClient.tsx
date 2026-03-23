@@ -52,9 +52,9 @@ export function BusDetailClient({ bus, stops, fareTable, currentStopName, sessio
   };
 
   const statusStyle = (s: string) => {
-    if (s === "Running") return { background: "var(--status-running-bg)", color: "var(--status-running-text)", border: "1px solid var(--status-running-border)" };
-    if (s === "Delayed")  return { background: "var(--status-delayed-bg)", color: "var(--status-delayed-text)", border: "1px solid var(--status-delayed-border)" };
-    return { background: "var(--status-stopped-bg)", color: "var(--status-stopped-text)", border: "1px solid var(--status-stopped-border)" };
+    if (s === "Running") return { background: "var(--status-running-bg)", color: "var(--status-running-text)", border: "2px solid var(--status-running-border)" };
+    if (s === "Delayed")  return { background: "var(--status-delayed-bg)", color: "var(--status-delayed-text)", border: "2px solid var(--status-delayed-border)" };
+    return { background: "var(--status-stopped-bg)", color: "var(--status-stopped-text)", border: "2px solid var(--status-stopped-border)" };
   };
 
   const cardStyle = { background: "var(--bg-surface)", borderColor: "var(--border-default)" };
@@ -63,7 +63,7 @@ export function BusDetailClient({ bus, stops, fareTable, currentStopName, sessio
     <>
       {/* ── Hero grid ── */}
       <section className="grid gap-4 md:grid-cols-2">
-        <div className="ticket-stub rounded-lg border-2 p-5" style={cardStyle}>
+        <div className="ticket-stub rounded-none border-2 p-5 shadow-[4px_4px_0_hsl(var(--foreground))]" style={cardStyle}>
           <p className="text-4xl font-extrabold uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>
             {bus.number}
           </p>
@@ -74,7 +74,7 @@ export function BusDetailClient({ bus, stops, fareTable, currentStopName, sessio
             <p>Route: {bus.origin} → {bus.destination}</p>
             <p>Boarding from: <strong style={{ color: "var(--text-primary)" }}>{currentStopName}</strong></p>
             <div
-              className="mt-2 inline-flex rounded-full border px-3 py-1 text-xs font-semibold"
+              className="mt-2 inline-flex rounded-full border-2 px-3 py-1 text-xs font-bold uppercase tracking-wide"
               style={statusStyle(bus.status)}
             >
               {bus.status}
@@ -82,7 +82,7 @@ export function BusDetailClient({ bus, stops, fareTable, currentStopName, sessio
           </div>
         </div>
 
-        <div className="rounded-lg border-2 p-5" style={cardStyle}>
+        <div className="rounded-none border-2 p-5 shadow-[4px_4px_0_hsl(var(--foreground))]" style={cardStyle}>
           <p className="text-3xl font-extrabold uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>
             Schedule & Notice
           </p>
@@ -91,7 +91,7 @@ export function BusDetailClient({ bus, stops, fareTable, currentStopName, sessio
               {(bus.schedule as string[]).map((slot) => (
                 <span
                   key={slot}
-                  className="rounded-md border px-2 py-1 text-xs"
+                  className="rounded-none border-2 px-2 py-1 text-xs font-bold uppercase tracking-wide"
                   style={{ background: "var(--bg-surface-2)", borderColor: "var(--border-default)", color: "var(--text-secondary)" }}
                 >
                   {slot}
@@ -99,7 +99,7 @@ export function BusDetailClient({ bus, stops, fareTable, currentStopName, sessio
               ))}
             </div>
             <p
-              className="rounded-md border p-2 text-xs"
+              className="rounded-none border-2 p-2 text-xs font-bold uppercase tracking-wide"
               style={{ background: "var(--status-delayed-bg)", borderColor: "var(--status-delayed-border)", color: "var(--status-delayed-text)" }}
             >
               {bus.statusNote}
@@ -107,7 +107,7 @@ export function BusDetailClient({ bus, stops, fareTable, currentStopName, sessio
             <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
               Student BusChalo Card:{" "}
               {bus.studentCardAccepted
-                ? <span className="font-semibold text-emerald-500">Accepted · {bus.studentDiscountPercent}% discount</span>
+                ? <span className="font-bold uppercase tracking-wide text-[#0E7C86]">Accepted · {bus.studentDiscountPercent}% discount</span>
                 : <span style={{ color: "var(--text-muted)" }}>Not Accepted</span>}
             </p>
           </div>
@@ -121,7 +121,7 @@ export function BusDetailClient({ bus, stops, fareTable, currentStopName, sessio
 
       {/* ── Fare + crowd ── */}
       <section className="mt-6 grid gap-4 md:grid-cols-2">
-        <div className="rounded-lg border-2 p-5" style={cardStyle}>
+        <div className="rounded-none border-2 p-5 shadow-[4px_4px_0_hsl(var(--foreground))]" style={cardStyle}>
           <p className="text-3xl font-extrabold uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>
             Fare from {currentStopName}
           </p>
@@ -134,7 +134,7 @@ export function BusDetailClient({ bus, stops, fareTable, currentStopName, sessio
               fareTable.map((row) => (
                 <div
                   key={row.stop}
-                  className="flex items-center justify-between rounded-md border px-3 py-2 text-sm"
+                  className="flex items-center justify-between rounded-none border-2 px-3 py-2 text-sm"
                   style={{ borderColor: "var(--border-default)", color: "var(--text-secondary)" }}
                 >
                   <span>{row.stop}</span>
@@ -145,7 +145,7 @@ export function BusDetailClient({ bus, stops, fareTable, currentStopName, sessio
           </div>
         </div>
 
-        <div className="rounded-lg border-2 p-5" style={cardStyle}>
+        <div className="rounded-none border-2 p-5 shadow-[4px_4px_0_hsl(var(--foreground))]" style={cardStyle}>
           <p className="text-3xl font-extrabold uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>
             Live Crowd Status
           </p>
@@ -158,18 +158,18 @@ export function BusDetailClient({ bus, stops, fareTable, currentStopName, sessio
                 <button
                   onClick={() => castVote(item.key)}
                   disabled={isPending}
-                  className="h-9 rounded-none border-2 px-3 text-xs font-bold uppercase tracking-wide hover:opacity-80 disabled:opacity-50"
-                  style={{ background: "var(--bg-surface-2)", borderColor: "var(--border-strong)", color: "var(--text-primary)" }}
+                  className="h-9 rounded-none border-2 border-foreground px-3 text-xs font-bold uppercase tracking-wide shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-80 disabled:opacity-50"
+                  style={{ background: "var(--bg-surface-2)", color: "var(--text-primary)" }}
                 >
                   Vote
                 </button>
               </div>
             ))}
 
-            <div className="rounded-md border p-3 text-sm" style={{ background: "var(--bg-surface-2)", borderColor: "var(--border-default)", color: "var(--text-secondary)" }}>
+            <div className="rounded-none border-2 border-foreground p-3 text-sm font-semibold" style={{ background: "var(--bg-surface-2)", color: "var(--text-secondary)" }}>
               Women Reserved: {bus.womenReservedAvailable} / {bus.womenReservedTotal}
             </div>
-            <div className="rounded-md border p-3 text-sm" style={{ background: "var(--bg-surface-2)", borderColor: "var(--border-default)", color: "var(--text-secondary)" }}>
+            <div className="rounded-none border-2 border-foreground p-3 text-sm font-semibold" style={{ background: "var(--bg-surface-2)", color: "var(--text-secondary)" }}>
               <Users className="mr-2 inline-block h-4 w-4" />
               Available Seats: {bus.totalSeats - bus.occupiedSeats} / {bus.totalSeats}
             </div>
@@ -179,18 +179,18 @@ export function BusDetailClient({ bus, stops, fareTable, currentStopName, sessio
 
       {/* ── QR ── */}
       <section className="mt-6 grid gap-4 md:grid-cols-[220px_1fr]">
-        <div className="flex flex-col items-center rounded-lg border-2 p-4" style={cardStyle}>
+        <div className="flex flex-col items-center rounded-none border-2 p-4 shadow-[4px_4px_0_hsl(var(--foreground))]" style={cardStyle}>
           <QrCode className="mb-2 h-5 w-5" style={{ color: "var(--text-primary)" }} />
           {qrDataUrl ? (
-            <img src={qrDataUrl} alt={`QR for bus ${bus.number}`} width={170} height={170} style={{ borderRadius: 4 }} />
+            <img src={qrDataUrl} alt={`QR for bus ${bus.number}`} width={170} height={170} className="rounded-none border-2 border-foreground" />
           ) : (
-            <div className="flex h-[170px] w-[170px] items-center justify-center text-xs rounded" style={{ background: "var(--bg-surface-2)", color: "var(--text-muted)" }}>
+            <div className="flex h-[170px] w-[170px] items-center justify-center rounded-none border-2 border-foreground text-xs font-bold uppercase tracking-wide" style={{ background: "var(--bg-surface-2)", color: "var(--text-muted)" }}>
               Generating...
             </div>
           )}
         </div>
 
-        <div className="rounded-lg border-2 p-5" style={cardStyle}>
+        <div className="rounded-none border-2 p-5 shadow-[4px_4px_0_hsl(var(--foreground))]" style={cardStyle}>
           <div className="space-y-3 text-sm" style={{ color: "var(--text-secondary)" }}>
             <p>Print this QR and place inside the bus for instant passenger access — no app required.</p>
             <p>Full Route Fare: <strong className="text-[#0E7C86]">₹{bus.fullFare}</strong></p>
@@ -199,8 +199,8 @@ export function BusDetailClient({ bus, stops, fareTable, currentStopName, sessio
               Votes and status refresh in real time.
             </p>
             {!session && (
-              <p className="rounded-md border p-2 text-xs" style={{ background: "var(--bg-surface-2)", borderColor: "var(--border-default)" }}>
-                <a href="/auth" className="font-semibold text-[#0E7C86] hover:underline">Sign in</a> to save this trip to your travel history.
+              <p className="rounded-none border-2 border-foreground p-2 text-xs font-medium normal-case tracking-normal" style={{ background: "var(--bg-surface-2)" }}>
+                <a href="/auth" className="font-bold uppercase tracking-wide text-[#0E7C86] hover:underline">Sign in</a> to save this trip to your travel history.
               </p>
             )}
           </div>
@@ -209,8 +209,8 @@ export function BusDetailClient({ bus, stops, fareTable, currentStopName, sessio
 
       {/* ── Sticky action bar ── */}
       <div
-        className="fixed bottom-16 left-0 right-0 z-30 flex items-center justify-center gap-2 px-4 py-3 backdrop-blur-md md:bottom-4 md:left-auto md:right-4 md:w-auto md:rounded-lg md:border"
-        style={{ background: "var(--header-bg)", borderColor: "var(--border-default)" }}
+        className="fixed bottom-16 left-0 right-0 z-30 flex items-center justify-center gap-2 border-t-2 border-foreground px-4 py-3 backdrop-blur-md md:bottom-4 md:left-auto md:right-4 md:w-auto md:rounded-none md:border-2 md:border-foreground md:shadow-[4px_4px_0_hsl(var(--foreground))]"
+        style={{ background: "var(--header-bg)" }}
       >
         <PaymentDrawer busId={bus.id} busNumber={bus.number} amount={bus.fullFare} />
         <ComplaintDialog busId={bus.id} busNumber={bus.number} />

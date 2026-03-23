@@ -69,7 +69,7 @@ export function EmptyState({
 }: EmptyStateProps) {
   return (
     <div
-      className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed px-6 py-14 text-center"
+      className="flex flex-col items-center justify-center rounded-none border-2 border-dashed px-6 py-14 text-center shadow-[4px_4px_0_hsl(var(--foreground))]"
       style={{
         borderColor: "var(--border-default)",
         background: "var(--bg-surface)",
@@ -80,7 +80,7 @@ export function EmptyState({
       </div>
 
       <p
-        className="text-xl font-extrabold uppercase tracking-wide"
+        className="text-xl font-black uppercase tracking-wide"
         style={{
           fontFamily: "'Barlow Condensed', sans-serif",
           color: "var(--text-secondary)",

@@ -150,7 +150,7 @@ export default function ChangePasswordPage() {
               placeholder="New Password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="h-12 w-full border-2 px-3 pr-11 text-sm outline-none"
+              className="h-12 w-full rounded-none border-2 border-foreground bg-background px-3 pr-11 text-sm outline-none shadow-[4px_4px_0_hsl(var(--foreground))] focus-visible:translate-x-[4px] focus-visible:translate-y-[4px] focus-visible:shadow-none"
               style={{
                 background: "var(--input-bg)",
                 borderColor: "var(--input-border)",
@@ -179,7 +179,7 @@ export default function ChangePasswordPage() {
               placeholder="Confirm Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="h-12 w-full border-2 px-3 pr-11 text-sm outline-none"
+              className="h-12 w-full rounded-none border-2 border-foreground bg-background px-3 pr-11 text-sm outline-none shadow-[4px_4px_0_hsl(var(--foreground))] focus-visible:translate-x-[4px] focus-visible:translate-y-[4px] focus-visible:shadow-none"
               style={{
                 background: "var(--input-bg)",
                 borderColor: "var(--input-border)",
@@ -207,12 +207,11 @@ export default function ChangePasswordPage() {
           type="button"
           onClick={handleSubmit}
           disabled={isPending}
-          className="mt-6 h-12 w-full border-2 text-sm font-bold uppercase tracking-widest disabled:opacity-60"
+          className="mt-6 h-12 w-full rounded-none border-2 text-sm font-bold uppercase tracking-widest shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none disabled:opacity-60"
           style={{
             background: "var(--cta-bg)",
             borderColor: "var(--text-primary)",
             color: "var(--text-primary)",
-            boxShadow: "4px 4px 0 var(--text-primary)",
           }}
         >
           {isPending ? "UPDATING…" : "SET NEW PASSWORD →"}

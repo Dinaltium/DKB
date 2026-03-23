@@ -5,7 +5,7 @@ export default function Loading() {
     <div className="mx-auto w-full max-w-6xl px-4 pb-28 pt-8 md:px-8 md:pt-12">
       <Skeleton className="mb-10 h-12 w-64" />
       <div
-        className="space-y-3 rounded-lg border-2 p-4 md:p-6"
+        className="space-y-3 rounded-none border-2 p-4 md:p-6"
         style={{ borderColor: "var(--border-default)" }}
       >
         <div className="grid gap-3 md:grid-cols-2">
@@ -22,7 +22,7 @@ export default function Loading() {
         {[...Array(2)].map((_, i) => (
           <div
             key={i}
-            className="rounded-lg border-2 p-5"
+            className="rounded-none border-2 p-5"
             style={{ borderColor: "var(--border-default)" }}
           >
             <div className="grid gap-4 md:grid-cols-[1.4fr_1fr_auto]">

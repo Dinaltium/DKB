@@ -126,12 +126,12 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
 
             {/* Auth button / user menu */}
             {status === "loading" ? (
-              <div className="h-10 w-24 animate-pulse rounded border-2" style={{ borderColor: "var(--border-default)", background: "var(--bg-surface-2)" }} />
+              <div className="h-10 w-24 animate-pulse rounded-none border-2" style={{ borderColor: "var(--border-default)", background: "var(--bg-surface-2)" }} />
             ) : session ? (
               <div className="relative">
                 <button
                   onClick={() => setMenuOpen((o) => !o)}
-                  className="relative flex h-10 items-center gap-2 rounded border-2 px-3 text-sm font-semibold hover:opacity-80"
+                  className="relative flex h-10 items-center gap-2 rounded-none border-2 px-3 text-sm font-bold uppercase tracking-wide hover:opacity-80"
                   style={{ background: "var(--bg-surface-2)", borderColor: "var(--input-border)", color: "var(--text-primary)" }}
                 >
                   {/* Avatar initials */}
@@ -159,12 +159,12 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
                     <div
-                      className="absolute right-0 top-12 z-50 w-52 border-2 py-1 shadow-lg"
-                      style={{ background: "var(--bg-surface)", borderColor: "var(--border-medium)" }}
+                      className="absolute right-0 top-12 z-50 w-52 rounded-none border-2 border-foreground py-1 shadow-[4px_4px_0_hsl(var(--foreground))]"
+                      style={{ background: "var(--bg-surface)" }}
                     >
                       {/* Role badge */}
-                      <div className="border-b px-4 py-2" style={{ borderColor: "var(--border-default)" }}>
-                        <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
+                      <div className="border-b-2 border-foreground px-4 py-2">
+                        <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
                           {role}
                         </p>
                         <p className="truncate text-xs" style={{ color: "var(--text-secondary)" }}>
@@ -177,7 +177,7 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
                         <Link
                           href="/operator"
                           onClick={() => setMenuOpen(false)}
-                          className="flex items-center gap-2 px-4 py-2 text-sm hover:opacity-80"
+                          className="flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wide hover:opacity-80"
                           style={{ color: "var(--text-primary)" }}
                         >
                           <LayoutDashboard className="h-4 w-4" />
@@ -190,7 +190,7 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
                         <Link
                           href="/admin"
                           onClick={() => setMenuOpen(false)}
-                          className="flex items-center gap-2 px-4 py-2 text-sm hover:opacity-80"
+                          className="flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wide hover:opacity-80"
                           style={{ color: "var(--text-primary)" }}
                         >
                           <ShieldCheck className="h-4 w-4" />
@@ -201,8 +201,8 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
                       {/* Sign out */}
                       <button
                         onClick={() => { setMenuOpen(false); signOut({ callbackUrl: "/" }); }}
-                        className="flex w-full items-center gap-2 border-t px-4 py-2 text-sm hover:opacity-80"
-                        style={{ borderColor: "var(--border-default)", color: "var(--status-stopped-text)" }}
+                        className="flex w-full items-center gap-2 border-t-2 border-foreground px-4 py-2 text-xs font-bold uppercase tracking-wide hover:opacity-80"
+                        style={{ color: "var(--status-stopped-text)" }}
                       >
                         <LogOut className="h-4 w-4" />
                         Sign Out
@@ -313,7 +313,7 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
         {!session && (
           <Link
             href="/auth"
-            className="rounded-none border-2 border-[#0D1B2A] bg-[#0D1B2A] px-4 py-2 text-xs font-bold uppercase tracking-wide text-white hover:bg-slate-800"
+            className="rounded-none border-2 border-[#0D1B2A] bg-[#0D1B2A] px-4 py-2 text-xs font-bold uppercase tracking-wide text-white shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-90"
           >
             Login
           </Link>

@@ -27,17 +27,17 @@ export function OperatorDashboard({ operator, buses, complaints, payments, busRe
 
   return (
     <div className="space-y-4">
-      <div className="border-2 p-4" style={{ borderColor: "var(--text-primary)", background: "var(--bg-surface)" }}>
+      <div className="rounded-none border-2 p-4 shadow-[4px_4px_0_hsl(var(--foreground))]" style={{ borderColor: "var(--text-primary)", background: "var(--bg-surface)" }}>
         <p className="text-2xl font-extrabold uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>{operator.companyName}</p>
         <p className="text-xs" style={{ color: "var(--text-muted)" }}>Buses: {buses.length} • Payments: {payments.length} • Complaints: {complaints.length}</p>
       </div>
 
-      <button onClick={() => setOpen(true)} className="h-10 border-2 px-4 text-xs font-bold uppercase" style={{ background: "var(--cta-bg)", borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>
+      <button type="button" onClick={() => setOpen(true)} className="h-10 rounded-none border-2 px-4 text-xs font-bold uppercase shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none" style={{ background: "var(--cta-bg)", borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>
         + REQUEST BUS REGISTRATION
       </button>
 
       {buses.map((bus) => (
-        <article key={bus.id} className="border-2 p-3" style={{ borderColor: "var(--text-primary)", background: "var(--bg-surface)" }}>
+        <article key={bus.id} className="rounded-none border-2 p-3 shadow-[4px_4px_0_hsl(var(--foreground))]" style={{ borderColor: "var(--text-primary)", background: "var(--bg-surface)" }}>
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="text-xl font-extrabold uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>{bus.number}</p>
@@ -48,7 +48,7 @@ export function OperatorDashboard({ operator, buses, complaints, payments, busRe
               <select defaultValue={bus.status} onChange={(e) => startTransition(async () => { const r = await updateBusStatusAction(bus.id, e.target.value as BusType["status"]); r.success ? toast.success("Status updated") : toast.error(r.error ?? "Failed"); })} className="h-9 border-2 px-2 text-xs" style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--input-text)" }}>
                 <option>Running</option><option>Not Running</option><option>Delayed</option>
               </select>
-              <Link href={`/bus/${bus.id}`} className="inline-flex h-9 items-center border-2 px-3 text-xs font-bold uppercase" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>VIEW</Link>
+              <Link href={`/bus/${bus.id}`} className="inline-flex h-9 items-center rounded-none border-2 px-3 text-xs font-bold uppercase shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>VIEW</Link>
             </div>
           </div>
         </article>
@@ -62,11 +62,11 @@ export function OperatorDashboard({ operator, buses, complaints, payments, busRe
       ))}
 
       {complaints.map((c) => (
-        <article key={c.id} className="border-2 p-3" style={{ borderColor: "var(--text-primary)", background: "var(--bg-surface)" }}>
+        <article key={c.id} className="rounded-none border-2 p-3 shadow-[4px_4px_0_hsl(var(--foreground))]" style={{ borderColor: "var(--text-primary)", background: "var(--bg-surface)" }}>
           <p className="text-sm font-bold" style={{ color: "var(--text-primary)" }}>{c.busNumber} • {c.category}</p>
           <p className="text-xs" style={{ color: "var(--text-muted)" }}>{c.description}</p>
           {c.status === "pending" && (
-            <button onClick={() => startTransition(async () => { const r = await resolveComplaintAction(c.id); r.success ? toast.success("Complaint resolved") : toast.error(r.error ?? "Failed"); })} className="mt-2 h-8 border-2 px-2 text-xs font-bold uppercase" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>
+            <button type="button" onClick={() => startTransition(async () => { const r = await resolveComplaintAction(c.id); r.success ? toast.success("Complaint resolved") : toast.error(r.error ?? "Failed"); })} className="mt-2 h-8 rounded-none border-2 px-2 text-xs font-bold uppercase shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none" style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}>
               RESOLVE
             </button>
           )}

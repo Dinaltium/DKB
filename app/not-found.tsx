@@ -15,13 +15,13 @@ export default function NotFound() {
       <div className="flex flex-wrap justify-center gap-3">
         <Link
           href="/"
-          className="inline-flex h-10 items-center rounded-none border-2 border-foreground bg-primary px-6 text-sm font-bold uppercase text-primary-foreground shadow-[3px_3px_0_hsl(var(--foreground))]"
+          className="inline-flex h-10 items-center rounded-none border-2 border-foreground bg-primary px-6 text-sm font-bold uppercase text-primary-foreground shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none"
         >
           Go home
         </Link>
         <Link
           href="/search"
-          className="inline-flex h-10 items-center rounded-none border-2 border-foreground bg-background px-6 text-sm font-bold uppercase text-foreground shadow-[2px_2px_0_hsl(var(--foreground))]"
+          className="inline-flex h-10 items-center rounded-none border-2 border-foreground bg-background px-6 text-sm font-bold uppercase text-foreground shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none"
         >
           Search buses
         </Link>

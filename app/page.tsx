@@ -19,7 +19,7 @@ const FleetMap = dynamic(() => import("@/components/maps/FleetMap"), {
 function SkeletonCard() {
   return (
     <div
-      className="h-52 animate-pulse rounded-lg border-2"
+      className="h-52 animate-pulse rounded-none border-2"
       style={{
         background: "var(--bg-surface)",
         borderColor: "var(--border-default)",
@@ -39,14 +39,14 @@ interface StatTileProps {
 function StatTile({ label, value, icon, loading }: StatTileProps) {
   return (
     <div
-      className="flex items-center gap-4 rounded-lg border-2 p-5"
+      className="flex items-center gap-4 rounded-none border-2 p-5 shadow-[4px_4px_0_hsl(var(--foreground))]"
       style={{
         background: "var(--bg-surface)",
         borderColor: "var(--border-default)",
       }}
     >
       <div
-        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border-2"
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-none border-2"
         style={{
           background: "var(--bg-surface-2)",
           borderColor: "var(--border-default)",
@@ -65,7 +65,7 @@ function StatTile({ label, value, icon, loading }: StatTileProps) {
         >
           {loading ? (
             <span
-              className="inline-block h-7 w-12 animate-pulse rounded"
+              className="inline-block h-7 w-12 animate-pulse rounded-none"
               style={{ background: "var(--bg-surface-3)" }}
             />
           ) : (
@@ -103,7 +103,7 @@ export default function LandingPage() {
     <AppShell title={tr("tagline")} subtitle={tr("corridorSubtitle")}>
       {/* ── Hero ── */}
       <section
-        className="grid gap-6 rounded-lg border-2 p-5 md:grid-cols-2 md:gap-10 md:p-8"
+        className="grid gap-6 rounded-none border-2 p-5 shadow-[4px_4px_0_hsl(var(--foreground))] md:grid-cols-2 md:gap-10 md:p-8"
         style={{
           background: "var(--bg-surface)",
           borderColor: "var(--border-default)",
@@ -125,14 +125,14 @@ export default function LandingPage() {
           <div className="flex flex-wrap gap-3">
             <Link
               href="/search"
-              className="inline-flex h-11 items-center rounded-none border-2 border-[#0D1B2A] bg-[#F4A522] px-5 text-sm font-bold uppercase tracking-wide text-[#0D1B2A] transition-opacity hover:opacity-80"
+              className="inline-flex h-11 items-center rounded-none border-2 border-[#0D1B2A] bg-[#F4A522] px-5 text-sm font-bold uppercase tracking-wide text-[#0D1B2A] shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-80"
             >
               {tr("searchRoute")}
             </Link>
             {buses.length > 0 && (
               <Link
                 href={`/bus/${buses[0].id}`}
-                className="inline-flex h-11 items-center rounded-none border-2 px-5 text-sm font-bold uppercase tracking-wide transition-opacity hover:opacity-80"
+                className="inline-flex h-11 items-center rounded-none border-2 px-5 text-sm font-bold uppercase tracking-wide shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-80"
                 style={{
                   background: "var(--bg-surface-2)",
                   borderColor: "var(--border-medium)",
@@ -147,7 +147,7 @@ export default function LandingPage() {
 
         {/* Hero image — full bleed on the right column */}
         <div
-          className="overflow-hidden rounded-lg border-2"
+          className="overflow-hidden rounded-none border-2 shadow-[4px_4px_0_hsl(var(--foreground))]"
           style={{ borderColor: "var(--border-default)" }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -250,7 +250,7 @@ export default function LandingPage() {
             action={
               <Link
                 href="/auth"
-                className="inline-flex h-10 items-center border-2 border-[#0D1B2A] bg-[#F4A522] px-5 text-xs font-bold uppercase tracking-wide text-[#0D1B2A] hover:opacity-80"
+                className="inline-flex h-10 items-center rounded-none border-2 border-[#0D1B2A] bg-[#F4A522] px-5 text-xs font-bold uppercase tracking-wide text-[#0D1B2A] shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-80"
               >
                 Operator Login
               </Link>
@@ -266,7 +266,7 @@ export default function LandingPage() {
               return (
                 <Link key={bus.id} href={`/bus/${bus.id}`} className="block">
                   <article
-                    className="h-full rounded-lg border-2 p-5 transition-opacity hover:opacity-90"
+                    className="h-full rounded-none border-2 p-5 shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-90"
                     style={{
                       background: "var(--bg-surface)",
                       borderColor: "var(--border-default)",
@@ -275,7 +275,7 @@ export default function LandingPage() {
                     {/* Bus number + status */}
                     <div className="flex items-start justify-between gap-2">
                       <span
-                        className="rounded-sm px-2 py-0.5 text-sm font-bold text-[#F4A522]"
+                        className="rounded-none border-2 border-[#F4A522] px-2 py-0.5 text-sm font-black uppercase tracking-wide text-[#F4A522]"
                         style={{
                           fontFamily: "'Barlow Condensed', sans-serif",
                           background: "var(--color-navy, #0D1B2A)",
@@ -304,13 +304,13 @@ export default function LandingPage() {
                     {pos ? (
                       <>
                         <div
-                          className="mt-3 rounded-md border px-3 py-2"
+                          className="mt-3 rounded-none border-2 px-3 py-2"
                           style={{
                             background: "var(--bg-surface-2)",
                             borderColor: "var(--border-default)",
                           }}
                         >
-                          <p className="text-[10px] font-semibold uppercase tracking-wide text-[#0E7C86]">
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-[#0E7C86]">
                             Now between
                           </p>
                           <p
@@ -324,11 +324,11 @@ export default function LandingPage() {
                         </div>
                         <div className="mt-3">
                           <div
-                            className="h-1.5 w-full overflow-hidden rounded-full"
+                            className="h-2 w-full overflow-hidden rounded-none border-2 border-foreground"
                             style={{ background: "var(--bg-surface-3)" }}
                           >
                             <div
-                              className="h-full rounded-full bg-[#0E7C86] transition-all duration-[1500ms] ease-in-out"
+                              className="h-full rounded-none bg-[#0E7C86] transition-all duration-[1500ms] ease-in-out"
                               style={{
                                 width: `${Math.round(pos.progressPct)}%`,
                               }}

@@ -62,7 +62,7 @@ export default async function DashboardPage() {
       return (
         <AppShell title="Dashboard" subtitle="Pending approval">
           <div
-            className="ticket-stub rounded-lg p-8 text-center"
+            className="ticket-stub rounded-none border-2 border-foreground p-8 text-center shadow-[4px_4px_0_hsl(var(--foreground))]"
             style={{ color: "var(--text-secondary)" }}
           >
             <p className="text-2xl font-extrabold uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>

@@ -6,7 +6,7 @@ export default function Loading() {
       <Skeleton className="mb-10 h-12 w-48" />
       <div className="mb-6 grid gap-4 md:grid-cols-2">
         <div
-          className="space-y-3 rounded-lg border-2 p-5"
+          className="space-y-3 rounded-none border-2 p-5"
           style={{ borderColor: "var(--border-default)" }}
         >
           <Skeleton className="h-10 w-32" />
@@ -15,30 +15,30 @@ export default function Loading() {
           ))}
         </div>
         <div
-          className="space-y-3 rounded-lg border-2 p-5"
+          className="space-y-3 rounded-none border-2 p-5"
           style={{ borderColor: "var(--border-default)" }}
         >
           <Skeleton className="h-8 w-48" />
           <div className="flex flex-wrap gap-2">
             {[...Array(4)].map((_, i) => (
-              <Skeleton key={i} className="h-7 w-16 rounded-md" />
+              <Skeleton key={i} className="h-7 w-16 rounded-none" />
             ))}
           </div>
         </div>
       </div>
-      <Skeleton className="mb-6 h-72 w-full rounded-lg md:h-96" />
+      <Skeleton className="mb-6 h-72 w-full rounded-none md:h-96" />
       <div className="grid gap-4 md:grid-cols-2">
         <div
-          className="space-y-2 rounded-lg border-2 p-5"
+          className="space-y-2 rounded-none border-2 p-5"
           style={{ borderColor: "var(--border-default)" }}
         >
           <Skeleton className="mb-3 h-8 w-40" />
           {[...Array(4)].map((_, i) => (
-            <Skeleton key={i} className="h-10 w-full rounded-md" />
+            <Skeleton key={i} className="h-10 w-full rounded-none" />
           ))}
         </div>
         <div
-          className="space-y-3 rounded-lg border-2 p-5"
+          className="space-y-3 rounded-none border-2 p-5"
           style={{ borderColor: "var(--border-default)" }}
         >
           <Skeleton className="mb-3 h-8 w-40" />

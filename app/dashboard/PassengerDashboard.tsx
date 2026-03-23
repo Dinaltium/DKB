@@ -59,7 +59,7 @@ export function PassengerDashboard({ travelHistory, loyalty, payments, user }: P
         </h2>
 
         {travelHistory.length === 0 ? (
-          <div className="ticket-stub rounded-lg p-8 text-center">
+          <div className="ticket-stub rounded-none border-2 border-foreground p-8 text-center shadow-[4px_4px_0_hsl(var(--foreground))]">
             <p className="text-sm" style={{ color: "var(--text-muted)" }}>
               No trips recorded yet. Scan a ticket with the mobile app to log your first journey.
             </p>
@@ -77,7 +77,7 @@ export function PassengerDashboard({ travelHistory, loyalty, payments, user }: P
               return (
                 <article
                   key={trip.id}
-                  className="rounded-lg border-2 p-4"
+                  className="rounded-none border-2 p-4 shadow-[4px_4px_0_hsl(var(--foreground))]"
                   style={cardStyle}
                 >
                   <div className="flex items-start justify-between gap-3">
@@ -113,7 +113,7 @@ export function PassengerDashboard({ travelHistory, loyalty, payments, user }: P
                         </span>
                       )}
                       {(trip.loyaltyPoints ?? 0) > 0 && (
-                        <p className="mt-1 text-[10px] font-semibold text-[#F4A522]">
+                        <p className="mt-1 text-[10px] font-bold uppercase tracking-widest text-[#F4A522]">
                           +{trip.loyaltyPoints} pts
                         </p>
                       )}
@@ -139,7 +139,7 @@ export function PassengerDashboard({ travelHistory, loyalty, payments, user }: P
             {payments.slice(0, 10).map((p) => (
               <div
                 key={p.id}
-                className="flex items-center justify-between rounded-lg border px-4 py-3 text-sm"
+                className="flex items-center justify-between rounded-none border-2 px-4 py-3 text-sm shadow-[4px_4px_0_hsl(var(--foreground))]"
                 style={cardStyle}
               >
                 <div>
@@ -182,12 +182,12 @@ function StatCard({
 }) {
   return (
     <div
-      className="rounded-lg border-2 p-5"
+      className="rounded-none border-2 p-5 shadow-[4px_4px_0_hsl(var(--foreground))]"
       style={{ background: "var(--bg-surface)", borderColor: "var(--border-default)" }}
     >
       <div className="flex items-center gap-2">
         {icon}
-        <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
+        <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
           {label}
         </p>
       </div>

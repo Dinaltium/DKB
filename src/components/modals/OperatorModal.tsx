@@ -960,7 +960,7 @@ function BusDetailPanel({
               value={st}
               onChange={(e) => setSt(e.target.value as typeof bus.status)}
               className="mt-1 h-10 w-full rounded-none border-2 border-foreground
-                bg-background px-2 text-sm"
+                bg-background px-2 text-sm shadow-[4px_4px_0_hsl(var(--foreground))]"
             >
               <option>Running</option>
               <option>Not Running</option>

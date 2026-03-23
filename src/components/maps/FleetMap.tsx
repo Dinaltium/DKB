@@ -196,15 +196,14 @@ export default function FleetMap() {
 
   return (
     <div
-      className="relative overflow-hidden rounded-xl border-2"
+      className="relative overflow-hidden rounded-none border-2 border-foreground shadow-[4px_4px_0_hsl(var(--foreground))]"
       style={{ borderColor: "var(--border-default)" }}
     >
       {/* Legend bar */}
       <div
-        className="flex items-center justify-between px-4 py-2 text-xs"
+        className="flex items-center justify-between border-b-2 border-foreground px-4 py-2 text-xs"
         style={{
           background: "var(--bg-surface-2)",
-          borderBottom: "1px solid var(--border-default)",
         }}
       >
         <div className="flex flex-wrap items-center gap-4">
@@ -218,7 +217,7 @@ export default function FleetMap() {
                 style={{ color: "var(--text-secondary)" }}
               >
                 <span
-                  className="inline-block h-2.5 w-2.5 rounded-full border border-black/20"
+                  className="inline-block h-2.5 w-2.5 rounded-full border-2 border-foreground"
                   style={{ background: getBusColor(index) }}
                 />
                 {bus.number}

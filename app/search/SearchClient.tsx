@@ -148,7 +148,7 @@ export function SearchClient({ buses, stops, operators }: Props) {
         action={
           <Link
             href="/auth"
-            className="inline-flex h-10 items-center border-2 border-[#0D1B2A] bg-[#F4A522] px-5 text-xs font-bold uppercase tracking-wide text-[#0D1B2A] hover:opacity-80"
+            className="inline-flex h-10 items-center rounded-none border-2 border-[#0D1B2A] bg-[#F4A522] px-5 text-xs font-bold uppercase tracking-wide text-[#0D1B2A] shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-80"
           >
             Operator Login
           </Link>
@@ -161,7 +161,7 @@ export function SearchClient({ buses, stops, operators }: Props) {
     <>
       {/* ── Search form ── */}
       <section
-        className="rounded-lg border-2 p-4 md:p-6"
+        className="rounded-none border-2 p-4 shadow-[4px_4px_0_hsl(var(--foreground))] md:p-6"
         style={{
           background: "var(--bg-surface)",
           borderColor: "var(--border-default)",
@@ -182,7 +182,7 @@ export function SearchClient({ buses, stops, operators }: Props) {
               list="stop-options"
               placeholder="e.g. Mangalore Central"
               data-testid="route-origin-input"
-              className="h-12 w-full border-2 px-3 text-sm outline-none"
+              className="h-12 w-full rounded-none border-2 border-foreground bg-background px-3 text-sm outline-none shadow-[4px_4px_0_hsl(var(--foreground))] focus-visible:translate-x-[4px] focus-visible:translate-y-[4px] focus-visible:shadow-none"
               style={inputStyle}
             />
           </div>
@@ -201,7 +201,7 @@ export function SearchClient({ buses, stops, operators }: Props) {
               list="stop-options"
               placeholder="e.g. Udupi"
               data-testid="route-destination-input"
-              className="h-12 w-full border-2 px-3 text-sm outline-none"
+              className="h-12 w-full rounded-none border-2 border-foreground bg-background px-3 text-sm outline-none shadow-[4px_4px_0_hsl(var(--foreground))] focus-visible:translate-x-[4px] focus-visible:translate-y-[4px] focus-visible:shadow-none"
               style={inputStyle}
             />
           </div>
@@ -219,7 +219,7 @@ export function SearchClient({ buses, stops, operators }: Props) {
               value={timeFilter}
               onChange={(e) => setTimeFilter(e.target.value)}
               data-testid="route-time-filter-input"
-              className="h-12 border-2 px-3 text-sm outline-none"
+              className="h-12 rounded-none border-2 border-foreground bg-background px-3 text-sm outline-none shadow-[4px_4px_0_hsl(var(--foreground))] focus-visible:translate-x-[4px] focus-visible:translate-y-[4px] focus-visible:shadow-none"
               style={inputStyle}
             />
           </div>
@@ -239,7 +239,7 @@ export function SearchClient({ buses, stops, operators }: Props) {
                 onChange={(e) => setMaxFare(e.target.value)}
                 placeholder="Any"
                 data-testid="route-max-fare-filter-input"
-                className="h-12 border-2 px-3 text-sm outline-none"
+                className="h-12 rounded-none border-2 border-foreground bg-background px-3 text-sm outline-none shadow-[4px_4px_0_hsl(var(--foreground))] focus-visible:translate-x-[4px] focus-visible:translate-y-[4px] focus-visible:shadow-none"
                 style={inputStyle}
               />
             </div>
@@ -257,7 +257,7 @@ export function SearchClient({ buses, stops, operators }: Props) {
                 onChange={(e) => setMinSeats(e.target.value)}
                 placeholder="Any"
                 data-testid="route-min-seats-filter-input"
-                className="h-12 border-2 px-3 text-sm outline-none"
+                className="h-12 rounded-none border-2 border-foreground bg-background px-3 text-sm outline-none shadow-[4px_4px_0_hsl(var(--foreground))] focus-visible:translate-x-[4px] focus-visible:translate-y-[4px] focus-visible:shadow-none"
                 style={inputStyle}
               />
             </div>
@@ -276,7 +276,7 @@ export function SearchClient({ buses, stops, operators }: Props) {
             if (origin.trim() && destination.trim()) setSearched(true);
           }}
           data-testid="route-search-submit-button"
-          className="mt-4 inline-flex h-11 items-center gap-2 border-2 border-[#0D1B2A] bg-[#F4A522] px-6 text-sm font-bold uppercase tracking-wider text-[#0D1B2A] transition-opacity hover:opacity-80"
+          className="mt-4 inline-flex h-11 items-center gap-2 rounded-none border-2 border-[#0D1B2A] bg-[#F4A522] px-6 text-sm font-bold uppercase tracking-wider text-[#0D1B2A] shadow-[3px_3px_0_hsl(var(--foreground))] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none hover:opacity-80"
         >
           <Search className="h-4 w-4" />
           Search Buses
@@ -308,7 +308,7 @@ export function SearchClient({ buses, stops, operators }: Props) {
           <div
             key={item.busId}
             data-testid={`search-result-card-${item.busNumber.toLowerCase()}`}
-            className="rounded-lg border-2"
+            className="rounded-none border-2 shadow-[4px_4px_0_hsl(var(--foreground))]"
             style={{
               background: "var(--bg-surface)",
               borderColor: "var(--border-default)",
@@ -368,7 +368,7 @@ export function SearchClient({ buses, stops, operators }: Props) {
               <Link
                 href={`/bus/${item.busId}?currentStop=${encodeURIComponent(origin)}`}
                 data-testid={`search-result-open-bus-${item.busNumber.toLowerCase()}`}
-                className="inline-flex h-10 items-center justify-center border-2 border-[#0D1B2A] bg-[#0D1B2A] px-5 text-xs font-bold uppercase tracking-wider text-white transition-opacity hover:opacity-80"
+                className="inline-flex h-10 items-center justify-center rounded-none border-2 border-[#0D1B2A] bg-[#0D1B2A] px-5 text-xs font-bold uppercase tracking-wider text-white shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-80"
               >
                 View Bus
               </Link>

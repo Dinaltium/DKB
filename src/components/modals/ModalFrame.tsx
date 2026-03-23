@@ -18,7 +18,7 @@ export function ModalFrame({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="fixed inset-0 z-40 bg-black/60" aria-hidden />
       <div
-        className={`z-50 flex max-h-[90vh] w-full flex-col border-2 border-foreground bg-background shadow-[4px_4px_0_hsl(var(--foreground))] ${max}`}
+        className={`z-50 flex max-h-[90vh] w-full flex-col rounded-none border-2 border-foreground bg-background shadow-[4px_4px_0_hsl(var(--foreground))] ${max}`}
       >
         <div className="flex shrink-0 items-center justify-between border-b-2 border-foreground p-4">
           <p
@@ -32,7 +32,7 @@ export function ModalFrame({
             variant="outline"
             size="icon"
             onClick={onClose}
-            className="h-8 w-8 rounded-none border-2 border-foreground font-black"
+            className="h-8 w-8 rounded-none border-2 border-foreground font-black shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none"
           >
             ✕
           </Button>

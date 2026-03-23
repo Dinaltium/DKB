@@ -81,17 +81,29 @@ export function RouteTracer({ busId, onSave }: RouteTracerProps) {
   }, []);
 
   return (
-    <div className="rounded-lg border-2 border-slate-300 bg-white p-5">
-      <p className="text-xl font-extrabold uppercase text-[#0D1B2A]">
+    <div
+      className="rounded-none border-2 border-foreground p-5 shadow-[4px_4px_0_hsl(var(--foreground))]"
+      style={{ background: "var(--bg-surface)" }}
+    >
+      <p
+        className="text-xl font-black uppercase tracking-wide"
+        style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}
+      >
         Route Trace — Bus {busId}
       </p>
-      <p className="mt-1 text-sm text-slate-500">
+      <p className="mt-1 text-xs font-bold uppercase tracking-widest text-muted-foreground">
         Drive the actual route while tracing. BusLink will record your exact
         path so the bus marker follows the real road.
       </p>
 
       {error && (
-        <p className="mt-2 rounded bg-rose-50 p-2 text-xs text-rose-700">
+        <p
+          className="mt-2 border-2 border-foreground p-2 text-xs font-bold uppercase tracking-wide"
+          style={{
+            background: "var(--status-stopped-bg)",
+            color: "var(--status-stopped-text)",
+          }}
+        >
           {error}
         </p>
       )}
@@ -101,7 +113,7 @@ export function RouteTracer({ busId, onSave }: RouteTracerProps) {
           <button
             onClick={startTrace}
             className="h-11 rounded-none border-2 border-[#0D1B2A] bg-[#0E7C86] px-6 
-              text-sm font-bold uppercase tracking-wide text-white hover:bg-teal-700"
+              text-sm font-bold uppercase tracking-wide text-white shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-90"
           >
             Start Route Trace
           </button>
@@ -109,14 +121,14 @@ export function RouteTracer({ busId, onSave }: RouteTracerProps) {
           <button
             onClick={stopTrace}
             className="h-11 rounded-none border-2 border-[#0D1B2A] bg-rose-600 px-6 
-              text-sm font-bold uppercase tracking-wide text-white hover:bg-rose-700"
+              text-sm font-bold uppercase tracking-wide text-white shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-90"
           >
             Stop & Save Trace
           </button>
         )}
 
         {points.length > 0 && (
-          <p className="text-sm text-slate-600">
+          <p className="text-sm font-bold uppercase tracking-wide text-muted-foreground">
             {tracing ? (
               <span className="flex items-center gap-2">
                 <span className="inline-block h-2 w-2 animate-pulse 
@@ -131,7 +143,13 @@ export function RouteTracer({ busId, onSave }: RouteTracerProps) {
       </div>
 
       {!tracing && points.length > 0 && (
-        <p className="mt-3 rounded bg-emerald-50 p-2 text-xs text-emerald-800">
+        <p
+          className="mt-3 border-2 border-foreground p-2 text-xs font-bold uppercase tracking-wide"
+          style={{
+            background: "var(--status-running-bg)",
+            color: "var(--status-running-text)",
+          }}
+        >
           Route saved! The bus marker will now follow this exact path.
           Re-trace anytime if the route changes.
         </p>

@@ -92,7 +92,7 @@ export function PaymentDrawer({
       <button
         onClick={() => setOpen(true)}
         data-testid="open-payment-drawer-button"
-        className="h-12 rounded-none border-2 border-[#0D1B2A] bg-[#F4A522] px-5 text-sm font-bold uppercase tracking-wide text-[#0D1B2A] hover:bg-amber-400 active:scale-[0.98]"
+        className="h-12 rounded-none border-2 border-[#0D1B2A] bg-[#F4A522] px-5 text-sm font-bold uppercase tracking-wide text-[#0D1B2A] shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:bg-amber-400 active:scale-[0.98]"
       >
         Pay via UPI
       </button>
@@ -105,10 +105,9 @@ export function PaymentDrawer({
         className="fixed inset-0 z-40 bg-black/40"
       />
       <div
-        className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-xl rounded-t-2xl border-2 px-4 pb-8 pt-6 shadow-2xl"
+        className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-xl rounded-none border-2 border-foreground px-4 pb-8 pt-6 shadow-[4px_4px_0_hsl(var(--foreground))]"
         style={{
           background: "var(--bg-surface)",
-          borderColor: "var(--border-medium)",
         }}
       >
         <div className="mb-1 flex items-center justify-between">
@@ -127,8 +126,10 @@ export function PaymentDrawer({
               setOpen(false);
               reset();
             }}
-            style={{ color: "var(--text-muted)" }}
-            className="rounded-full p-1 hover:opacity-80"
+            type="button"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-none border-2 border-foreground font-black text-sm text-foreground shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none"
+            style={{ background: "var(--bg-surface)" }}
+            aria-label="Close"
           >
             ✕
           </button>
@@ -151,7 +152,7 @@ export function PaymentDrawer({
             placeholder="Your name"
             value={payerName}
             onChange={(e) => setPayerName(e.target.value)}
-            className="h-11 w-full border-2 px-3 text-sm outline-none"
+            className="h-11 w-full rounded-none border-2 border-foreground bg-background px-3 text-sm outline-none shadow-[4px_4px_0_hsl(var(--foreground))] focus-visible:translate-x-[4px] focus-visible:translate-y-[4px] focus-visible:shadow-none"
             style={inputStyle}
           />
           <input
@@ -160,14 +161,14 @@ export function PaymentDrawer({
             placeholder="UPI ID (example@upi)"
             value={upiId}
             onChange={(e) => setUpiId(e.target.value)}
-            className="h-11 w-full border-2 px-3 text-sm outline-none"
+            className="h-11 w-full rounded-none border-2 border-foreground bg-background px-3 text-sm outline-none shadow-[4px_4px_0_hsl(var(--foreground))] focus-visible:translate-x-[4px] focus-visible:translate-y-[4px] focus-visible:shadow-none"
             style={inputStyle}
           />
 
           {receipt && (
             <div
               data-testid="payment-result-card"
-              className="ticket-stub rounded-lg p-4 text-sm"
+              className="ticket-stub rounded-none border-2 p-4 text-sm shadow-[4px_4px_0_hsl(var(--foreground))]"
               style={{
                 borderColor:
                   receipt.status === "success" ? "#10b981" : "#ef4444",
@@ -202,7 +203,7 @@ export function PaymentDrawer({
             onClick={processPayment}
             disabled={loading}
             data-testid="payment-submit-button"
-            className="mt-1 h-11 w-full rounded-none border-2 border-[#0D1B2A] bg-[#0D1B2A] font-semibold uppercase tracking-wider text-white hover:bg-slate-800 disabled:opacity-60"
+            className="mt-1 h-11 w-full rounded-none border-2 border-[#0D1B2A] bg-[#0D1B2A] font-bold uppercase tracking-wider text-white shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-90 disabled:opacity-60"
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">

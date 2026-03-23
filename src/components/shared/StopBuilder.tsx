@@ -87,7 +87,7 @@ export function StopBuilder({ stops, value, onChange }: StopBuilderProps) {
               type="button"
               onClick={() => moveUp(idx)}
               disabled={idx === 0}
-              className="flex h-7 w-7 items-center justify-center border-2 text-xs font-bold disabled:opacity-25"
+              className="flex h-7 w-7 items-center justify-center rounded-none border-2 text-xs font-bold shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none disabled:opacity-25"
               style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}
             >
               ↑
@@ -96,7 +96,7 @@ export function StopBuilder({ stops, value, onChange }: StopBuilderProps) {
               type="button"
               onClick={() => moveDown(idx)}
               disabled={idx === selectedStops.length - 1}
-              className="flex h-7 w-7 items-center justify-center border-2 text-xs font-bold disabled:opacity-25"
+              className="flex h-7 w-7 items-center justify-center rounded-none border-2 text-xs font-bold shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none disabled:opacity-25"
               style={{ borderColor: "var(--text-primary)", color: "var(--text-primary)" }}
             >
               ↓
@@ -104,7 +104,7 @@ export function StopBuilder({ stops, value, onChange }: StopBuilderProps) {
             <button
               type="button"
               onClick={() => removeStop(stop.id)}
-              className="flex h-7 w-7 items-center justify-center border-2 text-xs font-bold"
+              className="flex h-7 w-7 items-center justify-center rounded-none border-2 text-xs font-bold shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none"
               style={{ borderColor: "var(--status-stopped-border)", color: "var(--status-stopped-text)" }}
             >
               ✕
@@ -117,7 +117,7 @@ export function StopBuilder({ stops, value, onChange }: StopBuilderProps) {
         <button
           type="button"
           onClick={() => setDropdownOpen((d) => !d)}
-          className="w-full border-2 border-dashed px-3 py-2.5 text-sm font-extrabold uppercase tracking-widest"
+          className="w-full rounded-none border-2 border-dashed px-3 py-2.5 text-sm font-black uppercase tracking-widest"
           style={{
             borderColor: "var(--text-primary)",
             fontFamily: "'Barlow Condensed', sans-serif",
@@ -129,7 +129,7 @@ export function StopBuilder({ stops, value, onChange }: StopBuilderProps) {
 
         {dropdownOpen && remainingStops.length > 0 && (
           <div
-            className="absolute left-0 right-0 z-50 border-2"
+            className="absolute left-0 right-0 z-50 rounded-none border-2 border-foreground"
             style={{
               background: "var(--bg-surface)",
               borderColor: "var(--text-primary)",
@@ -162,8 +162,8 @@ export function StopBuilder({ stops, value, onChange }: StopBuilderProps) {
                       key={stop.id}
                       type="button"
                       onClick={() => addStop(stop.id)}
-                      className="flex w-full items-center justify-between border-b px-3 py-2 text-left"
-                      style={{ borderColor: "var(--border-default)" }}
+                      className="flex w-full items-center justify-between border-b-2 border-foreground px-3 py-2 text-left font-bold uppercase tracking-wide"
+                      style={{ color: "var(--text-primary)" }}
                     >
                       <span
                         className="font-extrabold uppercase"
@@ -192,7 +192,7 @@ export function StopBuilder({ stops, value, onChange }: StopBuilderProps) {
         )}
       </div>
 
-      <p className="pt-1 text-[10px] font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
+      <p className="pt-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
         {value.length} stop{value.length !== 1 ? "s" : ""} selected
       </p>
     </div>

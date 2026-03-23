@@ -8,7 +8,7 @@ export default function Loading() {
         {[...Array(4)].map((_, i) => (
           <div
             key={i}
-            className="rounded-lg border-2 p-5"
+            className="rounded-none border-2 p-5"
             style={{ borderColor: "var(--border-default)" }}
           >
             <Skeleton className="mb-2 h-3 w-20" />
@@ -28,7 +28,7 @@ export default function Loading() {
         {[...Array(3)].map((_, i) => (
           <div
             key={i}
-            className="rounded-lg border-2 p-4"
+            className="rounded-none border-2 p-4"
             style={{ borderColor: "var(--border-default)" }}
           >
             <div className="flex items-center justify-between">

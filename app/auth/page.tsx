@@ -142,7 +142,7 @@ export default function AuthPage() {
         {/* Error banner */}
         {error && (
           <div
-            className="mb-4 rounded-sm border-l-4 border-red-500 px-4 py-3 text-sm"
+            className="mb-4 rounded-none border-2 border-foreground px-4 py-3 text-sm font-medium normal-case tracking-normal"
             style={{ background: "var(--status-stopped-bg)", color: "var(--status-stopped-text)" }}
           >
             {error === "OAuthAccountNotLinked"
@@ -155,7 +155,7 @@ export default function AuthPage() {
         <button
           onClick={handleGoogle}
           disabled={isPending}
-          className="mb-4 flex h-12 w-full items-center justify-center gap-3 border-2 text-sm font-semibold uppercase tracking-wide transition-opacity hover:opacity-80 disabled:opacity-50"
+          className="mb-4 flex h-12 w-full items-center justify-center gap-3 rounded-none border-2 text-sm font-bold uppercase tracking-wide shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-80 disabled:opacity-50"
           style={{
             background:  "var(--bg-surface-2)",
             borderColor: "var(--border-medium)",
@@ -181,7 +181,7 @@ export default function AuthPage() {
               placeholder="Full name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="h-12 w-full border-2 px-3 text-sm outline-none"
+              className="h-12 w-full rounded-none border-2 border-foreground bg-background px-3 text-sm outline-none shadow-[4px_4px_0_hsl(var(--foreground))] focus-visible:translate-x-[4px] focus-visible:translate-y-[4px] focus-visible:shadow-none"
               style={inputStyle}
               autoComplete="name"
             />
@@ -204,7 +204,7 @@ export default function AuthPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && !isPending && handleSubmit()}
-              className="h-12 w-full border-2 px-3 pr-11 text-sm outline-none"
+              className="h-12 w-full rounded-none border-2 border-foreground bg-background px-3 pr-11 text-sm outline-none shadow-[4px_4px_0_hsl(var(--foreground))] focus-visible:translate-x-[4px] focus-visible:translate-y-[4px] focus-visible:shadow-none"
               style={inputStyle}
               autoComplete={mode === "register" ? "new-password" : "current-password"}
             />
@@ -226,7 +226,7 @@ export default function AuthPage() {
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && !isPending && handleSubmit()}
-              className="h-12 w-full border-2 px-3 text-sm outline-none"
+              className="h-12 w-full rounded-none border-2 border-foreground bg-background px-3 text-sm outline-none shadow-[4px_4px_0_hsl(var(--foreground))] focus-visible:translate-x-[4px] focus-visible:translate-y-[4px] focus-visible:shadow-none"
               style={inputStyle}
               autoComplete="new-password"
             />
@@ -237,7 +237,7 @@ export default function AuthPage() {
         <button
           onClick={handleSubmit}
           disabled={isPending}
-          className="mt-4 flex h-12 w-full items-center justify-center gap-2 border-2 border-[#0D1B2A] bg-[#F4A522] text-sm font-bold uppercase tracking-widest text-[#0D1B2A] hover:bg-amber-400 disabled:opacity-60"
+          className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-none border-2 border-[#0D1B2A] bg-[#F4A522] text-sm font-bold uppercase tracking-widest text-[#0D1B2A] shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:bg-amber-400 disabled:opacity-60"
         >
           {isPending ? (
             <>
@@ -259,7 +259,7 @@ export default function AuthPage() {
 
         {/* Operator/admin access note */}
         <div
-          className="mt-6 rounded-sm border px-3 py-2 text-xs"
+          className="mt-6 rounded-none border-2 border-foreground px-3 py-2 text-xs font-medium normal-case tracking-normal shadow-[4px_4px_0_hsl(var(--foreground))]"
           style={{
             background:  "var(--bg-surface-2)",
             borderColor: "var(--border-default)",

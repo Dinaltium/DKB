@@ -212,10 +212,13 @@ export default function BusMap({ stops, livePosition }: BusMapProps) {
   };
 
   return (
-    <div className="ticket-stub overflow-hidden rounded-lg">
+    <div className="ticket-stub overflow-hidden rounded-none border-2 border-foreground shadow-[4px_4px_0_hsl(var(--foreground))]">
       {/* Top bar */}
-      <div className="flex items-center justify-between bg-amber-50 px-3 py-1.5">
-        <div className="flex items-center gap-2 text-xs text-amber-800">
+      <div
+        className="flex items-center justify-between border-b-2 border-foreground px-3 py-1.5"
+        style={{ background: "var(--bg-surface-2)", color: "var(--text-primary)" }}
+      >
+        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide">
           <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-amber-500" />
           Route follows NH66 road data via OpenStreetMap
         </div>
@@ -223,10 +226,9 @@ export default function BusMap({ stops, livePosition }: BusMapProps) {
         {/* Back to Bus button — only shown when user has panned away */}
         {!isFollowing && livePosition && (
           <button
+            type="button"
             onClick={recenterOnBus}
-            className="flex items-center gap-1.5 rounded-full border border-[#0D1B2A] 
-              bg-white px-3 py-1 text-xs font-bold text-[#0D1B2A] 
-              shadow-sm hover:bg-slate-50 active:scale-95 transition-transform"
+            className="flex items-center gap-1.5 rounded-none border-2 border-[#0D1B2A] bg-background px-3 py-1 text-xs font-bold uppercase tracking-wide text-[#0D1B2A] shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none active:scale-95"
           >
             {/* Bus emoji as icon */}
             🚌 Back to Bus
@@ -235,7 +237,10 @@ export default function BusMap({ stops, livePosition }: BusMapProps) {
 
         {/* Following indicator */}
         {isFollowing && livePosition && (
-          <span className="flex items-center gap-1 text-xs text-emerald-700">
+          <span
+            className="flex items-center gap-1 text-xs font-bold uppercase tracking-wide"
+            style={{ color: "var(--status-running-text)" }}
+          >
             <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
             Following bus
           </span>
