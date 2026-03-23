@@ -266,7 +266,7 @@ export default function LandingPage() {
               return (
                 <Link key={bus.id} href={`/bus/${bus.id}`} className="block">
                   <article
-                    className="h-full rounded-none border-2 p-5 shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-90"
+                    className="h-full rounded-none border-2 p-5 shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-100"
                     style={{
                       background: "var(--bg-surface)",
                       borderColor: "var(--border-default)",

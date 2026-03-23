@@ -13,6 +13,15 @@ import { toast } from "sonner";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { useTheme } from "@/app/context/ThemeContext";
 import { LANGUAGE_OPTIONS } from "@/lib/i18n";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Button } from '@/components/ui/button'
 
 interface AppShellProps {
   title:     string;
@@ -104,7 +113,7 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value as typeof language)}
-              className="h-10 rounded border-2 px-2 text-sm focus:outline-none"
+              className="h-10 border-2 px-2 text-sm rounded-none px-2 shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-100"
               style={{ background: "var(--select-bg)", borderColor: "var(--input-border)", color: "var(--text-primary)" }}
             >
               {LANGUAGE_OPTIONS.map((opt) => (
@@ -116,7 +125,7 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
             <button
               onClick={toggleTheme}
               aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-              className="flex h-10 w-10 items-center justify-center rounded border-2 hover:opacity-80"
+              className="h-10 border-2 px-2 text-sm focus:outline-none rounded-none border-2 px-2 shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-100"
               style={{ background: isDark ? "var(--bg-surface-2)" : "var(--bg-surface)", borderColor: "var(--input-border)", color: "var(--text-primary)" }}
             >
               {isDark
@@ -126,12 +135,12 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
 
             {/* Auth button / user menu */}
             {status === "loading" ? (
-              <div className="h-10 w-24 animate-pulse rounded-none border-2" style={{ borderColor: "var(--border-default)", background: "var(--bg-surface-2)" }} />
+              <div className="h-10 w-24 animate-pulse rounded-none border-2 shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-100" style={{ borderColor: "var(--border-default)", background: "var(--bg-surface-2)" }} />
             ) : session ? (
               <div className="relative">
                 <button
                   onClick={() => setMenuOpen((o) => !o)}
-                  className="relative flex h-10 items-center gap-2 rounded-none border-2 px-3 text-sm font-bold uppercase tracking-wide hover:opacity-80"
+                  className="relative flex h-10 items-center gap-2 border-2 px-3 text-sm font-bold uppercase tracking-wide hover:opacity-80 rounded-none border-2 shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-100"
                   style={{ background: "var(--bg-surface-2)", borderColor: "var(--input-border)", color: "var(--text-primary)" }}
                 >
                   {/* Avatar initials */}
@@ -155,6 +164,7 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
                 </button>
 
                 {/* Dropdown menu */}
+
                 {menuOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
