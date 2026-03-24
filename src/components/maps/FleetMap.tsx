@@ -199,40 +199,6 @@ export default function FleetMap() {
       className="relative overflow-hidden rounded-none border-2 border-foreground shadow-[4px_4px_0_hsl(var(--foreground))]"
       style={{ borderColor: "var(--border-default)" }}
     >
-      {/* Legend bar */}
-      <div
-        className="flex items-center justify-between border-b-2 border-foreground px-4 py-2 text-xs"
-        style={{
-          background: "var(--bg-surface-2)",
-        }}
-      >
-        <div className="flex flex-wrap items-center gap-4">
-          {buses.length === 0 ? (
-            <span style={{ color: "var(--text-muted)" }}>Loading buses…</span>
-          ) : (
-            buses.map((bus, index) => (
-              <span
-                key={bus.id}
-                className="flex items-center gap-1.5 font-semibold"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                <span
-                  className="inline-block h-2.5 w-2.5 rounded-full border-2 border-foreground"
-                  style={{ background: getBusColor(index) }}
-                />
-                {bus.number}
-              </span>
-            ))
-          )}
-        </div>
-        <span
-          className="flex items-center gap-1.5 font-semibold"
-          style={{ color: "var(--text-muted)" }}
-        >
-          <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
-          Live · 2s
-        </span>
-      </div>
 
       {/* Map container — isolation:isolate keeps Leaflet z-indices from
           escaping the stacking context and fighting the app navbar. */}

@@ -42,14 +42,12 @@ function StatTile({ label, value, icon, loading }: StatTileProps) {
       className="flex items-center gap-4 rounded-none border-2 p-5 shadow-[4px_4px_0_hsl(var(--foreground))]"
       style={{
         background: "var(--bg-surface)",
-        borderColor: "var(--border-default)",
       }}
     >
       <div
         className="flex h-11 w-11 shrink-0 items-center justify-center rounded-none border-2"
         style={{
           background: "var(--bg-surface-2)",
-          borderColor: "var(--border-default)",
           color: "#0E7C86",
         }}
       >
@@ -106,7 +104,6 @@ export default function LandingPage() {
         className="grid gap-6 rounded-none border-2 p-5 shadow-[4px_4px_0_hsl(var(--foreground))] md:grid-cols-2 md:gap-10 md:p-8"
         style={{
           background: "var(--bg-surface)",
-          borderColor: "var(--border-default)",
         }}
       >
         <div className="flex flex-col justify-center space-y-5">
@@ -135,7 +132,6 @@ export default function LandingPage() {
                 className="inline-flex h-11 items-center rounded-none border-2 px-5 text-sm font-bold uppercase tracking-wide shadow-[4px_4px_0_hsl(var(--foreground))] transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none hover:opacity-80"
                 style={{
                   background: "var(--bg-surface-2)",
-                  borderColor: "var(--border-medium)",
                   color: "var(--text-primary)",
                 }}
               >
@@ -148,7 +144,6 @@ export default function LandingPage() {
         {/* Hero image — full bleed on the right column */}
         <div
           className="overflow-hidden rounded-none border-2 shadow-[4px_4px_0_hsl(var(--foreground))]"
-          style={{ borderColor: "var(--border-default)" }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -198,24 +193,9 @@ export default function LandingPage() {
               color: "var(--text-primary)",
             }}
           >
-            Corridor Overview
+            ALL BUS LOCATIONS
           </h2>
-          <span
-            className="flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold"
-            style={{
-              background: "var(--status-running-bg)",
-              color: "var(--status-running-text)",
-              borderColor: "var(--status-running-border)",
-            }}
-          >
-            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
-            LIVE
-          </span>
         </div>
-        <p className="mb-4 text-sm" style={{ color: "var(--text-muted)" }}>
-          All buses on the corridor in real time. Click a marker to open its
-          live page.
-        </p>
         <FleetMap />
       </section>
 

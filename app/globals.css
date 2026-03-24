@@ -316,27 +316,7 @@
    ══════════════════════════════════════════════════════════════════ */
 
 /* Ticket stub: dashed border + punch-hole pseudo-elements */
-.ticket-stub {
-  position: relative;
-  border: 2px dashed var(--border-medium);
-  background: var(--bg-surface);
-  transition: background 0.2s ease, border-color 0.2s ease;
-}
-.ticket-stub::before,
-.ticket-stub::after {
-  content: "";
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  background: var(--ticket-hole-bg);
-  border: 2px solid var(--border-medium);
-  top: 50%;
-  transform: translateY(-50%);
-  transition: background 0.2s ease, border-color 0.2s ease;
-}
-.ticket-stub::before { left: -12px; }
-.ticket-stub::after  { right: -12px; }
+
 
 /* Surface card with offset shadow */
 .surface-card {

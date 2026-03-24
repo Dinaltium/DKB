@@ -26,7 +26,7 @@ export default async function DashboardPage() {
   // Not logged in — send to auth page
   if (!session) redirect("/auth?callbackUrl=/dashboard");
 
-  const role   = session.user.role;
+  const role = session.user.role;
   const userId = session.user.id;
 
   // ── Passenger ──────────────────────────────────────────────────────────────
@@ -65,7 +65,13 @@ export default async function DashboardPage() {
             className="ticket-stub rounded-none border-2 border-foreground p-8 text-center shadow-[4px_4px_0_hsl(var(--foreground))]"
             style={{ color: "var(--text-secondary)" }}
           >
-            <p className="text-2xl font-extrabold uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}>
+            <p
+              className="text-2xl font-extrabold uppercase"
+              style={{
+                fontFamily: "'Barlow Condensed', sans-serif",
+                color: "var(--text-primary)",
+              }}
+            >
               Account Pending
             </p>
             <p className="mt-2 text-sm">
@@ -77,19 +83,17 @@ export default async function DashboardPage() {
       );
     }
 
-    const [opBuses, opComplaints, payments, operatorBusRequests, stops] = await Promise.all([
-      getBusesForOperator(op.id),
-      getComplaintsForOperator(op.id),
-      getPaymentsForUser(userId),
-      getBusRequestsByOperator(op.id),
-      getAllStops(),
-    ]);
+    const [opBuses, opComplaints, payments, operatorBusRequests, stops] =
+      await Promise.all([
+        getBusesForOperator(op.id),
+        getComplaintsForOperator(op.id),
+        getPaymentsForUser(userId),
+        getBusRequestsByOperator(op.id),
+        getAllStops(),
+      ]);
 
     return (
-      <AppShell
-        title="Operator Dashboard"
-        subtitle={op.companyName}
-      >
+      <AppShell title="Operator Dashboard" subtitle={op.companyName}>
         <OperatorDashboard
           operator={op}
           buses={opBuses}
@@ -104,21 +108,24 @@ export default async function DashboardPage() {
 
   // ── Admin ──────────────────────────────────────────────────────────────────
   if (role === "admin") {
-    const [allBuses, allOperators, allComplaints, allBusRequests, allStops, allPayments] =
-      await Promise.all([
-        getAllBusesWithRouteIds(),
-        getAllOperators(),
-        getAllComplaints(),
-        getAllBusRequests(),
-        getAllStops(),
-        getAllPayments(),
-      ]);
+    const [
+      allBuses,
+      allOperators,
+      allComplaints,
+      allBusRequests,
+      allStops,
+      allPayments,
+    ] = await Promise.all([
+      getAllBusesWithRouteIds(),
+      getAllOperators(),
+      getAllComplaints(),
+      getAllBusRequests(),
+      getAllStops(),
+      getAllPayments(),
+    ]);
 
     return (
-      <AppShell
-        title="Admin Panel"
-        subtitle="Full platform overview"
-      >
+      <AppShell title="Admin Panel" subtitle="Full platform overview">
         <AdminDashboard
           buses={allBuses}
           operators={allOperators}

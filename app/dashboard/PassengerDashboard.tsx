@@ -6,13 +6,21 @@ import type { TravelHistory, LoyaltyAccount, Payment } from "@/lib/db/schema";
 
 interface Props {
   travelHistory: TravelHistory[];
-  loyalty:       LoyaltyAccount | null;
-  payments:      Payment[];
-  user:          { name?: string | null; email?: string | null; image?: string | null };
+  loyalty: LoyaltyAccount | null;
+  payments: Payment[];
+  user: { name?: string | null; email?: string | null; image?: string | null };
 }
 
-export function PassengerDashboard({ travelHistory, loyalty, payments, user }: Props) {
-  const cardStyle = { background: "var(--bg-surface)", borderColor: "var(--border-default)" };
+export function PassengerDashboard({
+  travelHistory,
+  loyalty,
+  payments,
+  user,
+}: Props) {
+  const cardStyle = {
+    background: "var(--bg-surface)",
+    borderColor: "var(--border-default)",
+  };
 
   const totalSpent = payments
     .filter((p) => p.status === "success")
@@ -53,7 +61,10 @@ export function PassengerDashboard({ travelHistory, loyalty, payments, user }: P
       <section>
         <h2
           className="mb-4 text-xl font-extrabold uppercase tracking-wide"
-          style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}
+          style={{
+            fontFamily: "'Barlow Condensed', sans-serif",
+            color: "var(--text-primary)",
+          }}
         >
           Travel History
         </h2>
@@ -61,7 +72,8 @@ export function PassengerDashboard({ travelHistory, loyalty, payments, user }: P
         {travelHistory.length === 0 ? (
           <div className="ticket-stub rounded-none border-2 border-foreground p-8 text-center shadow-[4px_4px_0_hsl(var(--foreground))]">
             <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-              No trips recorded yet. Scan a ticket with the mobile app to log your first journey.
+              No trips recorded yet. Scan a ticket with the mobile app to log
+              your first journey.
             </p>
             <Link
               href="/search"
@@ -84,28 +96,45 @@ export function PassengerDashboard({ travelHistory, loyalty, payments, user }: P
                     <div>
                       <p
                         className="text-2xl font-extrabold"
-                        style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}
+                        style={{
+                          fontFamily: "'Barlow Condensed', sans-serif",
+                          color: "var(--text-primary)",
+                        }}
                       >
                         {trip.busNumber ?? "Unknown Bus"}
                       </p>
-                      <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+                      <p
+                        className="text-sm"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
                         {trip.fromStop} → {trip.toStop}
                       </p>
-                      <p className="mt-1 text-xs" style={{ color: "var(--text-muted)" }}>
+                      <p
+                        className="mt-1 text-xs"
+                        style={{ color: "var(--text-muted)" }}
+                      >
                         {trip.travelDate
-                          ? new Date(trip.travelDate).toLocaleDateString("en-IN", { dateStyle: "medium" })
-                          : new Date(trip.createdAt).toLocaleDateString("en-IN", { dateStyle: "medium" })}
+                          ? new Date(trip.travelDate).toLocaleDateString(
+                              "en-IN",
+                              { dateStyle: "medium" },
+                            )
+                          : new Date(trip.createdAt).toLocaleDateString(
+                              "en-IN",
+                              { dateStyle: "medium" },
+                            )}
                       </p>
                     </div>
 
                     <div className="text-right">
-                      <p className="text-lg font-bold text-[#0E7C86]">₹{trip.scannedFare}</p>
+                      <p className="text-lg font-bold text-[#0E7C86]">
+                        ₹{trip.scannedFare}
+                      </p>
                       {overcharged && (
                         <span
                           className="inline-block rounded-full border px-2 py-0.5 text-[10px] font-semibold"
                           style={{
-                            background:  "var(--status-stopped-bg)",
-                            color:       "var(--status-stopped-text)",
+                            background: "var(--status-stopped-bg)",
+                            color: "var(--status-stopped-text)",
                             borderColor: "var(--status-stopped-border)",
                           }}
                         >
@@ -131,7 +160,10 @@ export function PassengerDashboard({ travelHistory, loyalty, payments, user }: P
         <section>
           <h2
             className="mb-4 text-xl font-extrabold uppercase tracking-wide"
-            style={{ fontFamily: "'Barlow Condensed', sans-serif", color: "var(--text-primary)" }}
+            style={{
+              fontFamily: "'Barlow Condensed', sans-serif",
+              color: "var(--text-primary)",
+            }}
           >
             Payment History
           </h2>
@@ -143,10 +175,16 @@ export function PassengerDashboard({ travelHistory, loyalty, payments, user }: P
                 style={cardStyle}
               >
                 <div>
-                  <span className="font-semibold" style={{ color: "var(--text-primary)" }}>
+                  <span
+                    className="font-semibold"
+                    style={{ color: "var(--text-primary)" }}
+                  >
                     Bus {p.busNumber}
                   </span>
-                  <span className="ml-2 text-xs" style={{ color: "var(--text-muted)" }}>
+                  <span
+                    className="ml-2 text-xs"
+                    style={{ color: "var(--text-muted)" }}
+                  >
                     {new Date(p.createdAt).toLocaleDateString("en-IN")}
                   </span>
                 </div>
@@ -156,8 +194,16 @@ export function PassengerDashboard({ travelHistory, loyalty, payments, user }: P
                     className="rounded-full border px-2 py-0.5 text-[10px] font-semibold"
                     style={
                       p.status === "success"
-                        ? { background: "var(--status-running-bg)", color: "var(--status-running-text)", borderColor: "var(--status-running-border)" }
-                        : { background: "var(--status-stopped-bg)", color: "var(--status-stopped-text)", borderColor: "var(--status-stopped-border)" }
+                        ? {
+                            background: "var(--status-running-bg)",
+                            color: "var(--status-running-text)",
+                            borderColor: "var(--status-running-border)",
+                          }
+                        : {
+                            background: "var(--status-stopped-bg)",
+                            color: "var(--status-stopped-text)",
+                            borderColor: "var(--status-stopped-border)",
+                          }
                     }
                   >
                     {p.status}
@@ -173,7 +219,10 @@ export function PassengerDashboard({ travelHistory, loyalty, payments, user }: P
 }
 
 function StatCard({
-  icon, label, value, alert,
+  icon,
+  label,
+  value,
+  alert,
 }: {
   icon: React.ReactNode;
   label: string;
@@ -183,7 +232,10 @@ function StatCard({
   return (
     <div
       className="rounded-none border-2 p-5 shadow-[4px_4px_0_hsl(var(--foreground))]"
-      style={{ background: "var(--bg-surface)", borderColor: "var(--border-default)" }}
+      style={{
+        background: "var(--bg-surface)",
+        borderColor: "var(--border-default)",
+      }}
     >
       <div className="flex items-center gap-2">
         {icon}
