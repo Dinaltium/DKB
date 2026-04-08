@@ -12,32 +12,32 @@ export const dynamic = "force-dynamic";
 
 import { AppShell } from "@/components/layout/AppShell";
 import {
-  getAllBusesWithRouteIds,
-  getAllStops,
-  getAllOperators,
+	getAllBusesWithRouteIds,
+	getAllOperators,
+	getAllStops,
 } from "@/lib/db/queries";
 import { SearchClient } from "./SearchClient";
 
 export default async function SearchPage() {
-  const [buses, stops, operatorRows] = await Promise.all([
-    getAllBusesWithRouteIds(),
-    getAllStops(),
-    getAllOperators(),
-  ]);
+	const [buses, stops, operatorRows] = await Promise.all([
+		getAllBusesWithRouteIds(),
+		getAllStops(),
+		getAllOperators(),
+	]);
 
-  // Flatten operator rows into a simple id → companyName map that can be
-  // serialised as JSON props to the client component.
-  const operators = operatorRows.map(({ operator }) => ({
-    id: operator.id,
-    companyName: operator.companyName,
-  }));
+	// Flatten operator rows into a simple id → companyName map that can be
+	// serialised as JSON props to the client component.
+	const operators = operatorRows.map(({ operator }) => ({
+		id: operator.id,
+		companyName: operator.companyName,
+	}));
 
-  return (
-    <AppShell
-      title="Search Route"
-      subtitle="Choose stops, compare fares, and open live bus pages"
-    >
-      <SearchClient buses={buses} stops={stops} operators={operators} />
-    </AppShell>
-  );
+	return (
+		<AppShell
+			title="Search Route"
+			subtitle="Choose stops, compare fares, and open live bus pages"
+		>
+			<SearchClient buses={buses} stops={stops} operators={operators} />
+		</AppShell>
+	);
 }

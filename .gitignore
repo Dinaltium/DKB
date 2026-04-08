@@ -51,3 +51,10 @@ fix_csv.py
 pnpm-lock.yaml
 pnpm-workspace.yaml
 
+# Ignore Reference Folder
+BusLink/
+
+# next-pwa
+/public/sw.js
+/public/workbox-*.js
+/public/swe-worker-*.js

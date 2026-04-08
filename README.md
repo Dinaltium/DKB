@@ -27,7 +27,7 @@ Some Radix primitives (`dialog`, `tabs`, `scroll-area`, `toggle-group`, etc.) si
 
 ## Project structure
 
-Complete layout of **folders and files** in the repo (as tracked or present in the working tree). **Not listed** (generated or install-only): `node_modules/`, `.next/`, `.nextwin/`, `.git/`, `coverage/`, `out/`, `build/`, and local env files matching `.env*` (create `.env.local` from `.env.local.example` when present). After a production build, **next-pwa** may add `public/sw.js` and related workbox assets.
+Complete layout of **folders and files** in the repo (as tracked or present in the working tree). **Not listed** (generated or install-only): `node_modules/`, `.next/`, `.next/`, `.git/`, `coverage/`, `out/`, `build/`, and local env files matching `.env*` (create `.env.local` from `.env.local.example` when present). After a production build, **next-pwa** may add `public/sw.js` and related workbox assets.
 
 ```text
 dkbus/
@@ -36,9 +36,9 @@ dkbus/
 ├── README.md
 ├── app.py
 ├── auth.ts
+├── biome.json
 ├── components.json
 ├── drizzle.config.ts
-├── eslint.config.mjs
 ├── fix_csv.py
 ├── geocode_log.csv
 ├── locations_failed.json
@@ -220,7 +220,9 @@ dkbus/
 |---------|---------|
 | `pnpm dev` | Dev server (`predev` ensures Next output dir) |
 | `pnpm build` / `pnpm start` | Production build / run |
-| `pnpm lint` | ESLint |
+| `pnpm lint` | Biome Linting |
+| `pnpm format` | Biome Formatting |
+| `pnpm check` | Biome Code Checks |
 | `pnpm db:generate` | Generate Drizzle migrations from schema |
 | `pnpm db:migrate` | Run migrations |
 | `pnpm db:push` | Push schema (uses `--force` in script; use with care) |

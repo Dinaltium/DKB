@@ -18,12 +18,12 @@
  * @returns Fare in whole rupees (minimum ₹5)
  */
 export function calcFare(
-  fullFare: number,
-  fromIdx: number,
-  toIdx: number,
-  totalStops: number,
+	fullFare: number,
+	fromIdx: number,
+	toIdx: number,
+	totalStops: number,
 ): number {
-  const steps = Math.abs(toIdx - fromIdx);
-  if (steps === 0 || totalStops <= 1) return 0;
-  return Math.max(5, Math.ceil((steps / (totalStops - 1)) * fullFare));
+	const steps = Math.abs(toIdx - fromIdx);
+	if (steps === 0 || totalStops <= 1) return 0;
+	return Math.max(5, Math.ceil((steps / (totalStops - 1)) * fullFare));
 }
