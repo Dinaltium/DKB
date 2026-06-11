@@ -142,25 +142,25 @@
 
 .dark {
 	/* ── Base ── */
-	--background: 240 10% 10%;
+	--background: 240 12% 7%;
 	--foreground: 60 9% 98%;
 
 	/* ── Card & Popover ── */
-	--card: 240 10% 14%;
+	--card: 240 10% 11%;
 	--card-foreground: 60 9% 98%;
-	--popover: 240 10% 14%;
+	--popover: 240 10% 11%;
 	--popover-foreground: 60 9% 98%;
 
-	/* ── Brand palette (unchanged in dark) ── */
-	--primary: 0 84% 71%;
-	--primary-foreground: 240 10% 10%;
-	--secondary: 174 62% 56%;
+	/* ── Brand palette (Indian local bus accents: KSRTC Crimson, Saffron, Electric Blue) ── */
+	--primary: 355 85% 58%;
+	--primary-foreground: 0 0% 100%;
+	--secondary: 195 100% 50%;
 	--secondary-foreground: 240 10% 10%;
-	--accent: 49 100% 71%;
+	--accent: 26 100% 50%;
 	--accent-foreground: 240 10% 10%;
 
 	/* ── Muted ── */
-	--muted: 240 10% 20%;
+	--muted: 240 10% 15%;
 	--muted-foreground: 60 5% 65%;
 
 	/* ── Semantic ── */
@@ -182,34 +182,34 @@
 	--shadow-color: 0 0% 100%;
 
 	/* ── Sidebar ── */
-	--sidebar: 240 10% 14%;
+	--sidebar: 240 10% 11%;
 	--sidebar-foreground: 60 9% 98%;
-	--sidebar-primary: 340 82% 65%;
-	--sidebar-primary-foreground: 240 10% 10%;
-	--sidebar-accent: 240 10% 20%;
+	--sidebar-primary: 355 85% 58%;
+	--sidebar-primary-foreground: 0 0% 100%;
+	--sidebar-accent: 240 10% 15%;
 	--sidebar-accent-foreground: 60 9% 98%;
 	--sidebar-border: 60 9% 98%;
 	--sidebar-ring: 60 9% 98%;
 
 	/* ── BusLink design tokens (dark overrides) ── */
 	--cta-bg: var(--color-amber);
-	--bg-page: #0f1923;
-	--bg-surface: #1a2535;
-	--bg-surface-2: #243044;
-	--bg-surface-3: #2d3d54;
+	--bg-page: #0a0a0d;
+	--bg-surface: #131318;
+	--bg-surface-2: #1b1b21;
+	--bg-surface-3: #24242c;
 
-	--text-primary: #e8edf3;
-	--text-secondary: #9aafc5;
-	--text-muted: #6b849e;
-	--text-inverse: #0d1b2a;
+	--text-primary: #f5f5f7;
+	--text-secondary: #a1a1aa;
+	--text-muted: #71717a;
+	--text-inverse: #0f0f12;
 
 	--border-default: rgba(255, 255, 255, 0.08);
 	--border-medium: rgba(255, 255, 255, 0.14);
 	--border-strong: rgba(255, 255, 255, 0.22);
 
-	--ticket-hole-bg: #0f1923;
+	--ticket-hole-bg: #0a0a0d;
 
-	--header-bg: rgba(15, 25, 35, 0.92);
+	--header-bg: rgba(10, 10, 13, 0.92);
 	--header-border: rgba(255, 255, 255, 0.07);
 
 	--status-running-bg: #052e16;
@@ -225,11 +225,11 @@
 	--shadow-card: 4px 4px 0 rgba(255, 255, 255, 0.3);
 	--shadow-card-hover: 6px 6px 0 rgba(255, 255, 255, 0.45);
 
-	--input-bg: #243044;
-	--input-border: #3d5068;
-	--input-text: #e8edf3;
+	--input-bg: #1b1b21;
+	--input-border: #333342;
+	--input-text: #f5f5f7;
 
-	--select-bg: #243044;
+	--select-bg: #1b1b21;
 
 	--neon-pink: hsl(330 100% 70%);
 
