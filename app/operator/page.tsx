@@ -4,5 +4,5 @@
 import { redirect } from "next/navigation";
 
 export default function OperatorPageRedirect() {
-  redirect("/dashboard");
+	redirect("/dashboard");
 }

@@ -1,0 +1,3037 @@
+{
+	"id": "47331deb-97d5-446b-9592-cd1dc0f8c08c",
+	"prevId": "00000000-0000-0000-0000-000000000000",
+	"version": "7",
+	"dialect": "postgresql",
+	"tables": {
+		"public.accounts": {
+			"name": "accounts",
+			"schema": "",
+			"columns": {
+				"user_id": {
+					"name": "user_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"type": {
+					"name": "type",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"provider": {
+					"name": "provider",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"provider_account_id": {
+					"name": "provider_account_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"refresh_token": {
+					"name": "refresh_token",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"access_token": {
+					"name": "access_token",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"expires_at": {
+					"name": "expires_at",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"token_type": {
+					"name": "token_type",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"scope": {
+					"name": "scope",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"id_token": {
+					"name": "id_token",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"session_state": {
+					"name": "session_state",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"accounts_user_id_users_id_fk": {
+					"name": "accounts_user_id_users_id_fk",
+					"tableFrom": "accounts",
+					"tableTo": "users",
+					"columnsFrom": ["user_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"accounts_provider_provider_account_id_pk": {
+					"name": "accounts_provider_provider_account_id_pk",
+					"columns": ["provider", "provider_account_id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.bus_requests": {
+			"name": "bus_requests",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "uuid",
+					"primaryKey": true,
+					"notNull": true,
+					"default": "gen_random_uuid()"
+				},
+				"operator_id": {
+					"name": "operator_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"number": {
+					"name": "number",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"license_plate": {
+					"name": "license_plate",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"origin": {
+					"name": "origin",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"destination": {
+					"name": "destination",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"full_fare": {
+					"name": "full_fare",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"driver_name": {
+					"name": "driver_name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"conductor_name": {
+					"name": "conductor_name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"total_seats": {
+					"name": "total_seats",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"schedule": {
+					"name": "schedule",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'[]'::jsonb"
+				},
+				"women_reserved_total": {
+					"name": "women_reserved_total",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"default": 0
+				},
+				"student_card_accepted": {
+					"name": "student_card_accepted",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": false
+				},
+				"student_discount_percent": {
+					"name": "student_discount_percent",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"default": 0
+				},
+				"route_stop_ids": {
+					"name": "route_stop_ids",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'[]'::jsonb"
+				},
+				"operator_aadhaar": {
+					"name": "operator_aadhaar",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"operator_license": {
+					"name": "operator_license",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"rc_number": {
+					"name": "rc_number",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"pollution_cert_number": {
+					"name": "pollution_cert_number",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"insurance_policy_number": {
+					"name": "insurance_policy_number",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"status": {
+					"name": "status",
+					"type": "bus_request_status",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'pending'"
+				},
+				"admin_note": {
+					"name": "admin_note",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"bus_requests_operator_id_operators_id_fk": {
+					"name": "bus_requests_operator_id_operators_id_fk",
+					"tableFrom": "bus_requests",
+					"tableTo": "operators",
+					"columnsFrom": ["operator_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.bus_routes": {
+			"name": "bus_routes",
+			"schema": "",
+			"columns": {
+				"bus_id": {
+					"name": "bus_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"stop_id": {
+					"name": "stop_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"stop_order": {
+					"name": "stop_order",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"bus_routes_bus_id_buses_id_fk": {
+					"name": "bus_routes_bus_id_buses_id_fk",
+					"tableFrom": "bus_routes",
+					"tableTo": "buses",
+					"columnsFrom": ["bus_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				},
+				"bus_routes_stop_id_stops_id_fk": {
+					"name": "bus_routes_stop_id_stops_id_fk",
+					"tableFrom": "bus_routes",
+					"tableTo": "stops",
+					"columnsFrom": ["stop_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"bus_routes_bus_id_stop_id_pk": {
+					"name": "bus_routes_bus_id_stop_id_pk",
+					"columns": ["bus_id", "stop_id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.buses": {
+			"name": "buses",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"number": {
+					"name": "number",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"operator_id": {
+					"name": "operator_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"license_plate": {
+					"name": "license_plate",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"origin": {
+					"name": "origin",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"destination": {
+					"name": "destination",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"full_fare": {
+					"name": "full_fare",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"driver_name": {
+					"name": "driver_name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"conductor_name": {
+					"name": "conductor_name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"status": {
+					"name": "status",
+					"type": "bus_status",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'Running'"
+				},
+				"status_note": {
+					"name": "status_note",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "''"
+				},
+				"schedule": {
+					"name": "schedule",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'[]'::jsonb"
+				},
+				"total_seats": {
+					"name": "total_seats",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"occupied_seats": {
+					"name": "occupied_seats",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"default": 0
+				},
+				"women_reserved_total": {
+					"name": "women_reserved_total",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"default": 0
+				},
+				"women_reserved_available": {
+					"name": "women_reserved_available",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"default": 0
+				},
+				"student_card_accepted": {
+					"name": "student_card_accepted",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": false
+				},
+				"student_discount_percent": {
+					"name": "student_discount_percent",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"default": 0
+				},
+				"votes": {
+					"name": "votes",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'{\"onTime\":0,\"slightlyLate\":0,\"veryLate\":0}'::jsonb"
+				},
+				"route_geometry": {
+					"name": "route_geometry",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"seat_layout": {
+					"name": "seat_layout",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'2x2'"
+				},
+				"qr_code_data": {
+					"name": "qr_code_data",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"is_live": {
+					"name": "is_live",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": false
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"buses_operator_id_operators_id_fk": {
+					"name": "buses_operator_id_operators_id_fk",
+					"tableFrom": "buses",
+					"tableTo": "operators",
+					"columnsFrom": ["operator_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {
+				"buses_number_unique": {
+					"name": "buses_number_unique",
+					"nullsNotDistinct": false,
+					"columns": ["number"]
+				}
+			},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.chests": {
+			"name": "chests",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"user_id": {
+					"name": "user_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"chest_type": {
+					"name": "chest_type",
+					"type": "chest_type",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"xp_at_earn": {
+					"name": "xp_at_earn",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"is_opened": {
+					"name": "is_opened",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": false
+				},
+				"opened_at": {
+					"name": "opened_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"reward_type": {
+					"name": "reward_type",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"reward_value": {
+					"name": "reward_value",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"rarity": {
+					"name": "rarity",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"chests_user_id_users_id_fk": {
+					"name": "chests_user_id_users_id_fk",
+					"tableFrom": "chests",
+					"tableTo": "users",
+					"columnsFrom": ["user_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.complaints": {
+			"name": "complaints",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "uuid",
+					"primaryKey": true,
+					"notNull": true,
+					"default": "gen_random_uuid()"
+				},
+				"bus_id": {
+					"name": "bus_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"user_id": {
+					"name": "user_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"bus_number": {
+					"name": "bus_number",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"category": {
+					"name": "category",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"description": {
+					"name": "description",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"photo_url": {
+					"name": "photo_url",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"status": {
+					"name": "status",
+					"type": "complaint_status",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'pending'"
+				},
+				"resolved_by": {
+					"name": "resolved_by",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"resolved_at": {
+					"name": "resolved_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"complaints_bus_id_buses_id_fk": {
+					"name": "complaints_bus_id_buses_id_fk",
+					"tableFrom": "complaints",
+					"tableTo": "buses",
+					"columnsFrom": ["bus_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"complaints_user_id_users_id_fk": {
+					"name": "complaints_user_id_users_id_fk",
+					"tableFrom": "complaints",
+					"tableTo": "users",
+					"columnsFrom": ["user_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"complaints_resolved_by_users_id_fk": {
+					"name": "complaints_resolved_by_users_id_fk",
+					"tableFrom": "complaints",
+					"tableTo": "users",
+					"columnsFrom": ["resolved_by"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.conductor_access": {
+			"name": "conductor_access",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"conductor_id": {
+					"name": "conductor_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"bus_id": {
+					"name": "bus_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"operator_id": {
+					"name": "operator_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"conductor_code": {
+					"name": "conductor_code",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"is_active": {
+					"name": "is_active",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": true
+				},
+				"granted_at": {
+					"name": "granted_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {
+				"uniq_conductor_bus": {
+					"name": "uniq_conductor_bus",
+					"columns": [
+						{
+							"expression": "conductor_id",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						},
+						{
+							"expression": "bus_id",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": true,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				}
+			},
+			"foreignKeys": {
+				"conductor_access_conductor_id_users_id_fk": {
+					"name": "conductor_access_conductor_id_users_id_fk",
+					"tableFrom": "conductor_access",
+					"tableTo": "users",
+					"columnsFrom": ["conductor_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				},
+				"conductor_access_bus_id_buses_id_fk": {
+					"name": "conductor_access_bus_id_buses_id_fk",
+					"tableFrom": "conductor_access",
+					"tableTo": "buses",
+					"columnsFrom": ["bus_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				},
+				"conductor_access_operator_id_users_id_fk": {
+					"name": "conductor_access_operator_id_users_id_fk",
+					"tableFrom": "conductor_access",
+					"tableTo": "users",
+					"columnsFrom": ["operator_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {
+				"conductor_access_conductor_code_unique": {
+					"name": "conductor_access_conductor_code_unique",
+					"nullsNotDistinct": false,
+					"columns": ["conductor_code"]
+				}
+			},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.earned_titles": {
+			"name": "earned_titles",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"user_id": {
+					"name": "user_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"title": {
+					"name": "title",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"rarity": {
+					"name": "rarity",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'common'"
+				},
+				"earned_at": {
+					"name": "earned_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {
+				"uniq_user_title": {
+					"name": "uniq_user_title",
+					"columns": [
+						{
+							"expression": "user_id",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						},
+						{
+							"expression": "title",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": true,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				}
+			},
+			"foreignKeys": {
+				"earned_titles_user_id_users_id_fk": {
+					"name": "earned_titles_user_id_users_id_fk",
+					"tableFrom": "earned_titles",
+					"tableTo": "users",
+					"columnsFrom": ["user_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.fares": {
+			"name": "fares",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"route_id": {
+					"name": "route_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"from_stop_id": {
+					"name": "from_stop_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"to_stop_id": {
+					"name": "to_stop_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"fare_inr": {
+					"name": "fare_inr",
+					"type": "numeric(8, 2)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {
+				"uniq_fare_route_stops": {
+					"name": "uniq_fare_route_stops",
+					"columns": [
+						{
+							"expression": "route_id",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						},
+						{
+							"expression": "from_stop_id",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						},
+						{
+							"expression": "to_stop_id",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": true,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				}
+			},
+			"foreignKeys": {
+				"fares_route_id_routes_id_fk": {
+					"name": "fares_route_id_routes_id_fk",
+					"tableFrom": "fares",
+					"tableTo": "routes",
+					"columnsFrom": ["route_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				},
+				"fares_from_stop_id_route_stops_id_fk": {
+					"name": "fares_from_stop_id_route_stops_id_fk",
+					"tableFrom": "fares",
+					"tableTo": "route_stops",
+					"columnsFrom": ["from_stop_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				},
+				"fares_to_stop_id_route_stops_id_fk": {
+					"name": "fares_to_stop_id_route_stops_id_fk",
+					"tableFrom": "fares",
+					"tableTo": "route_stops",
+					"columnsFrom": ["to_stop_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.loyalty_accounts": {
+			"name": "loyalty_accounts",
+			"schema": "",
+			"columns": {
+				"user_id": {
+					"name": "user_id",
+					"type": "uuid",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"total_points": {
+					"name": "total_points",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"default": 0
+				},
+				"total_trips": {
+					"name": "total_trips",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"default": 0
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"loyalty_accounts_user_id_users_id_fk": {
+					"name": "loyalty_accounts_user_id_users_id_fk",
+					"tableFrom": "loyalty_accounts",
+					"tableTo": "users",
+					"columnsFrom": ["user_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.notifications": {
+			"name": "notifications",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"user_id": {
+					"name": "user_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"title": {
+					"name": "title",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"message": {
+					"name": "message",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"type": {
+					"name": "type",
+					"type": "notification_type",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'info'"
+				},
+				"is_read": {
+					"name": "is_read",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"notifications_user_id_users_id_fk": {
+					"name": "notifications_user_id_users_id_fk",
+					"tableFrom": "notifications",
+					"tableTo": "users",
+					"columnsFrom": ["user_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.operators": {
+			"name": "operators",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "uuid",
+					"primaryKey": true,
+					"notNull": true,
+					"default": "gen_random_uuid()"
+				},
+				"user_id": {
+					"name": "user_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"company_name": {
+					"name": "company_name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"phone": {
+					"name": "phone",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"approved": {
+					"name": "approved",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": false
+				},
+				"aadhar": {
+					"name": "aadhar",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"driving_license": {
+					"name": "driving_license",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"rc_number": {
+					"name": "rc_number",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"pollution_cert_no": {
+					"name": "pollution_cert_no",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"insurance_policy_no": {
+					"name": "insurance_policy_no",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"operators_user_id_users_id_fk": {
+					"name": "operators_user_id_users_id_fk",
+					"tableFrom": "operators",
+					"tableTo": "users",
+					"columnsFrom": ["user_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.passes": {
+			"name": "passes",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"pass_uid": {
+					"name": "pass_uid",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"user_id": {
+					"name": "user_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"pass_type": {
+					"name": "pass_type",
+					"type": "pass_type",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"student_name": {
+					"name": "student_name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"college_name": {
+					"name": "college_name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"student_id_number": {
+					"name": "student_id_number",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"year_of_passing": {
+					"name": "year_of_passing",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"application_fee_inr": {
+					"name": "application_fee_inr",
+					"type": "numeric(8, 2)",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'50'"
+				},
+				"fee_txn_id": {
+					"name": "fee_txn_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"status": {
+					"name": "status",
+					"type": "pass_status",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'pending_verification'"
+				},
+				"rejection_reason": {
+					"name": "rejection_reason",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"verified_by": {
+					"name": "verified_by",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"valid_from": {
+					"name": "valid_from",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"valid_until": {
+					"name": "valid_until",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"passes_user_id_users_id_fk": {
+					"name": "passes_user_id_users_id_fk",
+					"tableFrom": "passes",
+					"tableTo": "users",
+					"columnsFrom": ["user_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				},
+				"passes_verified_by_users_id_fk": {
+					"name": "passes_verified_by_users_id_fk",
+					"tableFrom": "passes",
+					"tableTo": "users",
+					"columnsFrom": ["verified_by"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {
+				"passes_pass_uid_unique": {
+					"name": "passes_pass_uid_unique",
+					"nullsNotDistinct": false,
+					"columns": ["pass_uid"]
+				}
+			},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.payments": {
+			"name": "payments",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "uuid",
+					"primaryKey": true,
+					"notNull": true,
+					"default": "gen_random_uuid()"
+				},
+				"bus_id": {
+					"name": "bus_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"user_id": {
+					"name": "user_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"bus_number": {
+					"name": "bus_number",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"amount": {
+					"name": "amount",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"upi_id": {
+					"name": "upi_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"transaction_id": {
+					"name": "transaction_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"status": {
+					"name": "status",
+					"type": "payment_status",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'pending'"
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"payments_bus_id_buses_id_fk": {
+					"name": "payments_bus_id_buses_id_fk",
+					"tableFrom": "payments",
+					"tableTo": "buses",
+					"columnsFrom": ["bus_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"payments_user_id_users_id_fk": {
+					"name": "payments_user_id_users_id_fk",
+					"tableFrom": "payments",
+					"tableTo": "users",
+					"columnsFrom": ["user_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.rewards": {
+			"name": "rewards",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"user_id": {
+					"name": "user_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"xp_points": {
+					"name": "xp_points",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"default": 0
+				},
+				"xp_level": {
+					"name": "xp_level",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'Newcomer'"
+				},
+				"active_title": {
+					"name": "active_title",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'New Rider'"
+				},
+				"total_km": {
+					"name": "total_km",
+					"type": "numeric(10, 2)",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'0'"
+				},
+				"pending_cashback_inr": {
+					"name": "pending_cashback_inr",
+					"type": "numeric(8, 2)",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'0'"
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"rewards_user_id_users_id_fk": {
+					"name": "rewards_user_id_users_id_fk",
+					"tableFrom": "rewards",
+					"tableTo": "users",
+					"columnsFrom": ["user_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {
+				"rewards_user_id_unique": {
+					"name": "rewards_user_id_unique",
+					"nullsNotDistinct": false,
+					"columns": ["user_id"]
+				}
+			},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.route_stops": {
+			"name": "route_stops",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"route_id": {
+					"name": "route_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"stop_name": {
+					"name": "stop_name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"stop_order": {
+					"name": "stop_order",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"latitude": {
+					"name": "latitude",
+					"type": "numeric(10, 7)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"longitude": {
+					"name": "longitude",
+					"type": "numeric(10, 7)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {
+				"uniq_route_stop_order": {
+					"name": "uniq_route_stop_order",
+					"columns": [
+						{
+							"expression": "route_id",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						},
+						{
+							"expression": "stop_order",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": true,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				}
+			},
+			"foreignKeys": {
+				"route_stops_route_id_routes_id_fk": {
+					"name": "route_stops_route_id_routes_id_fk",
+					"tableFrom": "route_stops",
+					"tableTo": "routes",
+					"columnsFrom": ["route_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.routes": {
+			"name": "routes",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"route_name": {
+					"name": "route_name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"start_city": {
+					"name": "start_city",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"end_city": {
+					"name": "end_city",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"is_active": {
+					"name": "is_active",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": true
+				},
+				"created_by": {
+					"name": "created_by",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"routes_created_by_users_id_fk": {
+					"name": "routes_created_by_users_id_fk",
+					"tableFrom": "routes",
+					"tableTo": "users",
+					"columnsFrom": ["created_by"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.sessions": {
+			"name": "sessions",
+			"schema": "",
+			"columns": {
+				"session_token": {
+					"name": "session_token",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"user_id": {
+					"name": "user_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"expires": {
+					"name": "expires",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"sessions_user_id_users_id_fk": {
+					"name": "sessions_user_id_users_id_fk",
+					"tableFrom": "sessions",
+					"tableTo": "users",
+					"columnsFrom": ["user_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.stickers": {
+			"name": "stickers",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"user_id": {
+					"name": "user_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"sticker_key": {
+					"name": "sticker_key",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"rarity": {
+					"name": "rarity",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'common'"
+				},
+				"earned_at": {
+					"name": "earned_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"stickers_user_id_users_id_fk": {
+					"name": "stickers_user_id_users_id_fk",
+					"tableFrom": "stickers",
+					"tableTo": "users",
+					"columnsFrom": ["user_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.stops": {
+			"name": "stops",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"name": {
+					"name": "name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"lat": {
+					"name": "lat",
+					"type": "real",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"lng": {
+					"name": "lng",
+					"type": "real",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.subscriptions": {
+			"name": "subscriptions",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"operator_id": {
+					"name": "operator_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"num_buses": {
+					"name": "num_buses",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"default": 1
+				},
+				"amount_paid_inr": {
+					"name": "amount_paid_inr",
+					"type": "numeric(10, 2)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"upi_txn_id": {
+					"name": "upi_txn_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"status": {
+					"name": "status",
+					"type": "subscription_status",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'pending_verification'"
+				},
+				"rejection_reason": {
+					"name": "rejection_reason",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"verified_by": {
+					"name": "verified_by",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"starts_at": {
+					"name": "starts_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"expires_at": {
+					"name": "expires_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"subscriptions_operator_id_users_id_fk": {
+					"name": "subscriptions_operator_id_users_id_fk",
+					"tableFrom": "subscriptions",
+					"tableTo": "users",
+					"columnsFrom": ["operator_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				},
+				"subscriptions_verified_by_users_id_fk": {
+					"name": "subscriptions_verified_by_users_id_fk",
+					"tableFrom": "subscriptions",
+					"tableTo": "users",
+					"columnsFrom": ["verified_by"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.tickets": {
+			"name": "tickets",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"ticket_uid": {
+					"name": "ticket_uid",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"user_id": {
+					"name": "user_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"guest_name": {
+					"name": "guest_name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"guest_phone": {
+					"name": "guest_phone",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"trip_id": {
+					"name": "trip_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"from_stop_id": {
+					"name": "from_stop_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"to_stop_id": {
+					"name": "to_stop_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"from_stop_name": {
+					"name": "from_stop_name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"to_stop_name": {
+					"name": "to_stop_name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"seat_count": {
+					"name": "seat_count",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"default": 1
+				},
+				"original_fare_inr": {
+					"name": "original_fare_inr",
+					"type": "numeric(8, 2)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"discount_type": {
+					"name": "discount_type",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"discount_amount_inr": {
+					"name": "discount_amount_inr",
+					"type": "numeric(8, 2)",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'0'"
+				},
+				"cashback_used_inr": {
+					"name": "cashback_used_inr",
+					"type": "numeric(8, 2)",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'0'"
+				},
+				"final_fare_inr": {
+					"name": "final_fare_inr",
+					"type": "numeric(8, 2)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"distance_km": {
+					"name": "distance_km",
+					"type": "numeric(8, 2)",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'0'"
+				},
+				"qr_hash": {
+					"name": "qr_hash",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"status": {
+					"name": "status",
+					"type": "ticket_status",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'pending'"
+				},
+				"payment_status": {
+					"name": "payment_status",
+					"type": "ticket_payment_status",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'pending'"
+				},
+				"payment_ref": {
+					"name": "payment_ref",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"payment_method": {
+					"name": "payment_method",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"upi_app": {
+					"name": "upi_app",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"is_guest": {
+					"name": "is_guest",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": false
+				},
+				"expires_at": {
+					"name": "expires_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"tickets_user_id_users_id_fk": {
+					"name": "tickets_user_id_users_id_fk",
+					"tableFrom": "tickets",
+					"tableTo": "users",
+					"columnsFrom": ["user_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"tickets_trip_id_trips_id_fk": {
+					"name": "tickets_trip_id_trips_id_fk",
+					"tableFrom": "tickets",
+					"tableTo": "trips",
+					"columnsFrom": ["trip_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"tickets_from_stop_id_route_stops_id_fk": {
+					"name": "tickets_from_stop_id_route_stops_id_fk",
+					"tableFrom": "tickets",
+					"tableTo": "route_stops",
+					"columnsFrom": ["from_stop_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"tickets_to_stop_id_route_stops_id_fk": {
+					"name": "tickets_to_stop_id_route_stops_id_fk",
+					"tableFrom": "tickets",
+					"tableTo": "route_stops",
+					"columnsFrom": ["to_stop_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {
+				"tickets_ticket_uid_unique": {
+					"name": "tickets_ticket_uid_unique",
+					"nullsNotDistinct": false,
+					"columns": ["ticket_uid"]
+				}
+			},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.transactions": {
+			"name": "transactions",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"ticket_id": {
+					"name": "ticket_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"user_id": {
+					"name": "user_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"operator_id": {
+					"name": "operator_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"amount_inr": {
+					"name": "amount_inr",
+					"type": "numeric(8, 2)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"type": {
+					"name": "type",
+					"type": "transaction_type",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'ticket_payment'"
+				},
+				"upi_txn_id": {
+					"name": "upi_txn_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"operator_upi_id": {
+					"name": "operator_upi_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"status": {
+					"name": "status",
+					"type": "transaction_status",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'pending'"
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"transactions_ticket_id_tickets_id_fk": {
+					"name": "transactions_ticket_id_tickets_id_fk",
+					"tableFrom": "transactions",
+					"tableTo": "tickets",
+					"columnsFrom": ["ticket_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"transactions_user_id_users_id_fk": {
+					"name": "transactions_user_id_users_id_fk",
+					"tableFrom": "transactions",
+					"tableTo": "users",
+					"columnsFrom": ["user_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"transactions_operator_id_users_id_fk": {
+					"name": "transactions_operator_id_users_id_fk",
+					"tableFrom": "transactions",
+					"tableTo": "users",
+					"columnsFrom": ["operator_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.travel_history": {
+			"name": "travel_history",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "uuid",
+					"primaryKey": true,
+					"notNull": true,
+					"default": "gen_random_uuid()"
+				},
+				"user_id": {
+					"name": "user_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"bus_id": {
+					"name": "bus_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"bus_number": {
+					"name": "bus_number",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"from_stop": {
+					"name": "from_stop",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"to_stop": {
+					"name": "to_stop",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"scanned_fare": {
+					"name": "scanned_fare",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"expected_fare": {
+					"name": "expected_fare",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"overcharge_delta": {
+					"name": "overcharge_delta",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"ticket_image_url": {
+					"name": "ticket_image_url",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"raw_ocr_text": {
+					"name": "raw_ocr_text",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"travel_date": {
+					"name": "travel_date",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"loyalty_points": {
+					"name": "loyalty_points",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"default": 0
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"travel_history_user_id_users_id_fk": {
+					"name": "travel_history_user_id_users_id_fk",
+					"tableFrom": "travel_history",
+					"tableTo": "users",
+					"columnsFrom": ["user_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				},
+				"travel_history_bus_id_buses_id_fk": {
+					"name": "travel_history_bus_id_buses_id_fk",
+					"tableFrom": "travel_history",
+					"tableTo": "buses",
+					"columnsFrom": ["bus_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.trip_reports": {
+			"name": "trip_reports",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"trip_id": {
+					"name": "trip_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"conductor_id": {
+					"name": "conductor_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"bus_id": {
+					"name": "bus_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"total_passengers": {
+					"name": "total_passengers",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"default": 0
+				},
+				"digital_tickets": {
+					"name": "digital_tickets",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"default": 0
+				},
+				"cash_tickets": {
+					"name": "cash_tickets",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"default": 0
+				},
+				"total_revenue_inr": {
+					"name": "total_revenue_inr",
+					"type": "numeric(10, 2)",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'0'"
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"trip_reports_trip_id_trips_id_fk": {
+					"name": "trip_reports_trip_id_trips_id_fk",
+					"tableFrom": "trip_reports",
+					"tableTo": "trips",
+					"columnsFrom": ["trip_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"trip_reports_conductor_id_users_id_fk": {
+					"name": "trip_reports_conductor_id_users_id_fk",
+					"tableFrom": "trip_reports",
+					"tableTo": "users",
+					"columnsFrom": ["conductor_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"trip_reports_bus_id_buses_id_fk": {
+					"name": "trip_reports_bus_id_buses_id_fk",
+					"tableFrom": "trip_reports",
+					"tableTo": "buses",
+					"columnsFrom": ["bus_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.trip_stops": {
+			"name": "trip_stops",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"trip_id": {
+					"name": "trip_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"stop_id": {
+					"name": "stop_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"stop_name": {
+					"name": "stop_name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"stop_order": {
+					"name": "stop_order",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"arrival_time_12": {
+					"name": "arrival_time_12",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"arrival_period": {
+					"name": "arrival_period",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"arrival_time_24": {
+					"name": "arrival_time_24",
+					"type": "time",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"latitude": {
+					"name": "latitude",
+					"type": "numeric(10, 7)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"longitude": {
+					"name": "longitude",
+					"type": "numeric(10, 7)",
+					"primaryKey": false,
+					"notNull": false
+				}
+			},
+			"indexes": {
+				"uniq_trip_stop_order": {
+					"name": "uniq_trip_stop_order",
+					"columns": [
+						{
+							"expression": "trip_id",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						},
+						{
+							"expression": "stop_order",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": true,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				}
+			},
+			"foreignKeys": {
+				"trip_stops_trip_id_trips_id_fk": {
+					"name": "trip_stops_trip_id_trips_id_fk",
+					"tableFrom": "trip_stops",
+					"tableTo": "trips",
+					"columnsFrom": ["trip_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				},
+				"trip_stops_stop_id_route_stops_id_fk": {
+					"name": "trip_stops_stop_id_route_stops_id_fk",
+					"tableFrom": "trip_stops",
+					"tableTo": "route_stops",
+					"columnsFrom": ["stop_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.trips": {
+			"name": "trips",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"bus_id": {
+					"name": "bus_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"route_id": {
+					"name": "route_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"conductor_id": {
+					"name": "conductor_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"departure_date": {
+					"name": "departure_date",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"departure_time_24": {
+					"name": "departure_time_24",
+					"type": "time",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"status": {
+					"name": "status",
+					"type": "trip_status",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'scheduled'"
+				},
+				"current_stop_idx": {
+					"name": "current_stop_idx",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"default": 0
+				},
+				"is_live": {
+					"name": "is_live",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"trips_bus_id_buses_id_fk": {
+					"name": "trips_bus_id_buses_id_fk",
+					"tableFrom": "trips",
+					"tableTo": "buses",
+					"columnsFrom": ["bus_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				},
+				"trips_route_id_routes_id_fk": {
+					"name": "trips_route_id_routes_id_fk",
+					"tableFrom": "trips",
+					"tableTo": "routes",
+					"columnsFrom": ["route_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"trips_conductor_id_users_id_fk": {
+					"name": "trips_conductor_id_users_id_fk",
+					"tableFrom": "trips",
+					"tableTo": "users",
+					"columnsFrom": ["conductor_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.users": {
+			"name": "users",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "uuid",
+					"primaryKey": true,
+					"notNull": true,
+					"default": "gen_random_uuid()"
+				},
+				"name": {
+					"name": "name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"email": {
+					"name": "email",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"email_verified": {
+					"name": "email_verified",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"image": {
+					"name": "image",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"password": {
+					"name": "password",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"role": {
+					"name": "role",
+					"type": "user_role",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'passenger'"
+				},
+				"phone": {
+					"name": "phone",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"upi_id": {
+					"name": "upi_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"is_active": {
+					"name": "is_active",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": true
+				},
+				"wallet_balance": {
+					"name": "wallet_balance",
+					"type": "numeric(10, 2)",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'0.00'"
+				},
+				"must_change_password": {
+					"name": "must_change_password",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": false
+				},
+				"password_changed_at": {
+					"name": "password_changed_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"password_expires_at": {
+					"name": "password_expires_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {
+				"users_email_unique": {
+					"name": "users_email_unique",
+					"nullsNotDistinct": false,
+					"columns": ["email"]
+				}
+			},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.verification_tokens": {
+			"name": "verification_tokens",
+			"schema": "",
+			"columns": {
+				"identifier": {
+					"name": "identifier",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"token": {
+					"name": "token",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"expires": {
+					"name": "expires",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {
+				"verification_tokens_identifier_token_pk": {
+					"name": "verification_tokens_identifier_token_pk",
+					"columns": ["identifier", "token"]
+				}
+			},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.xp_events": {
+			"name": "xp_events",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"user_id": {
+					"name": "user_id",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"event_type": {
+					"name": "event_type",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"xp_earned": {
+					"name": "xp_earned",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"km_travelled": {
+					"name": "km_travelled",
+					"type": "numeric(8, 2)",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'0'"
+				},
+				"metadata": {
+					"name": "metadata",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"xp_events_user_id_users_id_fk": {
+					"name": "xp_events_user_id_users_id_fk",
+					"tableFrom": "xp_events",
+					"tableTo": "users",
+					"columnsFrom": ["user_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		}
+	},
+	"enums": {
+		"public.bus_request_status": {
+			"name": "bus_request_status",
+			"schema": "public",
+			"values": ["pending", "approved", "rejected"]
+		},
+		"public.bus_status": {
+			"name": "bus_status",
+			"schema": "public",
+			"values": ["Running", "Not Running", "Delayed"]
+		},
+		"public.chest_type": {
+			"name": "chest_type",
+			"schema": "public",
+			"values": ["normal", "silver", "gold", "legendary"]
+		},
+		"public.complaint_cat_status": {
+			"name": "complaint_cat_status",
+			"schema": "public",
+			"values": ["open", "under_review", "resolved", "escalated"]
+		},
+		"public.complaint_status": {
+			"name": "complaint_status",
+			"schema": "public",
+			"values": ["pending", "resolved"]
+		},
+		"public.notification_type": {
+			"name": "notification_type",
+			"schema": "public",
+			"values": ["info", "success", "warning", "error"]
+		},
+		"public.pass_status": {
+			"name": "pass_status",
+			"schema": "public",
+			"values": [
+				"pending_verification",
+				"active",
+				"expired",
+				"suspended",
+				"rejected"
+			]
+		},
+		"public.pass_type": {
+			"name": "pass_type",
+			"schema": "public",
+			"values": ["student", "monthly"]
+		},
+		"public.payment_status": {
+			"name": "payment_status",
+			"schema": "public",
+			"values": ["success", "failed", "pending"]
+		},
+		"public.subscription_status": {
+			"name": "subscription_status",
+			"schema": "public",
+			"values": [
+				"pending_verification",
+				"active",
+				"expired",
+				"suspended",
+				"rejected"
+			]
+		},
+		"public.ticket_payment_status": {
+			"name": "ticket_payment_status",
+			"schema": "public",
+			"values": ["pending", "initiated", "confirmed", "failed", "cash"]
+		},
+		"public.ticket_status": {
+			"name": "ticket_status",
+			"schema": "public",
+			"values": ["pending", "paid", "validated", "cancelled", "cash"]
+		},
+		"public.transaction_status": {
+			"name": "transaction_status",
+			"schema": "public",
+			"values": ["pending", "confirmed", "failed", "refunded"]
+		},
+		"public.transaction_type": {
+			"name": "transaction_type",
+			"schema": "public",
+			"values": [
+				"ticket_payment",
+				"subscription_payment",
+				"pass_payment",
+				"cashback",
+				"wallet_credit",
+				"wallet_debit"
+			]
+		},
+		"public.trip_status": {
+			"name": "trip_status",
+			"schema": "public",
+			"values": ["scheduled", "active", "completed", "cancelled"]
+		},
+		"public.user_role": {
+			"name": "user_role",
+			"schema": "public",
+			"values": ["passenger", "operator", "conductor", "admin"]
+		}
+	},
+	"schemas": {},
+	"sequences": {},
+	"roles": {},
+	"policies": {},
+	"views": {},
+	"_meta": {
+		"columns": {},
+		"schemas": {},
+		"tables": {}
+	}
+}

@@ -1,356 +1,875 @@
-import {
-  boolean,
-  integer,
-  jsonb,
-  pgEnum,
-  pgTable,
-  primaryKey,
-  real,
-  text,
-  timestamp,
-  uuid,
-} from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import {
+	boolean,
+	integer,
+	jsonb,
+	numeric,
+	pgEnum,
+	pgTable,
+	primaryKey,
+	real,
+	serial,
+	text,
+	time,
+	timestamp,
+	uniqueIndex,
+	uuid,
+} from "drizzle-orm/pg-core";
 
 // ── Enums ─────────────────────────────────────────────────────────────────────
 
 export const userRoleEnum = pgEnum("user_role", [
-  "passenger",
-  "operator",
-  "admin",
+	"passenger",
+	"operator",
+	"conductor",
+	"admin",
 ]);
 
 export const busStatusEnum = pgEnum("bus_status", [
-  "Running",
-  "Not Running",
-  "Delayed",
+	"Running",
+	"Not Running",
+	"Delayed",
 ]);
 
 export const complaintStatusEnum = pgEnum("complaint_status", [
-  "pending",
-  "resolved",
+	"pending",
+	"resolved",
 ]);
 
 export const paymentStatusEnum = pgEnum("payment_status", [
-  "success",
-  "failed",
-  "pending",
+	"success",
+	"failed",
+	"pending",
 ]);
 
 export const busRequestStatusEnum = pgEnum("bus_request_status", [
-  "pending",
-  "approved",
-  "rejected",
+	"pending",
+	"approved",
+	"rejected",
+]);
+
+export const tripStatusEnum = pgEnum("trip_status", [
+	"scheduled",
+	"active",
+	"completed",
+	"cancelled",
+]);
+
+export const ticketStatusEnum = pgEnum("ticket_status", [
+	"pending",
+	"paid",
+	"validated",
+	"cancelled",
+	"cash",
+]);
+
+export const ticketPaymentStatusEnum = pgEnum("ticket_payment_status", [
+	"pending",
+	"initiated",
+	"confirmed",
+	"failed",
+	"cash",
+]);
+
+export const passTypeEnum = pgEnum("pass_type", ["student", "monthly"]);
+
+export const passStatusEnum = pgEnum("pass_status", [
+	"pending_verification",
+	"active",
+	"expired",
+	"suspended",
+	"rejected",
+]);
+
+export const subscriptionStatusEnum = pgEnum("subscription_status", [
+	"pending_verification",
+	"active",
+	"expired",
+	"suspended",
+	"rejected",
+]);
+
+export const notificationTypeEnum = pgEnum("notification_type", [
+	"info",
+	"success",
+	"warning",
+	"error",
+]);
+
+export const chestTypeEnum = pgEnum("chest_type", [
+	"normal",
+	"silver",
+	"gold",
+	"legendary",
+]);
+
+export const transactionTypeEnum = pgEnum("transaction_type", [
+	"ticket_payment",
+	"subscription_payment",
+	"pass_payment",
+	"cashback",
+	"wallet_credit",
+	"wallet_debit",
+]);
+
+export const transactionStatusEnum = pgEnum("transaction_status", [
+	"pending",
+	"confirmed",
+	"failed",
+	"refunded",
+]);
+
+export const complaintCategoryStatusEnum = pgEnum("complaint_cat_status", [
+	"open",
+	"under_review",
+	"resolved",
+	"escalated",
 ]);
 
 // ── Auth.js v5 required tables ─────────────────────────────────────────────
-// These are the exact column names Auth.js DrizzleAdapter expects.
 
 export const users = pgTable("users", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  name: text("name"),
-  email: text("email").notNull().unique(),
-  emailVerified: timestamp("email_verified", { mode: "date" }),
-  image: text("image"),
-  password: text("password"), // hashed; null for OAuth users
-  role: userRoleEnum("role").notNull().default("passenger"),
-  mustChangePassword: boolean("must_change_password").notNull().default(false),
-  passwordChangedAt: timestamp("password_changed_at"),
-  passwordExpiresAt: timestamp("password_expires_at"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+	id: uuid("id").defaultRandom().primaryKey(),
+	name: text("name"),
+	email: text("email").notNull().unique(),
+	emailVerified: timestamp("email_verified", { mode: "date" }),
+	image: text("image"),
+	password: text("password"), // hashed; null for OAuth users
+	role: userRoleEnum("role").notNull().default("passenger"),
+	phone: text("phone"),
+	upiId: text("upi_id"),
+	isActive: boolean("is_active").notNull().default(true),
+	walletBalance: numeric("wallet_balance", { precision: 10, scale: 2 })
+		.notNull()
+		.default("0.00"),
+	mustChangePassword: boolean("must_change_password").notNull().default(false),
+	passwordChangedAt: timestamp("password_changed_at"),
+	passwordExpiresAt: timestamp("password_expires_at"),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+	updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const accounts = pgTable(
-  "accounts",
-  {
-    userId: uuid("user_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    type: text("type").notNull(),
-    provider: text("provider").notNull(),
-    providerAccountId: text("provider_account_id").notNull(),
-    // DrizzleAdapter v5 requires these specific snake_case JS property names
-    // to match what Auth.js expects internally. The actual DB column names
-    // (second argument to text/integer) remain unchanged.
-    refresh_token: text("refresh_token"),
-    access_token: text("access_token"),
-    expires_at: integer("expires_at"),
-    token_type: text("token_type"),
-    scope: text("scope"),
-    id_token: text("id_token"),
-    session_state: text("session_state"),
-  },
-  (t) => ({
-    pk: primaryKey({ columns: [t.provider, t.providerAccountId] }),
-  }),
+	"accounts",
+	{
+		userId: uuid("user_id")
+			.notNull()
+			.references(() => users.id, { onDelete: "cascade" }),
+		type: text("type").notNull(),
+		provider: text("provider").notNull(),
+		providerAccountId: text("provider_account_id").notNull(),
+		refresh_token: text("refresh_token"),
+		access_token: text("access_token"),
+		expires_at: integer("expires_at"),
+		token_type: text("token_type"),
+		scope: text("scope"),
+		id_token: text("id_token"),
+		session_state: text("session_state"),
+	},
+	(t) => ({
+		pk: primaryKey({ columns: [t.provider, t.providerAccountId] }),
+	}),
 );
 
 export const sessions = pgTable("sessions", {
-  sessionToken: text("session_token").primaryKey(),
-  userId: uuid("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  expires: timestamp("expires", { mode: "date" }).notNull(),
+	sessionToken: text("session_token").primaryKey(),
+	userId: uuid("user_id")
+		.notNull()
+		.references(() => users.id, { onDelete: "cascade" }),
+	expires: timestamp("expires", { mode: "date" }).notNull(),
 });
 
 export const verificationTokens = pgTable(
-  "verification_tokens",
-  {
-    identifier: text("identifier").notNull(),
-    token: text("token").notNull(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  },
-  (t) => ({
-    pk: primaryKey({ columns: [t.identifier, t.token] }),
-  }),
+	"verification_tokens",
+	{
+		identifier: text("identifier").notNull(),
+		token: text("token").notNull(),
+		expires: timestamp("expires", { mode: "date" }).notNull(),
+	},
+	(t) => ({
+		pk: primaryKey({ columns: [t.identifier, t.token] }),
+	}),
 );
 
 // ── Operators ─────────────────────────────────────────────────────────────────
 
 export const operators = pgTable("operators", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  userId: uuid("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  companyName: text("company_name").notNull(),
-  phone: text("phone"),
-  approved: boolean("approved").notNull().default(false),
-  aadhar: text("aadhar"),
-  drivingLicense: text("driving_license"),
-  rcNumber: text("rc_number"),
-  pollutionCertNo: text("pollution_cert_no"),
-  insurancePolicyNo: text("insurance_policy_no"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+	id: uuid("id").defaultRandom().primaryKey(),
+	userId: uuid("user_id")
+		.notNull()
+		.references(() => users.id, { onDelete: "cascade" }),
+	companyName: text("company_name").notNull(),
+	phone: text("phone"),
+	approved: boolean("approved").notNull().default(false),
+	aadhar: text("aadhar"),
+	drivingLicense: text("driving_license"),
+	rcNumber: text("rc_number"),
+	pollutionCertNo: text("pollution_cert_no"),
+	insurancePolicyNo: text("insurance_policy_no"),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+	updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 // ── Stops ─────────────────────────────────────────────────────────────────────
 
 export const stops = pgTable("stops", {
-  id: text("id").primaryKey(), // slug e.g. "mangalore-central"
-  name: text("name").notNull(),
-  lat: real("lat").notNull(),
-  lng: real("lng").notNull(),
+	id: text("id").primaryKey(), // slug e.g. "mangalore-central"
+	name: text("name").notNull(),
+	lat: real("lat").notNull(),
+	lng: real("lng").notNull(),
 });
 
 // ── Buses ─────────────────────────────────────────────────────────────────────
 
 export const buses = pgTable("buses", {
-  id: text("id").primaryKey(), // e.g. "MNG-101"
-  number: text("number").notNull().unique(),
-  operatorId: uuid("operator_id").references(() => operators.id),
-  licensePlate: text("license_plate").notNull(),
-  origin: text("origin").notNull(),
-  destination: text("destination").notNull(),
-  fullFare: integer("full_fare").notNull(),
-  driverName: text("driver_name").notNull(),
-  conductorName: text("conductor_name").notNull(),
-  status: busStatusEnum("status").notNull().default("Running"),
-  statusNote: text("status_note").notNull().default(""),
-  schedule: jsonb("schedule").$type<string[]>().notNull().default([]),
-  totalSeats: integer("total_seats").notNull(),
-  occupiedSeats: integer("occupied_seats").notNull().default(0),
-  womenReservedTotal: integer("women_reserved_total").notNull().default(0),
-  womenReservedAvailable: integer("women_reserved_available")
-    .notNull()
-    .default(0),
-  studentCardAccepted: boolean("student_card_accepted")
-    .notNull()
-    .default(false),
-  studentDiscountPercent: integer("student_discount_percent")
-    .notNull()
-    .default(0),
-  votes: jsonb("votes")
-    .$type<{
-      onTime: number;
-      slightlyLate: number;
-      veryLate: number;
-    }>()
-    .notNull()
-    .default({ onTime: 0, slightlyLate: 0, veryLate: 0 }),
-  routeGeometry:
-    jsonb("route_geometry").$type<{ lat: number; lng: number }[]>(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+	id: text("id").primaryKey(), // e.g. "MNG-101"
+	number: text("number").notNull().unique(),
+	operatorId: uuid("operator_id").references(() => operators.id),
+	licensePlate: text("license_plate").notNull(),
+	origin: text("origin").notNull(),
+	destination: text("destination").notNull(),
+	fullFare: integer("full_fare").notNull(),
+	driverName: text("driver_name").notNull(),
+	conductorName: text("conductor_name").notNull(),
+	status: busStatusEnum("status").notNull().default("Running"),
+	statusNote: text("status_note").notNull().default(""),
+	schedule: jsonb("schedule").$type<string[]>().notNull().default([]),
+	totalSeats: integer("total_seats").notNull(),
+	occupiedSeats: integer("occupied_seats").notNull().default(0),
+	womenReservedTotal: integer("women_reserved_total").notNull().default(0),
+	womenReservedAvailable: integer("women_reserved_available")
+		.notNull()
+		.default(0),
+	studentCardAccepted: boolean("student_card_accepted")
+		.notNull()
+		.default(false),
+	studentDiscountPercent: integer("student_discount_percent")
+		.notNull()
+		.default(0),
+	votes: jsonb("votes")
+		.$type<{
+			onTime: number;
+			slightlyLate: number;
+			veryLate: number;
+		}>()
+		.notNull()
+		.default({ onTime: 0, slightlyLate: 0, veryLate: 0 }),
+	routeGeometry:
+		jsonb("route_geometry").$type<{ lat: number; lng: number }[]>(),
+	seatLayout: text("seat_layout").notNull().default("2x2"),
+	qrCodeData: text("qr_code_data"),
+	isLive: boolean("is_live").notNull().default(false),
+	updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 // ── Bus routes (ordered stop list) ───────────────────────────────────────────
 
 export const busRoutes = pgTable(
-  "bus_routes",
-  {
-    busId: text("bus_id")
-      .notNull()
-      .references(() => buses.id, { onDelete: "cascade" }),
-    stopId: text("stop_id")
-      .notNull()
-      .references(() => stops.id),
-    stopOrder: integer("stop_order").notNull(),
-  },
-  (t) => ({
-    pk: primaryKey({ columns: [t.busId, t.stopId] }),
-  }),
+	"bus_routes",
+	{
+		busId: text("bus_id")
+			.notNull()
+			.references(() => buses.id, { onDelete: "cascade" }),
+		stopId: text("stop_id")
+			.notNull()
+			.references(() => stops.id),
+		stopOrder: integer("stop_order").notNull(),
+	},
+	(t) => ({
+		pk: primaryKey({ columns: [t.busId, t.stopId] }),
+	}),
 );
 
 // ── Bus requests (operator submits, admin approves) ───────────────────────────
 
 export const busRequests = pgTable("bus_requests", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  operatorId: uuid("operator_id")
-    .notNull()
-    .references(() => operators.id, { onDelete: "cascade" }),
+	id: uuid("id").defaultRandom().primaryKey(),
+	operatorId: uuid("operator_id")
+		.notNull()
+		.references(() => operators.id, { onDelete: "cascade" }),
 
-  number: text("number").notNull(),
-  licensePlate: text("license_plate").notNull(),
-  origin: text("origin").notNull(),
-  destination: text("destination").notNull(),
-  fullFare: integer("full_fare").notNull(),
-  driverName: text("driver_name").notNull(),
-  conductorName: text("conductor_name").notNull(),
-  totalSeats: integer("total_seats").notNull(),
-  schedule: jsonb("schedule").$type<string[]>().notNull().default([]),
-  womenReservedTotal: integer("women_reserved_total").notNull().default(0),
-  studentCardAccepted: boolean("student_card_accepted").notNull().default(false),
-  studentDiscountPercent: integer("student_discount_percent").notNull().default(0),
-  routeStopIds: jsonb("route_stop_ids").$type<string[]>().notNull().default([]),
+	number: text("number").notNull(),
+	licensePlate: text("license_plate").notNull(),
+	origin: text("origin").notNull(),
+	destination: text("destination").notNull(),
+	fullFare: integer("full_fare").notNull(),
+	driverName: text("driver_name").notNull(),
+	conductorName: text("conductor_name").notNull(),
+	totalSeats: integer("total_seats").notNull(),
+	schedule: jsonb("schedule").$type<string[]>().notNull().default([]),
+	womenReservedTotal: integer("women_reserved_total").notNull().default(0),
+	studentCardAccepted: boolean("student_card_accepted")
+		.notNull()
+		.default(false),
+	studentDiscountPercent: integer("student_discount_percent")
+		.notNull()
+		.default(0),
+	routeStopIds: jsonb("route_stop_ids").$type<string[]>().notNull().default([]),
 
-  operatorAadhaar: text("operator_aadhaar"),
-  operatorLicense: text("operator_license"),
-  rcNumber: text("rc_number"),
-  pollutionCertNumber: text("pollution_cert_number"),
-  insurancePolicyNumber: text("insurance_policy_number"),
+	operatorAadhaar: text("operator_aadhaar"),
+	operatorLicense: text("operator_license"),
+	rcNumber: text("rc_number"),
+	pollutionCertNumber: text("pollution_cert_number"),
+	insurancePolicyNumber: text("insurance_policy_number"),
 
-  status: busRequestStatusEnum("status").notNull().default("pending"),
-  adminNote: text("admin_note"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+	status: busRequestStatusEnum("status").notNull().default("pending"),
+	adminNote: text("admin_note"),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+	updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-// ── Complaints ────────────────────────────────────────────────────────────────
+// ── Routes (admin creates) ──────────────────────────────────────────────────
+
+export const routes = pgTable("routes", {
+	id: serial("id").primaryKey(),
+	routeName: text("route_name").notNull(),
+	startCity: text("start_city").notNull(),
+	endCity: text("end_city").notNull(),
+	isActive: boolean("is_active").notNull().default(true),
+	createdBy: uuid("created_by").references(() => users.id),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// ── Route stops (admin creates, tied to route) ──────────────────────────────
+
+export const routeStops = pgTable(
+	"route_stops",
+	{
+		id: serial("id").primaryKey(),
+		routeId: integer("route_id")
+			.notNull()
+			.references(() => routes.id, { onDelete: "cascade" }),
+		stopName: text("stop_name").notNull(),
+		stopOrder: integer("stop_order").notNull(),
+		latitude: numeric("latitude", { precision: 10, scale: 7 }),
+		longitude: numeric("longitude", { precision: 10, scale: 7 }),
+		createdAt: timestamp("created_at").defaultNow().notNull(),
+	},
+	(t) => ({
+		uniqRouteOrder: uniqueIndex("uniq_route_stop_order").on(
+			t.routeId,
+			t.stopOrder,
+		),
+	}),
+);
+
+// ── Fares (admin sets per stop-pair per route) ──────────────────────────────
+
+export const fares = pgTable(
+	"fares",
+	{
+		id: serial("id").primaryKey(),
+		routeId: integer("route_id")
+			.notNull()
+			.references(() => routes.id, { onDelete: "cascade" }),
+		fromStopId: integer("from_stop_id")
+			.notNull()
+			.references(() => routeStops.id, { onDelete: "cascade" }),
+		toStopId: integer("to_stop_id")
+			.notNull()
+			.references(() => routeStops.id, { onDelete: "cascade" }),
+		fareInr: numeric("fare_inr", { precision: 8, scale: 2 }).notNull(),
+		updatedAt: timestamp("updated_at").defaultNow().notNull(),
+	},
+	(t) => ({
+		uniqFare: uniqueIndex("uniq_fare_route_stops").on(
+			t.routeId,
+			t.fromStopId,
+			t.toStopId,
+		),
+	}),
+);
+
+// ── Conductor Access ────────────────────────────────────────────────────────
+
+export const conductorAccess = pgTable(
+	"conductor_access",
+	{
+		id: serial("id").primaryKey(),
+		conductorId: uuid("conductor_id")
+			.notNull()
+			.references(() => users.id, { onDelete: "cascade" }),
+		busId: text("bus_id")
+			.notNull()
+			.references(() => buses.id, { onDelete: "cascade" }),
+		operatorId: uuid("operator_id")
+			.notNull()
+			.references(() => users.id, { onDelete: "cascade" }),
+		conductorCode: text("conductor_code").notNull().unique(),
+		isActive: boolean("is_active").notNull().default(true),
+		grantedAt: timestamp("granted_at").defaultNow().notNull(),
+	},
+	(t) => ({
+		uniqConductorBus: uniqueIndex("uniq_conductor_bus").on(
+			t.conductorId,
+			t.busId,
+		),
+	}),
+);
+
+// ── Trips ───────────────────────────────────────────────────────────────────
+
+export const trips = pgTable("trips", {
+	id: serial("id").primaryKey(),
+	busId: text("bus_id")
+		.notNull()
+		.references(() => buses.id, { onDelete: "cascade" }),
+	routeId: integer("route_id").references(() => routes.id),
+	conductorId: uuid("conductor_id").references(() => users.id),
+	departureDate: text("departure_date").notNull(), // YYYY-MM-DD
+	departureTime24: time("departure_time_24").notNull(),
+	status: tripStatusEnum("status").notNull().default("scheduled"),
+	currentStopIdx: integer("current_stop_idx").notNull().default(0),
+	isLive: boolean("is_live").notNull().default(false),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// ── Trip Stops (per trip schedule) ──────────────────────────────────────────
+
+export const tripStops = pgTable(
+	"trip_stops",
+	{
+		id: serial("id").primaryKey(),
+		tripId: integer("trip_id")
+			.notNull()
+			.references(() => trips.id, { onDelete: "cascade" }),
+		stopId: integer("stop_id").references(() => routeStops.id),
+		stopName: text("stop_name").notNull(),
+		stopOrder: integer("stop_order").notNull(),
+		arrivalTime12: text("arrival_time_12").notNull(),
+		arrivalPeriod: text("arrival_period").notNull(), // AM | PM
+		arrivalTime24: time("arrival_time_24").notNull(),
+		latitude: numeric("latitude", { precision: 10, scale: 7 }),
+		longitude: numeric("longitude", { precision: 10, scale: 7 }),
+	},
+	(t) => ({
+		uniqTripStopOrder: uniqueIndex("uniq_trip_stop_order").on(
+			t.tripId,
+			t.stopOrder,
+		),
+	}),
+);
+
+// ── Tickets ─────────────────────────────────────────────────────────────────
+
+export const tickets = pgTable("tickets", {
+	id: serial("id").primaryKey(),
+	ticketUid: text("ticket_uid").notNull().unique(),
+	userId: uuid("user_id").references(() => users.id),
+	guestName: text("guest_name"),
+	guestPhone: text("guest_phone"),
+	tripId: integer("trip_id").references(() => trips.id),
+	fromStopId: integer("from_stop_id").references(() => routeStops.id),
+	toStopId: integer("to_stop_id").references(() => routeStops.id),
+	fromStopName: text("from_stop_name").notNull(),
+	toStopName: text("to_stop_name").notNull(),
+	seatCount: integer("seat_count").notNull().default(1),
+	originalFareInr: numeric("original_fare_inr", {
+		precision: 8,
+		scale: 2,
+	}).notNull(),
+	discountType: text("discount_type"),
+	discountAmountInr: numeric("discount_amount_inr", {
+		precision: 8,
+		scale: 2,
+	})
+		.notNull()
+		.default("0"),
+	cashbackUsedInr: numeric("cashback_used_inr", { precision: 8, scale: 2 })
+		.notNull()
+		.default("0"),
+	finalFareInr: numeric("final_fare_inr", {
+		precision: 8,
+		scale: 2,
+	}).notNull(),
+	distanceKm: numeric("distance_km", { precision: 8, scale: 2 })
+		.notNull()
+		.default("0"),
+	qrHash: text("qr_hash").notNull(),
+	status: ticketStatusEnum("status").notNull().default("pending"),
+	paymentStatus: ticketPaymentStatusEnum("payment_status")
+		.notNull()
+		.default("pending"),
+	paymentRef: text("payment_ref"),
+	paymentMethod: text("payment_method"), // "upi", "ussd", "cash"
+	upiApp: text("upi_app"),
+	isGuest: boolean("is_guest").notNull().default(false),
+	expiresAt: timestamp("expires_at"),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// ── Transactions ────────────────────────────────────────────────────────────
+
+export const transactions = pgTable("transactions", {
+	id: serial("id").primaryKey(),
+	ticketId: integer("ticket_id").references(() => tickets.id),
+	userId: uuid("user_id").references(() => users.id),
+	operatorId: uuid("operator_id").references(() => users.id),
+	amountInr: numeric("amount_inr", { precision: 8, scale: 2 }).notNull(),
+	type: transactionTypeEnum("type").notNull().default("ticket_payment"),
+	upiTxnId: text("upi_txn_id"),
+	operatorUpiId: text("operator_upi_id"),
+	status: transactionStatusEnum("status").notNull().default("pending"),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// ── Subscriptions ───────────────────────────────────────────────────────────
+
+export const subscriptions = pgTable("subscriptions", {
+	id: serial("id").primaryKey(),
+	operatorId: uuid("operator_id")
+		.notNull()
+		.references(() => users.id, { onDelete: "cascade" }),
+	numBuses: integer("num_buses").notNull().default(1),
+	amountPaidInr: numeric("amount_paid_inr", {
+		precision: 10,
+		scale: 2,
+	}).notNull(),
+	upiTxnId: text("upi_txn_id").notNull(),
+	status: subscriptionStatusEnum("status")
+		.notNull()
+		.default("pending_verification"),
+	rejectionReason: text("rejection_reason"),
+	verifiedBy: uuid("verified_by").references(() => users.id),
+	startsAt: timestamp("starts_at"),
+	expiresAt: timestamp("expires_at"),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// ── Passes ──────────────────────────────────────────────────────────────────
+
+export const passes = pgTable("passes", {
+	id: serial("id").primaryKey(),
+	passUid: text("pass_uid").notNull().unique(),
+	userId: uuid("user_id")
+		.notNull()
+		.references(() => users.id, { onDelete: "cascade" }),
+	passType: passTypeEnum("pass_type").notNull(),
+	studentName: text("student_name"),
+	collegeName: text("college_name"),
+	studentIdNumber: text("student_id_number"),
+	yearOfPassing: integer("year_of_passing"),
+	applicationFeeInr: numeric("application_fee_inr", {
+		precision: 8,
+		scale: 2,
+	})
+		.notNull()
+		.default("50"),
+	feeTxnId: text("fee_txn_id"),
+	status: passStatusEnum("status").notNull().default("pending_verification"),
+	rejectionReason: text("rejection_reason"),
+	verifiedBy: uuid("verified_by").references(() => users.id),
+	validFrom: timestamp("valid_from"),
+	validUntil: timestamp("valid_until"),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// ── Notifications ───────────────────────────────────────────────────────────
+
+export const notifications = pgTable("notifications", {
+	id: serial("id").primaryKey(),
+	userId: uuid("user_id")
+		.notNull()
+		.references(() => users.id, { onDelete: "cascade" }),
+	title: text("title").notNull(),
+	message: text("message").notNull(),
+	type: notificationTypeEnum("type").notNull().default("info"),
+	isRead: boolean("is_read").notNull().default(false),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// ── Rewards ─────────────────────────────────────────────────────────────────
+
+export const rewards = pgTable("rewards", {
+	id: serial("id").primaryKey(),
+	userId: uuid("user_id")
+		.notNull()
+		.unique()
+		.references(() => users.id, { onDelete: "cascade" }),
+	xpPoints: integer("xp_points").notNull().default(0),
+	xpLevel: text("xp_level").notNull().default("Newcomer"),
+	activeTitle: text("active_title").notNull().default("New Rider"),
+	totalKm: numeric("total_km", { precision: 10, scale: 2 })
+		.notNull()
+		.default("0"),
+	pendingCashbackInr: numeric("pending_cashback_inr", {
+		precision: 8,
+		scale: 2,
+	})
+		.notNull()
+		.default("0"),
+	updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// ── Chests ──────────────────────────────────────────────────────────────────
+
+export const chests = pgTable("chests", {
+	id: serial("id").primaryKey(),
+	userId: uuid("user_id")
+		.notNull()
+		.references(() => users.id, { onDelete: "cascade" }),
+	chestType: chestTypeEnum("chest_type").notNull(),
+	xpAtEarn: integer("xp_at_earn").notNull(),
+	isOpened: boolean("is_opened").notNull().default(false),
+	openedAt: timestamp("opened_at"),
+	rewardType: text("reward_type"),
+	rewardValue: text("reward_value"),
+	rarity: text("rarity"),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// ── Stickers ────────────────────────────────────────────────────────────────
+
+export const stickers = pgTable("stickers", {
+	id: serial("id").primaryKey(),
+	userId: uuid("user_id")
+		.notNull()
+		.references(() => users.id, { onDelete: "cascade" }),
+	stickerKey: text("sticker_key").notNull(),
+	rarity: text("rarity").notNull().default("common"),
+	earnedAt: timestamp("earned_at").defaultNow().notNull(),
+});
+
+// ── Earned Titles ───────────────────────────────────────────────────────────
+
+export const earnedTitles = pgTable(
+	"earned_titles",
+	{
+		id: serial("id").primaryKey(),
+		userId: uuid("user_id")
+			.notNull()
+			.references(() => users.id, { onDelete: "cascade" }),
+		title: text("title").notNull(),
+		rarity: text("rarity").notNull().default("common"),
+		earnedAt: timestamp("earned_at").defaultNow().notNull(),
+	},
+	(t) => ({
+		uniqUserTitle: uniqueIndex("uniq_user_title").on(t.userId, t.title),
+	}),
+);
+
+// ── XP Events ───────────────────────────────────────────────────────────────
+
+export const xpEvents = pgTable("xp_events", {
+	id: serial("id").primaryKey(),
+	userId: uuid("user_id").references(() => users.id),
+	eventType: text("event_type"),
+	xpEarned: integer("xp_earned"),
+	kmTravelled: numeric("km_travelled", { precision: 8, scale: 2 })
+		.notNull()
+		.default("0"),
+	metadata: jsonb("metadata"),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// ── Complaints (enhanced) ───────────────────────────────────────────────────
 
 export const complaints = pgTable("complaints", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  busId: text("bus_id")
-    .notNull()
-    .references(() => buses.id),
-  userId: uuid("user_id").references(() => users.id), // nullable — allow guest complaints
-  busNumber: text("bus_number").notNull(),
-  category: text("category").notNull(),
-  description: text("description").notNull(),
-  photoUrl: text("photo_url"),
-  status: complaintStatusEnum("status").notNull().default("pending"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+	id: uuid("id").defaultRandom().primaryKey(),
+	busId: text("bus_id")
+		.notNull()
+		.references(() => buses.id),
+	userId: uuid("user_id").references(() => users.id),
+	busNumber: text("bus_number").notNull(),
+	category: text("category").notNull(),
+	description: text("description").notNull(),
+	photoUrl: text("photo_url"),
+	status: complaintStatusEnum("status").notNull().default("pending"),
+	resolvedBy: uuid("resolved_by").references(() => users.id),
+	resolvedAt: timestamp("resolved_at"),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // ── Payments ──────────────────────────────────────────────────────────────────
 
 export const payments = pgTable("payments", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  busId: text("bus_id")
-    .notNull()
-    .references(() => buses.id),
-  userId: uuid("user_id").references(() => users.id),
-  busNumber: text("bus_number").notNull(),
-  amount: integer("amount").notNull(),
-  upiId: text("upi_id"),
-  transactionId: text("transaction_id").notNull(),
-  status: paymentStatusEnum("status").notNull().default("pending"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+	id: uuid("id").defaultRandom().primaryKey(),
+	busId: text("bus_id")
+		.notNull()
+		.references(() => buses.id),
+	userId: uuid("user_id").references(() => users.id),
+	busNumber: text("bus_number").notNull(),
+	amount: integer("amount").notNull(),
+	upiId: text("upi_id"),
+	transactionId: text("transaction_id").notNull(),
+	status: paymentStatusEnum("status").notNull().default("pending"),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // ── Travel history (OCR tickets) ─────────────────────────────────────────────
 
 export const travelHistory = pgTable("travel_history", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  userId: uuid("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  busId: text("bus_id").references(() => buses.id),
-  busNumber: text("bus_number"), // from OCR — may not match a known bus
-  fromStop: text("from_stop"),
-  toStop: text("to_stop"),
-  scannedFare: integer("scanned_fare"), // what the ticket says
-  expectedFare: integer("expected_fare"), // what calcFare() returns
-  overchargeDelta: integer("overcharge_delta"), // scanned - expected (positive = overcharged)
-  ticketImageUrl: text("ticket_image_url"),
-  rawOcrText: text("raw_ocr_text"),
-  travelDate: timestamp("travel_date"),
-  loyaltyPoints: integer("loyalty_points").notNull().default(0),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+	id: uuid("id").defaultRandom().primaryKey(),
+	userId: uuid("user_id")
+		.notNull()
+		.references(() => users.id, { onDelete: "cascade" }),
+	busId: text("bus_id").references(() => buses.id),
+	busNumber: text("bus_number"),
+	fromStop: text("from_stop"),
+	toStop: text("to_stop"),
+	scannedFare: integer("scanned_fare"),
+	expectedFare: integer("expected_fare"),
+	overchargeDelta: integer("overcharge_delta"),
+	ticketImageUrl: text("ticket_image_url"),
+	rawOcrText: text("raw_ocr_text"),
+	travelDate: timestamp("travel_date"),
+	loyaltyPoints: integer("loyalty_points").notNull().default(0),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // ── Loyalty / offers ──────────────────────────────────────────────────────────
 
 export const loyaltyAccounts = pgTable("loyalty_accounts", {
-  userId: uuid("user_id")
-    .primaryKey()
-    .references(() => users.id, { onDelete: "cascade" }),
-  totalPoints: integer("total_points").notNull().default(0),
-  totalTrips: integer("total_trips").notNull().default(0),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+	userId: uuid("user_id")
+		.primaryKey()
+		.references(() => users.id, { onDelete: "cascade" }),
+	totalPoints: integer("total_points").notNull().default(0),
+	totalTrips: integer("total_trips").notNull().default(0),
+	updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// ── Trip Reports ────────────────────────────────────────────────────────────
+
+export const tripReports = pgTable("trip_reports", {
+	id: serial("id").primaryKey(),
+	tripId: integer("trip_id").references(() => trips.id),
+	conductorId: uuid("conductor_id").references(() => users.id),
+	busId: text("bus_id").references(() => buses.id),
+	totalPassengers: integer("total_passengers").notNull().default(0),
+	digitalTickets: integer("digital_tickets").notNull().default(0),
+	cashTickets: integer("cash_tickets").notNull().default(0),
+	totalRevenueInr: numeric("total_revenue_inr", { precision: 10, scale: 2 })
+		.notNull()
+		.default("0"),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // ── Relations (for Drizzle relational queries) ────────────────────────────────
 
 export const usersRelations = relations(users, ({ one, many }) => ({
-  operator: one(operators, {
-    fields: [users.id],
-    references: [operators.userId],
-  }),
-  complaints: many(complaints),
-  payments: many(payments),
-  travelHistory: many(travelHistory),
-  loyaltyAccount: one(loyaltyAccounts, {
-    fields: [users.id],
-    references: [loyaltyAccounts.userId],
-  }),
+	operator: one(operators, {
+		fields: [users.id],
+		references: [operators.userId],
+	}),
+	complaints: many(complaints),
+	payments: many(payments),
+	travelHistory: many(travelHistory),
+	loyaltyAccount: one(loyaltyAccounts, {
+		fields: [users.id],
+		references: [loyaltyAccounts.userId],
+	}),
+	reward: one(rewards, {
+		fields: [users.id],
+		references: [rewards.userId],
+	}),
+	notifications: many(notifications),
+	tickets: many(tickets),
+	passes: many(passes),
 }));
 
 export const operatorsRelations = relations(operators, ({ one, many }) => ({
-  user: one(users, { fields: [operators.userId], references: [users.id] }),
-  buses: many(buses),
-  busRequests: many(busRequests),
+	user: one(users, { fields: [operators.userId], references: [users.id] }),
+	buses: many(buses),
+	busRequests: many(busRequests),
 }));
 
 export const busRequestsRelations = relations(busRequests, ({ one }) => ({
-  operator: one(operators, {
-    fields: [busRequests.operatorId],
-    references: [operators.id],
-  }),
+	operator: one(operators, {
+		fields: [busRequests.operatorId],
+		references: [operators.id],
+	}),
 }));
 
 export const busesRelations = relations(buses, ({ one, many }) => ({
-  operator: one(operators, {
-    fields: [buses.operatorId],
-    references: [operators.id],
-  }),
-  routes: many(busRoutes),
-  complaints: many(complaints),
-  payments: many(payments),
+	operator: one(operators, {
+		fields: [buses.operatorId],
+		references: [operators.id],
+	}),
+	routes: many(busRoutes),
+	complaints: many(complaints),
+	payments: many(payments),
+	trips: many(trips),
 }));
 
 export const busRoutesRelations = relations(busRoutes, ({ one }) => ({
-  bus: one(buses, { fields: [busRoutes.busId], references: [buses.id] }),
-  stop: one(stops, { fields: [busRoutes.stopId], references: [stops.id] }),
+	bus: one(buses, { fields: [busRoutes.busId], references: [buses.id] }),
+	stop: one(stops, { fields: [busRoutes.stopId], references: [stops.id] }),
 }));
 
 export const stopsRelations = relations(stops, ({ many }) => ({
-  routes: many(busRoutes),
+	routes: many(busRoutes),
+}));
+
+export const routesRelations = relations(routes, ({ many }) => ({
+	routeStops: many(routeStops),
+	fares: many(fares),
+	trips: many(trips),
+}));
+
+export const routeStopsRelations = relations(routeStops, ({ one }) => ({
+	route: one(routes, {
+		fields: [routeStops.routeId],
+		references: [routes.id],
+	}),
+}));
+
+export const tripsRelations = relations(trips, ({ one, many }) => ({
+	bus: one(buses, { fields: [trips.busId], references: [buses.id] }),
+	route: one(routes, { fields: [trips.routeId], references: [routes.id] }),
+	conductor: one(users, {
+		fields: [trips.conductorId],
+		references: [users.id],
+	}),
+	tripStops: many(tripStops),
+	tickets: many(tickets),
+	tripReports: many(tripReports),
+}));
+
+export const tripStopsRelations = relations(tripStops, ({ one }) => ({
+	trip: one(trips, { fields: [tripStops.tripId], references: [trips.id] }),
+}));
+
+export const ticketsRelations = relations(tickets, ({ one }) => ({
+	user: one(users, { fields: [tickets.userId], references: [users.id] }),
+	trip: one(trips, { fields: [tickets.tripId], references: [trips.id] }),
 }));
 
 export const complaintsRelations = relations(complaints, ({ one }) => ({
-  bus: one(buses, { fields: [complaints.busId], references: [buses.id] }),
-  user: one(users, { fields: [complaints.userId], references: [users.id] }),
+	bus: one(buses, { fields: [complaints.busId], references: [buses.id] }),
+	user: one(users, { fields: [complaints.userId], references: [users.id] }),
 }));
 
 export const paymentsRelations = relations(payments, ({ one }) => ({
-  bus: one(buses, { fields: [payments.busId], references: [buses.id] }),
-  user: one(users, { fields: [payments.userId], references: [users.id] }),
+	bus: one(buses, { fields: [payments.busId], references: [buses.id] }),
+	user: one(users, { fields: [payments.userId], references: [users.id] }),
 }));
 
 export const travelHistoryRelations = relations(travelHistory, ({ one }) => ({
-  user: one(users, { fields: [travelHistory.userId], references: [users.id] }),
-  bus: one(buses, { fields: [travelHistory.busId], references: [buses.id] }),
+	user: one(users, { fields: [travelHistory.userId], references: [users.id] }),
+	bus: one(buses, { fields: [travelHistory.busId], references: [buses.id] }),
+}));
+
+export const notificationsRelations = relations(notifications, ({ one }) => ({
+	user: one(users, {
+		fields: [notifications.userId],
+		references: [users.id],
+	}),
+}));
+
+export const rewardsRelations = relations(rewards, ({ one }) => ({
+	user: one(users, { fields: [rewards.userId], references: [users.id] }),
+}));
+
+export const passesRelations = relations(passes, ({ one }) => ({
+	user: one(users, { fields: [passes.userId], references: [users.id] }),
+}));
+
+export const tripReportsRelations = relations(tripReports, ({ one }) => ({
+	trip: one(trips, { fields: [tripReports.tripId], references: [trips.id] }),
+	conductor: one(users, {
+		fields: [tripReports.conductorId],
+		references: [users.id],
+	}),
 }));
 
 // ── TypeScript types inferred from schema ────────────────────────────────────
@@ -370,3 +889,23 @@ export type NewTravelHistory = typeof travelHistory.$inferInsert;
 export type LoyaltyAccount = typeof loyaltyAccounts.$inferSelect;
 export type BusRequest = typeof busRequests.$inferSelect;
 export type NewBusRequest = typeof busRequests.$inferInsert;
+export type Route = typeof routes.$inferSelect;
+export type NewRoute = typeof routes.$inferInsert;
+export type RouteStop = typeof routeStops.$inferSelect;
+export type Fare = typeof fares.$inferSelect;
+export type Trip = typeof trips.$inferSelect;
+export type NewTrip = typeof trips.$inferInsert;
+export type TripStop = typeof tripStops.$inferSelect;
+export type Ticket = typeof tickets.$inferSelect;
+export type NewTicket = typeof tickets.$inferInsert;
+export type Transaction = typeof transactions.$inferSelect;
+export type Subscription = typeof subscriptions.$inferSelect;
+export type Pass = typeof passes.$inferSelect;
+export type Notification = typeof notifications.$inferSelect;
+export type Reward = typeof rewards.$inferSelect;
+export type Chest = typeof chests.$inferSelect;
+export type Sticker = typeof stickers.$inferSelect;
+export type EarnedTitle = typeof earnedTitles.$inferSelect;
+export type XpEvent = typeof xpEvents.$inferSelect;
+export type TripReport = typeof tripReports.$inferSelect;
+export type ConductorAccess = typeof conductorAccess.$inferSelect;

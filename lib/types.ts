@@ -16,12 +16,12 @@ export type BusStatus = "Running" | "Not Running" | "Delayed";
 // Re-export DB types for convenience so existing imports don't all break at once.
 // Gradually migrate callers to import directly from "@/lib/db/schema" instead.
 export type {
-  Bus,
-  Stop,
-  Operator,
-  Complaint,
-  Payment,
-  User,
-  TravelHistory,
-  LoyaltyAccount,
+	Bus,
+	Complaint,
+	LoyaltyAccount,
+	Operator,
+	Payment,
+	Stop,
+	TravelHistory,
+	User,
 } from "@/lib/db/schema";
