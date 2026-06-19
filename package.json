@@ -20,7 +20,11 @@
 		"db:seed": "psql $DATABASE_URL -f drizzle/seed.sql",
 		"db:seed-ts": "tsx --env-file=.env.local scripts/seed.ts",
 		"db:setup": "pnpm db:push && pnpm db:seed-ts",
-		"db:seed-stops": "tsx scripts/seed-stops.ts",
+		"db:seed-stops": "tsx --env-file=.env.local scripts/seed-stops.ts",
+		"db:push:prod": "dotenv -e .env.production.local -- drizzle-kit push --force",
+		"db:seed:prod": "tsx --env-file=.env.production.local scripts/seed.ts",
+		"db:seed-stops:prod": "tsx --env-file=.env.production.local scripts/seed-stops.ts",
+		"db:setup:prod": "pnpm db:push:prod && pnpm db:seed:prod && pnpm db:seed-stops:prod",
 		"test": "dotenv -e .env.local -- vitest",
 		"test:run": "dotenv -e .env.local -- vitest run",
 		"test:e2e": "playwright test"

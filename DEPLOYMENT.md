@@ -82,7 +82,59 @@ Optional:
 
 ---
 
-## 5. Post-deploy verification
+## 5. Seed the production database
+
+Vercel doesn't run seed scripts — you have to push the schema and seed data once from your own machine, pointed at the production `DATABASE_URL`. The cleanest path uses the Vercel CLI to pull env vars locally, then runs the `:prod` package scripts:
+
+```powershell
+# 1. Link the local checkout to the Vercel project (once per machine)
+npx vercel link
+
+# 2. Pull every env var from Vercel into .env.production.local (gitignored)
+npx vercel env pull .env.production.local
+
+# 3. Append SEED_* values to .env.production.local — they're not stored in
+#    Vercel because they're only used by the seeders, not the running app.
+#    Pick passwords you'll actually use:
+#
+#      SEED_ADMIN_EMAIL=admin@dkbus.com
+#      SEED_ADMIN_PASSWORD=<strong>
+#      SEED_ADMIN_NAME=Admin
+#
+#      SEED_OPERATOR_EMAIL=operator@dkbus.com
+#      SEED_OPERATOR_PASSWORD=<strong>
+#      SEED_OPERATOR_COMPANY=DK Bus Company
+#      SEED_OPERATOR_APPROVED=true
+#
+#      SEED_CONDUCTOR_EMAIL=conductor@dkbus.com
+#      SEED_CONDUCTOR_PASSWORD=<strong>
+#      SEED_CONDUCTOR_NAME=Conductor
+#
+#      SEED_PASSENGER_EMAIL=passenger@dkbus.com
+#      SEED_PASSENGER_PASSWORD=<strong>
+#      SEED_PASSENGER_NAME=Passenger
+
+# 4. Push schema + seed accounts + seed stops in one shot
+pnpm db:setup:prod
+```
+
+`db:setup:prod` runs three steps in order:
+
+| Step | Command | What it does |
+|---|---|---|
+| 1 | `pnpm db:push:prod` | `drizzle-kit push --force` against production. Creates / alters tables to match `lib/db/schema.ts`. **Destructive on drift** — review the diff if you've edited the schema since the last push. |
+| 2 | `pnpm db:seed:prod` | Upserts the 4 role accounts from the `SEED_*` env vars. Idempotent. Marks every seeded user as already onboarded. |
+| 3 | `pnpm db:seed-stops:prod` | Upserts ~90 Mangalore-area bus stops (name + lat/lng). Idempotent. |
+
+After this runs you should be able to sign in at the live site with the seeded credentials, and the search page will recognise stop names.
+
+> **Buses, routes, and fares are not seeded.** Sign in as the operator, go to the operator dashboard, and create a bus + route through the UI — or write a one-off TypeScript script if you want a demo fleet.
+
+To re-seed later (e.g. you rotated a test password), just edit `.env.production.local` and re-run `pnpm db:seed:prod`. Schema pushes are only needed when `lib/db/schema.ts` actually changed.
+
+---
+
+## 6. Post-deploy verification
 
 After the first deploy:
 
@@ -105,7 +157,7 @@ If anything 500s, the Vercel function logs (Project → Deployments → Function
 
 ---
 
-## 6. Go-live checklist
+## 7. Go-live checklist
 
 Before flipping a real domain to point at this app, confirm each:
 
@@ -123,7 +175,7 @@ Before flipping a real domain to point at this app, confirm each:
 
 ---
 
-## 7. Rolling back
+## 8. Rolling back
 
 Vercel keeps every deployment. To roll back: **Deployments → pick the previous one → Promote to Production.** No code change needed.
 
@@ -131,7 +183,7 @@ If a bad DB migration was applied, roll back the deployment **and** restore the 
 
 ---
 
-## 8. Migrating from Neon to Supabase (planned)
+## 9. Migrating from Neon to Supabase (planned)
 
 When you switch:
 

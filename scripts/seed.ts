@@ -15,6 +15,13 @@
 // Optional operator:
 //   SEED_OPERATOR_EMAIL, SEED_OPERATOR_PASSWORD, SEED_OPERATOR_COMPANY,
 //   SEED_OPERATOR_PHONE (optional), SEED_OPERATOR_APPROVED ("true" | "false")
+//
+// Optional conductor:
+//   SEED_CONDUCTOR_EMAIL, SEED_CONDUCTOR_PASSWORD, SEED_CONDUCTOR_NAME (optional)
+//
+// Optional passenger:
+//   SEED_PASSENGER_EMAIL, SEED_PASSENGER_PASSWORD, SEED_PASSENGER_NAME (optional),
+//   SEED_PASSENGER_PHONE (optional)
 // -----------------------------------------------------------------------------
 
 import { randomUUID } from "node:crypto";
@@ -175,6 +182,87 @@ async function seedOperators() {
 	return true;
 }
 
+async function seedConductor() {
+	const email = process.env.SEED_CONDUCTOR_EMAIL?.trim();
+	const password = process.env.SEED_CONDUCTOR_PASSWORD;
+	const name = (process.env.SEED_CONDUCTOR_NAME || "Conductor").trim();
+
+	if (!email || !password) return false;
+
+	console.log("\nConductor user");
+	logSeparator();
+
+	const id = randomUUID();
+	const hashed = await hashPassword(password);
+
+	await db
+		.insert(schema.users)
+		.values({
+			id,
+			name,
+			email,
+			password: hashed,
+			role: "conductor",
+			onboardedAt: new Date(),
+		})
+		.onConflictDoUpdate({
+			target: schema.users.email,
+			set: {
+				name,
+				password: hashed,
+				role: "conductor",
+				onboardedAt: new Date(),
+				updatedAt: new Date(),
+			},
+		});
+
+	log(`Email : ${email}`);
+	log("Role  : conductor");
+	return true;
+}
+
+async function seedPassenger() {
+	const email = process.env.SEED_PASSENGER_EMAIL?.trim();
+	const password = process.env.SEED_PASSENGER_PASSWORD;
+	const name = (process.env.SEED_PASSENGER_NAME || "Passenger").trim();
+	const phone = process.env.SEED_PASSENGER_PHONE?.trim() || null;
+
+	if (!email || !password) return false;
+
+	console.log("\nPassenger user");
+	logSeparator();
+
+	const id = randomUUID();
+	const hashed = await hashPassword(password);
+
+	await db
+		.insert(schema.users)
+		.values({
+			id,
+			name,
+			email,
+			password: hashed,
+			role: "passenger",
+			phone,
+			onboardedAt: new Date(),
+		})
+		.onConflictDoUpdate({
+			target: schema.users.email,
+			set: {
+				name,
+				password: hashed,
+				role: "passenger",
+				phone,
+				onboardedAt: new Date(),
+				updatedAt: new Date(),
+			},
+		});
+
+	log(`Email : ${email}`);
+	log("Role  : passenger");
+	return true;
+}
+
 // -----------------------------------------------------------------------------
 // Main
 // -----------------------------------------------------------------------------
@@ -189,12 +277,13 @@ async function main() {
 	try {
 		const didAdmin = await seedAdmin();
 		const didOperator = await seedOperators();
+		const didConductor = await seedConductor();
+		const didPassenger = await seedPassenger();
 
-		if (!didAdmin && !didOperator) {
+		if (!didAdmin && !didOperator && !didConductor && !didPassenger) {
 			console.log(
 				"\nNo seed env vars provided. Nothing to seed.\n" +
-					"Set SEED_ADMIN_EMAIL/SEED_ADMIN_PASSWORD and/or\n" +
-					"SEED_OPERATOR_EMAIL/SEED_OPERATOR_PASSWORD/SEED_OPERATOR_COMPANY and retry.\n",
+					"Set SEED_ADMIN_EMAIL/SEED_ADMIN_PASSWORD or other SEED_* vars and retry.\n",
 			);
 			return;
 		}
