@@ -1,9 +1,10 @@
 import { auth } from "@/auth";
 import { activateTripAction } from "@/lib/actions/trips";
+import { createHmac } from "node:crypto";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(
-	request: NextRequest,
+	_request: NextRequest,
 	{ params }: { params: Promise<{ id: string }> },
 ) {
 	const session = await auth();
@@ -16,7 +17,7 @@ export async function POST(
 
 	try {
 		const { id } = await params;
-		const tripId = Number.parseInt(id);
+		const tripId = Number.parseInt(id, 10);
 		if (Number.isNaN(tripId)) {
 			return NextResponse.json(
 				{ success: false, error: "Invalid trip ID" },
@@ -32,10 +33,16 @@ export async function POST(
 			);
 		}
 
-		// BusLink also returned a dailyHMACSecret
-		const crypto = require("node:crypto");
-		const dailySecret = crypto
-			.createHmac("sha256", process.env.NEXTAUTH_SECRET || "fallback_secret")
+		const authSecret = process.env.AUTH_SECRET;
+		if (!authSecret) {
+			console.error("[activate] AUTH_SECRET is not set");
+			return NextResponse.json(
+				{ success: false, error: "Server misconfiguration" },
+				{ status: 500 },
+			);
+		}
+
+		const dailySecret = createHmac("sha256", authSecret)
 			.update(new Date().toDateString())
 			.digest("hex")
 			.slice(0, 32);
@@ -48,9 +55,10 @@ export async function POST(
 				dailyHMACSecret: dailySecret,
 			},
 		});
-	} catch (err: any) {
+	} catch (err) {
+		console.error("[POST /api/trips/[id]/activate]", err);
 		return NextResponse.json(
-			{ success: false, error: err.message },
+			{ success: false, error: "Server error" },
 			{ status: 500 },
 		);
 	}

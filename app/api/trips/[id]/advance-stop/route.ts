@@ -60,9 +60,10 @@ export async function POST(
 				destination_alerts_for: destPax.map((p) => p.name),
 			},
 		});
-	} catch (err: any) {
+	} catch (err) {
+		console.error("[POST /api/trips/[id]/advance-stop]", err);
 		return NextResponse.json(
-			{ success: false, error: err.message },
+			{ success: false, error: "Server error" },
 			{ status: 500 },
 		);
 	}

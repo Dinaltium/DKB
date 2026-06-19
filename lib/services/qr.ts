@@ -15,7 +15,10 @@ export function generateTicketHash(
 	tripId: number,
 	userId: string | null,
 ): string {
-	const secret = process.env.AUTH_SECRET ?? "buslink-default-secret";
+	const secret = process.env.AUTH_SECRET;
+	if (!secret) {
+		throw new Error("AUTH_SECRET is not set — cannot sign ticket");
+	}
 	return crypto
 		.createHmac("sha256", secret)
 		.update(`${ticketUid}:${tripId}:${userId ?? "guest"}`)

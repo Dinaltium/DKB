@@ -32,7 +32,6 @@ export async function GET(request: NextRequest) {
 				originalFareInr: tickets.originalFareInr,
 				discountType: tickets.discountType,
 				discountAmountInr: tickets.discountAmountInr,
-				cashbackUsedInr: tickets.cashbackUsedInr,
 				finalFareInr: tickets.finalFareInr,
 				distanceKm: tickets.distanceKm,
 				qrHash: tickets.qrHash,
@@ -57,9 +56,10 @@ export async function GET(request: NextRequest) {
 			.limit(50);
 
 		return NextResponse.json({ success: true, data: rows });
-	} catch (err: any) {
+	} catch (err) {
+		console.error("[GET /api/tickets/my]", err);
 		return NextResponse.json(
-			{ success: false, error: err.message },
+			{ success: false, error: "Server error" },
 			{ status: 500 },
 		);
 	}

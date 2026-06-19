@@ -4,15 +4,12 @@ import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import {
 	buses,
-	chests,
 	fares,
 	passes,
-	rewards,
 	routeStops,
 	tickets,
 	transactions,
 	trips,
-	xpEvents,
 } from "@/lib/db/schema";
 import { distanceBetween } from "@/lib/services/location";
 import { generateTicketHash, generateTicketUID } from "@/lib/services/qr";
@@ -208,6 +205,11 @@ export async function confirmPaymentAction(data: {
 		return { success: false, error: "ticket_uid required" };
 	}
 
+	const session = await auth();
+	if (!session) {
+		return { success: false, error: "Authentication required" };
+	}
+
 	const [ticket] = await db
 		.select()
 		.from(tickets)
@@ -218,9 +220,22 @@ export async function confirmPaymentAction(data: {
 		return { success: false, error: "Payment already confirmed" };
 	}
 
-	const session = await auth();
+	const role = session.user.role;
+	const isStaff = role === "conductor" || role === "admin";
+	const isTicketOwner = ticket.userId && ticket.userId === session.user.id;
+
+	if (data.paymentMethod === "cash" && !isStaff) {
+		return {
+			success: false,
+			error: "Only a conductor can confirm a cash payment",
+		};
+	}
+	if (!isStaff && !isTicketOwner) {
+		return { success: false, error: "Not authorised to confirm this ticket" };
+	}
+
 	let userId = ticket.userId;
-	if (!userId && session) {
+	if (!userId && !isStaff) {
 		userId = session.user.id;
 	}
 
@@ -256,15 +271,6 @@ export async function confirmPaymentAction(data: {
 				upiTxnId: data.upiTxnId ?? null,
 				status: "confirmed",
 			});
-		}
-	}
-
-	// Award XP if registered user
-	if (userId) {
-		try {
-			await awardXP(userId, ticket);
-		} catch (e) {
-			console.error("[XP]", e);
 		}
 	}
 
@@ -313,82 +319,3 @@ export async function linkTicketToAccountAction(guestPhone: string) {
 	};
 }
 
-// ── XP Award (internal) ────────────────────────────────────────────────────
-
-async function awardXP(
-	userId: string,
-	ticket: { distanceKm: string; id: number },
-) {
-	const distKm = Number.parseFloat(ticket.distanceKm) || 0;
-	const xpEarned = Math.max(10, Math.floor(distKm / 5) * 10);
-
-	const [existing] = await db
-		.select()
-		.from(rewards)
-		.where(eq(rewards.userId, userId));
-
-	const currentXP = existing?.xpPoints ?? 0;
-	const newXP = currentXP + xpEarned;
-
-	let level = "Newcomer";
-	let title = "New Rider";
-	if (newXP >= 5000) {
-		level = "BusLink Legend";
-		title = "Road Legend";
-	} else if (newXP >= 2000) {
-		level = "Voyager";
-		title = "City Voyager";
-	} else if (newXP >= 1000) {
-		level = "Explorer";
-		title = "City Explorer";
-	} else if (newXP >= 500) {
-		level = "Regular";
-		title = "Daily Commuter";
-	} else if (newXP >= 100) {
-		level = "Commuter";
-		title = "Frequent Rider";
-	}
-
-	if (existing) {
-		await db
-			.update(rewards)
-			.set({
-				xpPoints: newXP,
-				xpLevel: level,
-				totalKm: sql`CAST(${rewards.totalKm} AS NUMERIC) + ${distKm}`,
-				updatedAt: new Date(),
-			})
-			.where(eq(rewards.userId, userId));
-	} else {
-		await db.insert(rewards).values({
-			userId,
-			xpPoints: newXP,
-			xpLevel: level,
-			activeTitle: title,
-			totalKm: distKm.toFixed(2),
-		});
-	}
-
-	await db.insert(xpEvents).values({
-		userId,
-		eventType: "trip_completed",
-		xpEarned,
-		kmTravelled: distKm.toFixed(2),
-	});
-
-	// Chest milestone every 250 XP
-	const prevMilestone = Math.floor(currentXP / 250);
-	const newMilestone = Math.floor(newXP / 250);
-	if (newMilestone > prevMilestone) {
-		let chestType: "normal" | "silver" | "gold" | "legendary" = "normal";
-		if (newXP >= 2000) chestType = "legendary";
-		else if (newXP >= 1000) chestType = "gold";
-		else if (newXP >= 500) chestType = "silver";
-
-		await db.insert(chests).values({
-			userId,
-			chestType,
-			xpAtEarn: newXP,
-		});
-	}
-}

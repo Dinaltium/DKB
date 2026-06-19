@@ -42,9 +42,10 @@ export async function POST(
 				total_revenue_inr: res.data.totalRevenueInr,
 			},
 		});
-	} catch (err: any) {
+	} catch (err) {
+		console.error("[POST /api/trips/[id]/end]", err);
 		return NextResponse.json(
-			{ success: false, error: err.message },
+			{ success: false, error: "Server error" },
 			{ status: 500 },
 		);
 	}
