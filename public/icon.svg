@@ -1,0 +1,17 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" fill="#F4C038"/>
+  <rect x="40" y="40" width="432" height="432" fill="none" stroke="#0D1B2A" stroke-width="20"/>
+  <g stroke="#0D1B2A" stroke-width="14" stroke-linejoin="round" stroke-linecap="round">
+    <rect x="96" y="160" width="320" height="180" rx="12" fill="#0D1B2A"/>
+    <rect x="118" y="184" width="120" height="60" rx="6" fill="#F4C038"/>
+    <rect x="270" y="184" width="120" height="60" rx="6" fill="#F4C038"/>
+    <rect x="118" y="262" width="272" height="50" rx="6" fill="#F4C038"/>
+    <circle cx="156" cy="360" r="34" fill="#0D1B2A"/>
+    <circle cx="156" cy="360" r="14" fill="#F4C038"/>
+    <circle cx="356" cy="360" r="34" fill="#0D1B2A"/>
+    <circle cx="356" cy="360" r="14" fill="#F4C038"/>
+    <line x1="96" y1="160" x2="96" y2="340"/>
+    <line x1="416" y1="160" x2="416" y2="340"/>
+  </g>
+  <text x="256" y="450" text-anchor="middle" font-family="'Barlow Condensed', 'Arial Black', sans-serif" font-weight="900" font-size="56" fill="#0D1B2A" letter-spacing="6">BUSLINK</text>
+</svg>

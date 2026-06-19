@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Providers } from "@/components/layout/Providers";
 import { cn } from "@/lib/utils";
@@ -6,10 +6,59 @@ import { Geist } from "next/font/google";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
+const APP_NAME = "BusLink";
+const APP_DEFAULT_TITLE = "BusLink — Mangalore-Udupi Smart Bus Platform";
+const APP_DESCRIPTION =
+	"Search routes, check fares, book tickets, and track buses between Mangalore and Udupi.";
+
 export const metadata: Metadata = {
-	title: "BusLink – Mangalore-Udupi Smart Bus Platform",
-	description:
-		"Search routes, check fares, and track private buses between Mangalore and Udupi, Karnataka. Scan QR at bus stops for live info.",
+	applicationName: APP_NAME,
+	title: {
+		default: APP_DEFAULT_TITLE,
+		template: "%s · BusLink",
+	},
+	description: APP_DESCRIPTION,
+	manifest: "/manifest.json",
+	appleWebApp: {
+		capable: true,
+		statusBarStyle: "black-translucent",
+		title: APP_NAME,
+	},
+	formatDetection: {
+		telephone: false,
+	},
+	icons: {
+		icon: [
+			{ url: "/icon.svg", type: "image/svg+xml" },
+			{ url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+			{ url: "/favicon-16.png", sizes: "16x16", type: "image/png" },
+		],
+		apple: [
+			{ url: "/apple-touch-icon.png", sizes: "180x180" },
+		],
+	},
+	openGraph: {
+		type: "website",
+		siteName: APP_NAME,
+		title: APP_DEFAULT_TITLE,
+		description: APP_DESCRIPTION,
+	},
+	twitter: {
+		card: "summary",
+		title: APP_DEFAULT_TITLE,
+		description: APP_DESCRIPTION,
+	},
+};
+
+export const viewport: Viewport = {
+	themeColor: [
+		{ media: "(prefers-color-scheme: light)", color: "#F4C038" },
+		{ media: "(prefers-color-scheme: dark)", color: "#0D1B2A" },
+	],
+	width: "device-width",
+	initialScale: 1,
+	maximumScale: 5,
+	viewportFit: "cover",
 };
 
 export default function RootLayout({

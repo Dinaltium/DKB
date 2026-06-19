@@ -7,6 +7,13 @@ const withPWAConfig = withPWA({
 	disable: process.env.NODE_ENV === "development",
 	cacheOnFrontEndNav: true,
 	aggressiveFrontEndNavCaching: true,
+	register: true,
+	reloadOnOnline: true,
+	workboxOptions: {
+		// Fall through to /offline when navigations fail (no network + nothing cached).
+		navigateFallback: "/offline",
+		navigateFallbackDenylist: [/^\/api\//, /^\/auth/, /^\/onboarding/],
+	},
 });
 
 const nextConfig: NextConfig = {
