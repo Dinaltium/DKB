@@ -11,6 +11,7 @@ declare module "next-auth" {
 			id: string;
 			role: "passenger" | "operator" | "conductor" | "admin";
 			mustChangePassword?: boolean;
+			onboarded?: boolean;
 		} & DefaultSession["user"];
 	}
 }
@@ -20,13 +21,10 @@ declare module "next-auth" {
 // fields we write in the jwt() callback so TypeScript stops complaining.
 declare module "next-auth/jwt" {
 	interface JWT {
-		/** Database UUID of the authenticated user */
 		id?: string;
-		/** Role stored in the users table */
 		role?: string;
-		/** Timestamp (ms) of the last role re-check against the DB */
 		roleCheckedAt?: number;
-		/** Whether forced password change is required */
 		mustChangePassword?: boolean;
+		onboarded?: boolean;
 	}
 }

@@ -7,9 +7,8 @@ import { NextResponse } from "next/server";
 export default auth(async (req) => {
 	const { pathname } = req.nextUrl;
 	const session = req.auth;
-	const mustChangePwd = (
-		session?.user as { mustChangePassword?: boolean } | undefined
-	)?.mustChangePassword;
+	const mustChangePwd = session?.user?.mustChangePassword;
+	const onboarded = session?.user?.onboarded;
 
 	// Verify active session DB state if authenticated
 	if (session?.user?.id) {
@@ -64,6 +63,26 @@ export default auth(async (req) => {
 		!pathname.startsWith("/api/")
 	) {
 		return NextResponse.redirect(new URL("/change-password", req.url));
+	}
+
+	// ── First-run onboarding for passengers ──────────────────────────────────
+	// Logged-in passenger with no onboardedAt → /onboarding, except on the
+	// onboarding page itself, auth callbacks, and any API route.
+	if (
+		session &&
+		session.user.role === "passenger" &&
+		onboarded === false &&
+		!pathname.startsWith("/onboarding") &&
+		!pathname.startsWith("/change-password") &&
+		!pathname.startsWith("/auth") &&
+		!pathname.startsWith("/api/")
+	) {
+		return NextResponse.redirect(new URL("/onboarding", req.url));
+	}
+
+	// If they're already onboarded, keep them away from /onboarding.
+	if (session && onboarded === true && pathname.startsWith("/onboarding")) {
+		return NextResponse.redirect(new URL("/", req.url));
 	}
 
 	// ── Dashboard — must be authenticated ────────────────────────────────────

@@ -61,6 +61,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 					image: user.image,
 					role: user.role,
 					mustChangePassword: user.mustChangePassword ?? false,
+					onboarded: !!user.onboardedAt,
 				};
 			},
 		}),
@@ -68,7 +69,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 	// ── Callbacks ──────────────────────────────────────────────────────────────
 	callbacks: {
-		// Inject role into the JWT on sign-in
+		// Inject role + onboarding state into the JWT on sign-in
 		async jwt({ token, user }) {
 			if (user) {
 				token.id = user.id;
@@ -76,12 +77,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 				token.mustChangePassword =
 					(user as { mustChangePassword?: boolean }).mustChangePassword ??
 					false;
+				token.onboarded =
+					(user as { onboarded?: boolean }).onboarded ?? false;
 			}
 
 			if (token.email) {
 				const fresh = await getUserByEmail(token.email as string);
 				if (fresh) {
 					token.mustChangePassword = fresh.mustChangePassword ?? false;
+					token.onboarded = !!fresh.onboardedAt;
 					if (
 						!token.roleCheckedAt ||
 						Date.now() - (token.roleCheckedAt as number) > 5 * 60 * 1000
@@ -96,15 +100,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 			return token;
 		},
 
-		// Expose id + role on the session object so client components can read it
+		// Expose id + role + onboarding on the session object
 		async session({ session, token }) {
 			if (token) {
 				session.user.id = (token.id as string) ?? "";
 				session.user.role =
 					(token.role as "passenger" | "operator" | "conductor" | "admin") ??
 					"passenger";
-				(session.user as { mustChangePassword?: boolean }).mustChangePassword =
+				session.user.mustChangePassword =
 					(token.mustChangePassword as boolean) ?? false;
+				session.user.onboarded = (token.onboarded as boolean) ?? false;
 			}
 			return session;
 		},
