@@ -1,12 +1,55 @@
 import { auth } from "@/auth";
+import { db } from "@/lib/db";
+import { userActiveSessions } from "@/lib/db/schema";
+import { and, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
-export default auth((req) => {
+export default auth(async (req) => {
 	const { pathname } = req.nextUrl;
 	const session = req.auth;
 	const mustChangePwd = (
 		session?.user as { mustChangePassword?: boolean } | undefined
 	)?.mustChangePassword;
+
+	// Verify active session DB state if authenticated
+	if (session?.user?.id) {
+		const sessionId = req.cookies.get("buslink_session_id")?.value;
+		if (sessionId) {
+			try {
+				const active = await db
+					.select()
+					.from(userActiveSessions)
+					.where(
+						and(
+							eq(userActiveSessions.id, sessionId),
+							eq(userActiveSessions.userId, session.user.id),
+						),
+					)
+					.limit(1);
+
+				if (active.length > 0 && active[0].revoked) {
+					// Session was revoked! Log out and redirect/unauthorize
+					const nextUrl = new URL("/auth", req.url);
+					const response = pathname.startsWith("/api/")
+						? NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+						: NextResponse.redirect(nextUrl);
+
+					response.cookies.delete({
+						name: "next-auth.session-token",
+						path: "/",
+					});
+					response.cookies.delete({
+						name: "__Secure-next-auth.session-token",
+						path: "/",
+					});
+					response.cookies.delete({ name: "buslink_session_id", path: "/" });
+					return response;
+				}
+			} catch (dbErr) {
+				console.error("[middleware] DB active session check failed:", dbErr);
+			}
+		}
+	}
 
 	// ── Redirect old standalone routes to unified dashboard ───────────────────
 	if (pathname.startsWith("/operator") || pathname.startsWith("/admin")) {
