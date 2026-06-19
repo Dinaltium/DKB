@@ -1,7 +1,6 @@
 import { auth } from "@/auth";
 import { AppShell } from "@/components/layout/AppShell";
 import {
-	getAllBusRequests,
 	getAllBusesWithRouteIds,
 	getAllComplaints,
 	getAllOperators,
@@ -10,9 +9,9 @@ import {
 	getBusRequestsByOperator,
 	getBusesForOperator,
 	getComplaintsForOperator,
-	getLoyaltyAccount,
 	getOperatorByUserId,
 	getPaymentsForUser,
+	getPendingBusRequests,
 	getTravelHistoryForUser,
 } from "@/lib/db/queries";
 import { redirect } from "next/navigation";
@@ -39,9 +38,8 @@ export default async function DashboardPage() {
 
 	// ── Passenger ──────────────────────────────────────────────────────────────
 	if (role === "passenger") {
-		const [travelHistory, loyalty, payments] = await Promise.all([
+		const [travelHistory, payments] = await Promise.all([
 			getTravelHistoryForUser(userId),
-			getLoyaltyAccount(userId),
 			getPaymentsForUser(userId),
 		]);
 
@@ -52,7 +50,6 @@ export default async function DashboardPage() {
 			>
 				<PassengerDashboard
 					travelHistory={travelHistory}
-					loyalty={loyalty ?? null}
 					payments={payments}
 					user={session.user}
 				/>
@@ -127,7 +124,7 @@ export default async function DashboardPage() {
 			getAllBusesWithRouteIds(),
 			getAllOperators(),
 			getAllComplaints(),
-			getAllBusRequests(),
+			getPendingBusRequests(),
 			getAllStops(),
 			getAllPayments(),
 		]);

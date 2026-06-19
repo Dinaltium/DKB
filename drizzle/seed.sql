@@ -129,11 +129,3 @@ INSERT INTO bus_routes (bus_id, stop_id, stop_order) VALUES
   ('UDU-310', 'hampankatta',       2),
   ('UDU-310', 'mangalore-central', 3)
 ON CONFLICT DO NOTHING;
-
--- ── Loyalty accounts for seed users ──────────────────────────────────────────
-INSERT INTO loyalty_accounts (user_id, total_points, total_trips) VALUES
-  ('00000000-0000-0000-0000-000000000001', 0, 0),
-  ('00000000-0000-0000-0000-000000000002', 0, 0),
-  ('00000000-0000-0000-0000-000000000003', 0, 0),
-  ('00000000-0000-0000-0000-000000000004', 0, 0)
-ON CONFLICT (user_id) DO NOTHING;

@@ -1,29 +1,16 @@
 "use client";
 
 import { applyPassAction, getMyPassesAction } from "@/lib/actions/passes";
-import {
-	getLeaderboardAction,
-	getMyRewardsAction,
-	openChestAction,
-	setTitleAction,
-} from "@/lib/actions/rewards";
-import type { LoyaltyAccount, Payment, TravelHistory } from "@/lib/db/schema";
-import {
-	Clock,
-	Gift,
-	MapPin,
-	Receipt,
-	ShieldAlert,
-	Star,
-	Trophy,
-} from "lucide-react";
+import { DocUploadField } from "@/components/shared/DocUploadField";
+import { saveTravelHistoryAction } from "@/lib/actions/travelHistory";
+import type { Payment, TravelHistory } from "@/lib/db/schema";
+import { Clock, MapPin, Receipt } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 interface Props {
 	travelHistory: TravelHistory[];
-	loyalty: LoyaltyAccount | null;
 	payments: Payment[];
 	user: {
 		name?: string | null;
@@ -35,23 +22,13 @@ interface Props {
 
 export function PassengerDashboard({
 	travelHistory,
-	loyalty,
 	payments,
 	user,
 }: Props) {
 	const [activeSubTab, setActiveSubTab] = useState<
-		"history" | "passes" | "rewards" | "payments"
+		"history" | "passes" | "payments"
 	>("history");
 	const [isPending, startTransition] = useTransition();
-
-	// Rewards state
-	const [rewardsProfile, setRewardsProfile] = useState<any>(null);
-	const [chestsInfo, setChestsInfo] = useState<any>(null);
-	const [stickersList, setStickersList] = useState<any[]>([]);
-	const [titlesList, setTitlesList] = useState<any[]>([]);
-	const [leaderboard, setLeaderboard] = useState<any[]>([]);
-	const [xpHistory, setXpHistory] = useState<any[]>([]);
-	const [rewardsLoading, setRewardsLoading] = useState(false);
 
 	// Passes state
 	const [passesList, setPassesList] = useState<any[]>([]);
@@ -62,35 +39,53 @@ export function PassengerDashboard({
 	const [yearOfPassing, setYearOfPassing] = useState("");
 	const [feeTxnId, setFeeTxnId] = useState("");
 
+	// OCR Ticket Scanner states
+	const [showScanner, setShowScanner] = useState(false);
+	const [ocrBusNumber, setOcrBusNumber] = useState("");
+	const [ocrFromStop, setOcrFromStop] = useState("");
+	const [ocrToStop, setOcrToStop] = useState("");
+	const [ocrFare, setOcrFare] = useState("");
+	const [ocrTravelDate, setOcrTravelDate] = useState("");
+	const [rawOcrText, setRawOcrText] = useState("");
+
+	const handleSaveScannedTicket = async (e: React.FormEvent) => {
+		e.preventDefault();
+		if (!ocrBusNumber || !ocrFromStop || !ocrToStop || !ocrFare || !ocrTravelDate) {
+			toast.error("Please fill in all scanned ticket fields");
+			return;
+		}
+
+		startTransition(async () => {
+			const res = await saveTravelHistoryAction({
+				busNumber: ocrBusNumber,
+				fromStop: ocrFromStop,
+				toStop: ocrToStop,
+				scannedFare: Number(ocrFare),
+				travelDate: ocrTravelDate,
+				rawOcrText: rawOcrText || undefined,
+			});
+
+			if (res.success) {
+				toast.success("Ticket logged to Travel History!");
+				setShowScanner(false);
+				setOcrBusNumber("");
+				setOcrFromStop("");
+				setOcrToStop("");
+				setOcrFare("");
+				setOcrTravelDate("");
+				setRawOcrText("");
+				window.location.reload();
+			} else {
+				toast.error(res.error || "Failed to save scanned ticket");
+			}
+		});
+	};
+
 	useEffect(() => {
-		if (activeSubTab === "rewards") {
-			loadRewards();
-		} else if (activeSubTab === "passes") {
+		if (activeSubTab === "passes") {
 			loadPasses();
 		}
 	}, [activeSubTab]);
-
-	const loadRewards = async () => {
-		setRewardsLoading(true);
-		try {
-			const res = await getMyRewardsAction();
-			if (res.success && res.data) {
-				setRewardsProfile(res.data.profile);
-				setChestsInfo(res.data.chests);
-				setStickersList(res.data.stickers);
-				setTitlesList(res.data.earned_titles);
-				setXpHistory(res.data.xp_history);
-			}
-			const lbRes = await getLeaderboardAction();
-			if (lbRes.success && lbRes.data) {
-				setLeaderboard(lbRes.data);
-			}
-		} catch (err) {
-			toast.error(`Failed to load rewards: ${(err as Error).message}`);
-		} finally {
-			setRewardsLoading(false);
-		}
-	};
 
 	const loadPasses = async () => {
 		try {
@@ -103,29 +98,7 @@ export function PassengerDashboard({
 		}
 	};
 
-	const handleOpenChest = async (chestId: number) => {
-		startTransition(async () => {
-			const res = await openChestAction(chestId);
-			if (res.success) {
-				toast.success(res.message);
-				loadRewards();
-			} else {
-				toast.error(res.error || "Failed to open chest");
-			}
-		});
-	};
 
-	const handleSetTitle = async (title: string) => {
-		startTransition(async () => {
-			const res = await setTitleAction(title);
-			if (res.success) {
-				toast.success("Active title updated");
-				loadRewards();
-			} else {
-				toast.error(res.error || "Failed to set title");
-			}
-		});
-	};
 
 	const handleApplyPass = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -169,16 +142,11 @@ export function PassengerDashboard({
 	return (
 		<div className="space-y-8">
 			{/* Stats row */}
-			<section className="grid gap-4 md:grid-cols-4">
+			<section className="grid gap-4 md:grid-cols-3">
 				<StatCard
 					icon={<Clock className="theme-text-teal h-5 w-5" />}
 					label="Total Trips"
-					value={loyalty?.totalTrips ?? 0}
-				/>
-				<StatCard
-					icon={<Star className="theme-text-amber h-5 w-5" />}
-					label="Loyalty Points"
-					value={loyalty?.totalPoints ?? 0}
+					value={travelHistory.length}
 				/>
 				<StatCard
 					icon={<Receipt className="theme-text-teal h-5 w-5" />}
@@ -211,12 +179,6 @@ export function PassengerDashboard({
 					Bus Passes
 				</button>
 				<button
-					onClick={() => setActiveSubTab("rewards")}
-					className={`px-4 py-2 text-sm font-bold uppercase ${activeSubTab === "rewards" ? "border-b-2 border-primary text-primary" : "text-muted-foreground"}`}
-				>
-					XP & Rewards
-				</button>
-				<button
 					onClick={() => setActiveSubTab("payments")}
 					className={`px-4 py-2 text-sm font-bold uppercase ${activeSubTab === "payments" ? "border-b-2 border-primary text-primary" : "text-muted-foreground"}`}
 				>
@@ -228,7 +190,141 @@ export function PassengerDashboard({
 
 			{/* 1. Travel History */}
 			{activeSubTab === "history" && (
-				<section>
+				<section className="space-y-4">
+					{/* Ticket OCR Scanner Card */}
+					<div
+						className="border-2 p-4"
+						style={{
+							background: "var(--bg-surface)",
+							borderColor: "var(--border-default)",
+						}}
+					>
+						<div className="flex justify-between items-center">
+							<div>
+								<h3 className="text-sm font-bold uppercase tracking-wide">
+									Log Physical Bus Ticket
+								</h3>
+								<p className="text-[10px] text-muted-foreground mt-0.5">
+									Upload a photo of your ticket. Our OCR will scan and calculate if you were overcharged!
+								</p>
+							</div>
+							<button
+								type="button"
+								onClick={() => setShowScanner(!showScanner)}
+								className="theme-btn-secondary brutal-transition brutal-hover px-3 py-1.5 border-2 text-xs font-bold uppercase tracking-wide neo-shadow cursor-pointer"
+								style={{ background: showScanner ? "var(--status-stopped-bg)" : "var(--cta-bg)", color: "var(--text-primary)" }}
+							>
+								{showScanner ? "Close Scanner" : "📷 Scan Ticket"}
+							</button>
+						</div>
+
+						{showScanner && (
+							<div className="mt-4 space-y-4 border-t pt-4" style={{ borderColor: "var(--border-default)" }}>
+								<DocUploadField
+									label="Upload Bus Ticket Image"
+									placeholder="Scanning image..."
+									value={ocrBusNumber}
+									onChange={setOcrBusNumber}
+									docType="bus_ticket"
+									primaryKey="bus_number"
+									onExtraFields={(fields) => {
+										if (fields.bus_number) setOcrBusNumber(fields.bus_number);
+										if (fields.from_stop) setOcrFromStop(fields.from_stop);
+										if (fields.to_stop) setOcrToStop(fields.to_stop);
+										if (fields.fare) setOcrFare(fields.fare);
+										if (fields.ticket_date) setOcrTravelDate(fields.ticket_date);
+										if (fields.rawOcrText) setRawOcrText(fields.rawOcrText);
+									}}
+								/>
+
+								<form onSubmit={handleSaveScannedTicket} className="space-y-3">
+									<div className="grid gap-3 grid-cols-2">
+										<div>
+											<label className="block text-[10px] font-bold uppercase mb-1">
+												Bus License Plate / Number
+											</label>
+											<input
+												type="text"
+												value={ocrBusNumber}
+												onChange={(e) => setOcrBusNumber(e.target.value)}
+												required
+												className="w-full border-2 p-2 font-mono text-sm"
+												placeholder="e.g. KA-19-F-1234"
+											/>
+										</div>
+										<div>
+											<label className="block text-[10px] font-bold uppercase mb-1">
+												Scanned Fare (₹)
+											</label>
+											<input
+												type="number"
+												value={ocrFare}
+												onChange={(e) => setOcrFare(e.target.value)}
+												required
+												className="w-full border-2 p-2 font-mono text-sm"
+												placeholder="e.g. 50"
+											/>
+										</div>
+									</div>
+
+									<div className="grid gap-3 grid-cols-2">
+										<div>
+											<label className="block text-[10px] font-bold uppercase mb-1">
+												From Stop
+											</label>
+											<input
+												type="text"
+												value={ocrFromStop}
+												onChange={(e) => setOcrFromStop(e.target.value)}
+												required
+												className="w-full border-2 p-2 font-mono text-sm"
+												placeholder="e.g. Mangalore"
+											/>
+										</div>
+										<div>
+											<label className="block text-[10px] font-bold uppercase mb-1">
+												To Stop
+											</label>
+											<input
+												type="text"
+												value={ocrToStop}
+												onChange={(e) => setOcrToStop(e.target.value)}
+												required
+												className="w-full border-2 p-2 font-mono text-sm"
+												placeholder="e.g. Udupi"
+											/>
+										</div>
+									</div>
+
+									<div>
+										<label className="block text-[10px] font-bold uppercase mb-1">
+											Travel Date
+										</label>
+										<input
+											type="date"
+											value={ocrTravelDate}
+											onChange={(e) => setOcrTravelDate(e.target.value)}
+											required
+											className="w-full border-2 p-2 font-mono text-sm"
+										/>
+									</div>
+
+									<button
+										type="submit"
+										disabled={isPending}
+										className="w-full border-2 p-2.5 font-bold uppercase text-sm neo-shadow transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:neo-shadow-none disabled:opacity-50 disabled:cursor-not-allowed"
+										style={{
+											background: "var(--cta-bg)",
+											color: "var(--text-primary)",
+										}}
+									>
+										{isPending ? "Logging Ticket..." : "Log Ticket to Travel History"}
+									</button>
+								</form>
+							</div>
+						)}
+					</div>
+
 					{travelHistory.length === 0 ? (
 						<div className="ticket-stub rounded-none border-2 border-foreground p-8 text-center neo-shadow">
 							<p className="text-sm" style={{ color: "var(--text-muted)" }}>
@@ -297,11 +393,6 @@ export function PassengerDashboard({
 													>
 														+₹{trip.overchargeDelta} overcharged
 													</span>
-												)}
-												{(trip.loyaltyPoints ?? 0) > 0 && (
-													<p className="theme-text-amber mt-1 text-[10px] font-bold uppercase tracking-widest">
-														+{trip.loyaltyPoints} pts
-													</p>
 												)}
 											</div>
 										</div>
@@ -497,146 +588,6 @@ export function PassengerDashboard({
 							))
 						)}
 					</div>
-				</section>
-			)}
-
-			{/* 3. XP & Rewards */}
-			{activeSubTab === "rewards" && (
-				<section className="space-y-6">
-					{rewardsLoading ? (
-						<p className="text-sm">Loading XP profile & chests...</p>
-					) : (
-						<div className="grid gap-6 md:grid-cols-2">
-							{/* Pro XP Stats */}
-							<div className="border-2 p-4 space-y-4" style={cardStyle}>
-								<div className="flex justify-between items-center">
-									<h3 className="text-lg font-bold uppercase">XP Profile</h3>
-									<span className="bg-primary text-primary-foreground text-xs font-bold px-2 py-0.5 rounded">
-										{rewardsProfile?.xpLevel || "Newcomer"}
-									</span>
-								</div>
-								<p
-									style={{
-										fontSize: "28px",
-										fontWeight: "extrabold",
-										color: "orange",
-									}}
-								>
-									{rewardsProfile?.xpPoints || 0} XP
-								</p>
-								<p className="text-xs">
-									<strong>Active Title:</strong> "
-									{rewardsProfile?.activeTitle || "New Rider"}"
-								</p>
-								<p className="text-xs">
-									<strong>Total Travel Distance:</strong>{" "}
-									{rewardsProfile?.totalKm || "0.00"} km
-								</p>
-
-								{/* XP Titles list */}
-								<div>
-									<h4 className="text-xs font-bold uppercase mt-4 mb-2">
-										Change Active Title
-									</h4>
-									<div className="flex flex-wrap gap-2">
-										{titlesList.map((t) => (
-											<button
-												key={t.id}
-												onClick={() => handleSetTitle(t.title)}
-												className={`px-2 py-1 text-xs border ${rewardsProfile?.activeTitle === t.title ? "bg-black text-white font-bold" : "bg-white"}`}
-											>
-												{t.title} ({t.rarity})
-											</button>
-										))}
-									</div>
-								</div>
-
-								{/* Stickers earned */}
-								<div>
-									<h4 className="text-xs font-bold uppercase mt-4 mb-2">
-										My Stickers Collection
-									</h4>
-									{stickersList.length === 0 ? (
-										<p className="text-xs text-muted-foreground">
-											No stickers collected yet. Open chests to unlock!
-										</p>
-									) : (
-										<div className="flex flex-wrap gap-2">
-											{stickersList.map((s) => (
-												<span
-													key={s.id}
-													className="inline-block border px-2 py-1 text-xs bg-slate-100"
-													title={s.rarity}
-												>
-													🖼️ {s.stickerKey} ({s.rarity})
-												</span>
-											))}
-										</div>
-									)}
-								</div>
-							</div>
-
-							{/* Unopened Loot Chests */}
-							<div className="border-2 p-4 space-y-4" style={cardStyle}>
-								<h3 className="text-lg font-bold uppercase flex items-center gap-2">
-									<Gift className="h-5 w-5 text-amber-500" /> Chests Inventory
-								</h3>
-								{chestsInfo?.unopened?.length === 0 ? (
-									<p className="text-xs text-muted-foreground">
-										No unopened chests. Keep riding and earning XP to receive
-										chests!
-									</p>
-								) : (
-									<div className="space-y-2">
-										{chestsInfo?.unopened?.map((chest: any) => (
-											<div
-												key={chest.id}
-												className="flex justify-between items-center border p-3 bg-white"
-											>
-												<div>
-													<p className="font-bold text-sm uppercase">
-														{chest.chestType} Chest
-													</p>
-													<p className="text-[10px] text-muted-foreground">
-														Earned at {chest.xpAtEarn} XP
-													</p>
-												</div>
-												<button
-													onClick={() => handleOpenChest(chest.id)}
-													className="px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-white font-bold text-xs"
-												>
-													OPEN CHEST
-												</button>
-											</div>
-										))}
-									</div>
-								)}
-
-								{/* Leaderboard Section */}
-								<div className="mt-6 border-t pt-4">
-									<h4 className="text-sm font-bold uppercase flex items-center gap-2 mb-3">
-										<Trophy className="h-4 w-4 text-yellow-500" /> Top 20 Riders
-									</h4>
-									<div className="space-y-1">
-										{leaderboard.map((rider, index) => (
-											<div
-												key={index}
-												className="flex justify-between items-center text-xs py-1 border-b"
-											>
-												<span>
-													{index + 1}. <strong>{rider.name}</strong> (
-													{rider.activeTitle})
-												</span>
-												<span className="font-mono font-bold text-amber-600">
-													{rider.xpPoints} XP
-												</span>
-											</div>
-										))}
-									</div>
-								</div>
-							</div>
-						</div>
-					)}
 				</section>
 			)}
 

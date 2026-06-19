@@ -8,7 +8,6 @@ import {
 	busRoutes,
 	buses,
 	complaints,
-	loyaltyAccounts,
 	operators,
 	payments,
 	stops,
@@ -534,11 +533,6 @@ export async function createOperatorAction(data: {
 		phone: data.phone ?? null,
 		approved: true,
 	});
-
-	await db
-		.insert(loyaltyAccounts)
-		.values({ userId: user.id })
-		.onConflictDoNothing();
 
 	revalidatePath("/dashboard");
 	return { success: true };

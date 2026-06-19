@@ -1,7 +1,7 @@
 // lib/db/queries.ts
 // Server-only. Never import in client components.
 
-import { asc, count, desc, eq, inArray, sql } from "drizzle-orm";
+import { asc, count, desc, eq, inArray } from "drizzle-orm";
 import { db } from "./index";
 import {
 	type Bus,
@@ -15,7 +15,6 @@ import {
 	busRoutes,
 	buses,
 	complaints,
-	loyaltyAccounts,
 	operators,
 	payments,
 	stops,
@@ -217,11 +216,6 @@ export async function createUser(data: {
 		.values({ ...data, role: "passenger" })
 		.returning();
 
-	await db
-		.insert(loyaltyAccounts)
-		.values({ userId: rows[0].id })
-		.onConflictDoNothing();
-
 	return rows[0];
 }
 
@@ -229,23 +223,6 @@ export async function createUser(data: {
 
 export async function saveTravelHistory(data: NewTravelHistory) {
 	const rows = await db.insert(travelHistory).values(data).returning();
-
-	await db
-		.insert(loyaltyAccounts)
-		.values({
-			userId: data.userId,
-			totalPoints: data.loyaltyPoints ?? 0,
-			totalTrips: 1,
-		})
-		.onConflictDoUpdate({
-			target: loyaltyAccounts.userId,
-			set: {
-				totalPoints: sql`loyalty_accounts.total_points + ${data.loyaltyPoints ?? 0}`,
-				totalTrips: sql`loyalty_accounts.total_trips + 1`,
-				updatedAt: new Date(),
-			},
-		});
-
 	return rows[0];
 }
 
@@ -255,14 +232,6 @@ export async function getTravelHistoryForUser(userId: string) {
 		.from(travelHistory)
 		.where(eq(travelHistory.userId, userId))
 		.orderBy(desc(travelHistory.createdAt));
-}
-
-export async function getLoyaltyAccount(userId: string) {
-	const rows = await db
-		.select()
-		.from(loyaltyAccounts)
-		.where(eq(loyaltyAccounts.userId, userId));
-	return rows[0];
 }
 
 // ── Bus requests ──────────────────────────────────────────────────────────────

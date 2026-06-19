@@ -18,7 +18,6 @@ export type BusStatus = "Running" | "Not Running" | "Delayed";
 export type {
 	Bus,
 	Complaint,
-	LoyaltyAccount,
 	Operator,
 	Payment,
 	Stop,

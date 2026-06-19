@@ -3,7 +3,7 @@
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { getUserByEmail } from "@/lib/db/queries";
-import { loyaltyAccounts, users } from "@/lib/db/schema";
+import { users } from "@/lib/db/schema";
 import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
 
@@ -37,12 +37,6 @@ export async function registerUser(data: {
 				role: "passenger",
 			})
 			.returning({ id: users.id });
-
-		// Create empty loyalty account
-		await db
-			.insert(loyaltyAccounts)
-			.values({ userId: user.id })
-			.onConflictDoNothing();
 
 		return { success: true, userId: user.id };
 	} catch (err) {

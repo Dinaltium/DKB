@@ -108,11 +108,6 @@ async function seedAdmin() {
 			set: { name, password: hashed, role: "admin", updatedAt: new Date() },
 		});
 
-	await db
-		.insert(schema.loyaltyAccounts)
-		.values({ userId: id })
-		.onConflictDoNothing();
-
 	log(`Email : ${email}`);
 	log("Role  : admin");
 	return true;
@@ -173,11 +168,6 @@ async function seedOperators() {
 				updatedAt: new Date(),
 			},
 		});
-
-	await db
-		.insert(schema.loyaltyAccounts)
-		.values({ userId })
-		.onConflictDoNothing();
 
 	log(`Company : ${companyName}`);
 	log(`Email   : ${email}`);
