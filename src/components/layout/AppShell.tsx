@@ -2,6 +2,7 @@
 
 import { useLanguage } from "@/app/context/LanguageContext";
 import { useTheme } from "@/app/context/ThemeContext";
+import { BottomNav } from "@/components/layout/BottomNav";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -13,7 +14,6 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { LANGUAGE_OPTIONS } from "@/lib/i18n";
 import {
-	Bus,
 	LayoutDashboard,
 	LogIn,
 	LogOut,
@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -35,7 +35,6 @@ interface AppShellProps {
 }
 
 export function AppShell({ title, subtitle, children }: AppShellProps) {
-	const pathname = usePathname();
 	const router = useRouter();
 	const { language, setLanguage, tr } = useLanguage();
 	const { isDark, toggleTheme } = useTheme();
@@ -393,105 +392,8 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
 				</main>
 
 				{/* ── Mobile bottom nav ── */}
-				<nav className="theme-nav-shell fixed bottom-0 left-0 right-0 z-30 flex h-16 items-center justify-around border-t-4 px-2 md:hidden">
-					<Link
-						href="/search"
-						className={`flex min-w-[70px] flex-col items-center gap-1 rounded-none border-2 px-2 py-1 text-xs ${
-							pathname.startsWith("/search")
-								? "theme-nav-item-active"
-								: "theme-nav-item-idle border-transparent"
-						}`}
-					>
-						<Bus className="h-4 w-4" />
-						<span>{tr("routeSearch")}</span>
-					</Link>
+				<BottomNav pendingCount={pendingCount} />
 
-					{session ? (
-						<>
-							{role === "operator" && (
-								<Link
-									href="/operator"
-									className={`flex min-w-[70px] flex-col items-center gap-1 rounded-none border-2 px-2 py-1 text-xs ${
-										pathname.startsWith("/operator")
-											? "theme-nav-item-active"
-											: "theme-nav-item-idle border-transparent"
-									}`}
-								>
-									<LayoutDashboard className="h-4 w-4" />
-									<span>Dashboard</span>
-								</Link>
-							)}
-							{role === "admin" && (
-								<>
-									<Link
-										href="/admin"
-										className={`relative flex min-w-[70px] flex-col items-center gap-1 rounded-none border-2 px-2 py-1 text-xs ${
-											pathname.startsWith("/admin")
-												? "theme-nav-item-active"
-												: "theme-nav-item-idle border-transparent"
-										}`}
-									>
-										<ShieldCheck className="h-4 w-4" />
-										<span>Admin</span>
-										{pendingCount > 0 && (
-											<span className="theme-counter absolute -right-1 -top-1 flex h-4 min-w-[16px] items-center justify-center rounded-none border-2 px-1 text-[9px] font-black">
-												{pendingCount > 99 ? "99+" : pendingCount}
-											</span>
-										)}
-									</Link>
-									<Link
-										href="/settings"
-										className={`flex min-w-[70px] flex-col items-center gap-1 rounded-none border-2 px-2 py-1 text-xs ${
-											pathname.startsWith("/settings")
-												? "theme-nav-item-active"
-												: "theme-nav-item-idle border-transparent"
-										}`}
-									>
-										<SettingsIcon className="h-4 w-4" />
-										<span>Settings</span>
-									</Link>
-								</>
-							)}
-							<button
-								onClick={() => signOut({ callbackUrl: "/" })}
-								className="theme-nav-item-idle flex min-w-[70px] flex-col items-center gap-1 rounded-none border-2 border-transparent px-2 py-1 text-xs"
-							>
-								<LogOut className="h-4 w-4" />
-								<span>Sign Out</span>
-							</button>
-						</>
-					) : (
-						<Link
-							href="/auth"
-							className={`flex min-w-[70px] flex-col items-center gap-1 rounded-none border-2 px-2 py-1 text-xs ${
-								pathname === "/auth"
-									? "theme-nav-item-active"
-									: "theme-nav-item-idle border-transparent"
-							}`}
-						>
-							<LogIn className="h-4 w-4" />
-							<span>Sign In</span>
-						</Link>
-					)}
-				</nav>
-
-				{/* ── Desktop floating nav ── */}
-				<div className="fixed bottom-5 right-4 hidden gap-2 md:flex">
-					<Link
-						href="/search"
-						className="theme-btn-primary brutal-transition brutal-hover rounded-none border-2 px-4 py-2 text-xs font-bold uppercase tracking-wide neo-shadow hover:opacity-90"
-					>
-						{tr("routeSearch")}
-					</Link>
-					{!session && (
-						<Link
-							href="/auth"
-							className="theme-btn-secondary brutal-transition brutal-hover rounded-none border-2 px-4 py-2 text-xs font-bold uppercase tracking-wide neo-shadow hover:opacity-90"
-						>
-							Login
-						</Link>
-					)}
-				</div>
 				<footer
 					className="bottom-0"
 					style={{

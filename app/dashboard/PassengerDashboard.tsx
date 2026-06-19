@@ -142,7 +142,7 @@ export function PassengerDashboard({
 	return (
 		<div className="space-y-8">
 			{/* Stats row */}
-			<section className="grid gap-4 md:grid-cols-3">
+			<section className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3">
 				<StatCard
 					icon={<Clock className="theme-text-teal h-5 w-5" />}
 					label="Total Trips"
