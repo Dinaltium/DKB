@@ -2,12 +2,17 @@ import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 import * as schema from "./schema";
 
-// neon() returns a tagged-template SQL executor backed by Neon's HTTP API.
-// drizzle() wraps it with the full ORM query builder.
-// This module is imported by server actions and API routes only — never
-// shipped to the browser.
-
-const sql = neon(process.env.DATABASE_URL!);
+// neon() needs a syntactically valid Postgres URL at import time so that
+// Auth.js DrizzleAdapter can inspect the dialect during module evaluation
+// (this runs during `next build`, even on machines that have no real DB).
+//
+// In a real environment DATABASE_URL is set. When it isn't (CI without
+// secrets configured, first Vercel deploy without env vars, etc.) we fall
+// back to a never-reachable stub so the build succeeds. Actual queries
+// will still fail at runtime with a clear network error, which is the
+// behaviour we want.
+const STUB_URL = "postgres://stub:stub@stub.invalid:5432/stub";
+const sql = neon(process.env.DATABASE_URL || STUB_URL);
 
 export const db = drizzle(sql, { schema });
 
