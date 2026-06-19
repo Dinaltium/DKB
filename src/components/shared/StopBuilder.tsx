@@ -2,7 +2,8 @@
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Stop } from "@/lib/db/schema";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 interface StopBuilderProps {
 	stops: Stop[];
@@ -13,6 +14,63 @@ interface StopBuilderProps {
 export function StopBuilder({ stops, value, onChange }: StopBuilderProps) {
 	const [search, setSearch] = useState("");
 	const [dropdownOpen, setDropdownOpen] = useState(false);
+	const [mounted, setMounted] = useState(false);
+	const [coords, setCoords] = useState({ top: 0, left: 0, width: 0 });
+
+	const containerRef = useRef<HTMLDivElement>(null);
+	const dropdownRef = useRef<HTMLDivElement>(null);
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		setMounted(true);
+	}, []);
+
+	const updatePosition = () => {
+		if (containerRef.current) {
+			const rect = containerRef.current.getBoundingClientRect();
+			setCoords({
+				top: rect.bottom + 2,
+				left: rect.left,
+				width: rect.width,
+			});
+		}
+	};
+
+	useEffect(() => {
+		if (dropdownOpen) {
+			updatePosition();
+			const timer = setTimeout(() => {
+				inputRef.current?.focus();
+			}, 50);
+			window.addEventListener("resize", updatePosition);
+			window.addEventListener("scroll", updatePosition, true);
+			return () => {
+				clearTimeout(timer);
+				window.removeEventListener("resize", updatePosition);
+				window.removeEventListener("scroll", updatePosition, true);
+			};
+		}
+	}, [dropdownOpen]);
+
+	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			if (
+				containerRef.current &&
+				!containerRef.current.contains(event.target as Node) &&
+				dropdownRef.current &&
+				!dropdownRef.current.contains(event.target as Node)
+			) {
+				setDropdownOpen(false);
+			}
+		};
+
+		if (dropdownOpen) {
+			document.addEventListener("mousedown", handleClickOutside);
+			return () => {
+				document.removeEventListener("mousedown", handleClickOutside);
+			};
+		}
+	}, [dropdownOpen]);
 
 	const selectedStops = value
 		.map((id) => stops.find((s) => s.id === id))
@@ -101,7 +159,7 @@ export function StopBuilder({ stops, value, onChange }: StopBuilderProps) {
 						<button
 							type="button"
 							onClick={() => moveDown(idx)}
-							disabled={idx === selectedStops.length - 1}
+							disabled={idx === value.length - 1}
 							className="flex h-7 w-7 items-center justify-center rounded-none border-2 text-xs font-bold neo-shadow transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:neo-shadow-none disabled:opacity-25"
 							style={{
 								borderColor: "var(--text-primary)",
@@ -125,7 +183,7 @@ export function StopBuilder({ stops, value, onChange }: StopBuilderProps) {
 				</div>
 			))}
 
-			<div className="relative">
+			<div className="relative" ref={containerRef}>
 				<button
 					type="button"
 					onClick={() => setDropdownOpen((d) => !d)}
@@ -139,68 +197,76 @@ export function StopBuilder({ stops, value, onChange }: StopBuilderProps) {
 					ADD MORE +
 				</button>
 
-				{dropdownOpen && remainingStops.length > 0 && (
-					<div
-						className="absolute left-0 right-0 z-50 rounded-none border-2 border-foreground"
-						style={{
-							background: "var(--bg-surface)",
-							borderColor: "var(--text-primary)",
-							boxShadow: "4px 4px 0 var(--text-primary)",
-							top: "calc(100% + 2px)",
-						}}
-					>
-						<input
-							type="text"
-							placeholder="Search stop name..."
-							value={search}
-							onChange={(e) => setSearch(e.target.value)}
-							className="h-10 w-full border-b-2 px-3 text-sm outline-none"
+				{mounted &&
+					dropdownOpen &&
+					remainingStops.length > 0 &&
+					createPortal(
+						<div
+							ref={dropdownRef}
+							className="fixed z-[9999] rounded-none border-2 border-foreground"
 							style={{
+								background: "var(--bg-surface)",
 								borderColor: "var(--text-primary)",
-								background: "var(--input-bg)",
-								color: "var(--input-text)",
+								boxShadow: "4px 4px 0 var(--text-primary)",
+								top: `${coords.top}px`,
+								left: `${coords.left}px`,
+								width: `${coords.width}px`,
 							}}
-						/>
-						<ScrollArea className="max-h-52">
-							<div className="pr-2">
-								{filtered.length === 0 ? (
-									<p
-										className="px-3 py-3 text-xs"
-										style={{ color: "var(--text-muted)" }}
-									>
-										No matching stops
-									</p>
-								) : (
-									filtered.map((stop) => (
-										<button
-											key={stop.id}
-											type="button"
-											onClick={() => addStop(stop.id)}
-											className="flex w-full items-center justify-between border-b-2 border-foreground px-3 py-2 text-left font-bold uppercase tracking-wide"
-											style={{ color: "var(--text-primary)" }}
+						>
+							<input
+								ref={inputRef}
+								type="text"
+								placeholder="Search stop name..."
+								value={search}
+								onChange={(e) => setSearch(e.target.value)}
+								className="h-10 w-full border-b-2 px-3 text-sm outline-none"
+								style={{
+									borderColor: "var(--text-primary)",
+									background: "var(--input-bg)",
+									color: "var(--input-text)",
+								}}
+							/>
+							<ScrollArea className="max-h-52">
+								<div className="pr-2">
+									{filtered.length === 0 ? (
+										<p
+											className="px-3 py-3 text-xs"
+											style={{ color: "var(--text-muted)" }}
 										>
-											<span
-												className="font-extrabold uppercase"
-												style={{
-													fontFamily: "'Barlow Condensed', sans-serif",
-													color: "var(--text-primary)",
-												}}
+											No matching stops
+										</p>
+									) : (
+										filtered.map((stop) => (
+											<button
+												key={stop.id}
+												type="button"
+												onClick={() => addStop(stop.id)}
+												className="flex w-full items-center justify-between border-b-2 border-foreground px-3 py-2 text-left font-bold uppercase tracking-wide cursor-pointer hover:bg-black/5 dark:hover:bg-white/5"
+												style={{ color: "var(--text-primary)" }}
 											>
-												{stop.name}
-											</span>
-											<span
-												className="text-[10px]"
-												style={{ color: "var(--text-muted)" }}
-											>
-												{stop.lat.toFixed(4)}, {stop.lng.toFixed(4)}
-											</span>
-										</button>
-									))
-								)}
-							</div>
-						</ScrollArea>
-					</div>
-				)}
+												<span
+													className="font-extrabold uppercase"
+													style={{
+														fontFamily: "'Barlow Condensed', sans-serif",
+														color: "var(--text-primary)",
+													}}
+												>
+													{stop.name}
+												</span>
+												<span
+													className="text-[10px]"
+													style={{ color: "var(--text-muted)" }}
+												>
+													{stop.lat.toFixed(4)}, {stop.lng.toFixed(4)}
+												</span>
+											</button>
+										))
+									)}
+								</div>
+							</ScrollArea>
+						</div>,
+						document.body,
+					)}
 
 				{dropdownOpen && remainingStops.length === 0 && (
 					<p

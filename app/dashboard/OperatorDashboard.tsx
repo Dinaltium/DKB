@@ -16,6 +16,8 @@ import {
 } from "@/lib/actions/bus";
 import {
 	grantConductorAccessAction,
+	getAllConductorsAction,
+	getOperatorConductorAssignmentsAction,
 	revokeConductorAccessAction,
 	searchConductorsAction,
 } from "@/lib/actions/conductor";
@@ -70,15 +72,22 @@ export function OperatorDashboard({
 
 	// Conductor management state
 	const [searchQuery, setSearchQuery] = useState("");
+	const [allConductors, setAllConductors] = useState<any[]>([]);
 	const [foundConductors, setFoundConductors] = useState<any[]>([]);
 	const [selectedConductorId, setSelectedConductorId] = useState("");
 	const [selectedBusId, setSelectedBusId] = useState("");
+	const [assignments, setAssignments] = useState<any[]>([]);
+	const [conductorsLoading, setConductorsLoading] = useState(false);
+	const [assignmentsLoading, setAssignmentsLoading] = useState(false);
 
 	useEffect(() => {
 		if (activeTab === "analytics") {
 			loadAnalytics();
 		} else if (activeTab === "subscriptions") {
 			loadSubscription();
+		} else if (activeTab === "conductors") {
+			loadConductors();
+			loadAssignments();
 		}
 	}, [activeTab]);
 
@@ -107,18 +116,50 @@ export function OperatorDashboard({
 		}
 	};
 
-	const handleConductorSearch = async () => {
-		if (!searchQuery.trim()) return;
+	const loadConductors = async () => {
+		setConductorsLoading(true);
 		try {
-			const res = await searchConductorsAction(searchQuery);
+			const res = await getAllConductorsAction();
 			if (res.success && res.data) {
+				setAllConductors(res.data);
 				setFoundConductors(res.data);
-			} else {
-				toast.error(res.error || "No conductors found");
 			}
 		} catch (err: any) {
-			toast.error(err.message || "An error occurred");
+			toast.error(`Failed to load conductors: ${err.message}`);
+		} finally {
+			setConductorsLoading(false);
 		}
+	};
+
+	const loadAssignments = async () => {
+		setAssignmentsLoading(true);
+		try {
+			const res = await getOperatorConductorAssignmentsAction();
+			if (res.success && res.data) {
+				setAssignments(res.data);
+			}
+		} catch (err: any) {
+			toast.error(`Failed to load assignments: ${err.message}`);
+		} finally {
+			setAssignmentsLoading(false);
+		}
+	};
+
+	const handleConductorSearch = (query: string) => {
+		setSearchQuery(query);
+		if (!query.trim()) {
+			setFoundConductors(allConductors);
+			return;
+		}
+		const q = query.toLowerCase();
+		setFoundConductors(
+			allConductors.filter(
+				(c) =>
+					c.name?.toLowerCase().includes(q) ||
+					c.email?.toLowerCase().includes(q) ||
+					c.phone?.toLowerCase().includes(q),
+			),
+		);
 	};
 
 	const handleGrantAccess = async (e: React.FormEvent) => {
@@ -138,8 +179,8 @@ export function OperatorDashboard({
 				);
 				setSelectedConductorId("");
 				setSelectedBusId("");
-				setSearchQuery("");
-				setFoundConductors([]);
+				// Reload assignments to show the new one
+				loadAssignments();
 			} else {
 				toast.error(res.error || "Failed to grant access");
 			}
@@ -147,10 +188,12 @@ export function OperatorDashboard({
 	};
 
 	const handleRevokeAccess = async (conductorId: string, busId: string) => {
+		if (!confirm("Revoke this conductor's access to the bus?")) return;
 		startTransition(async () => {
 			const res = await revokeConductorAccessAction({ conductorId, busId });
 			if (res.success) {
 				toast.success("Access revoked successfully!");
+				loadAssignments();
 			} else {
 				toast.error(res.error || "Failed to revoke access");
 			}
@@ -319,118 +362,239 @@ export function OperatorDashboard({
 						</article>
 					))}
 
-					{busRequests.map((req) => (
-						<article
-							key={req.id}
-							className="border-2 p-3"
-							style={{
-								borderColor: "var(--text-primary)",
-								background: "var(--bg-surface)",
-							}}
-						>
-							<p className="font-bold" style={{ color: "var(--text-primary)" }}>
-								{req.number}
-							</p>
-							<StatusBadge status={req.status} />
-						</article>
-					))}
+					{busRequests
+						.filter((req) => req.status !== "approved")
+						.map((req) => (
+							<article
+								key={req.id}
+								className="border-2 p-3"
+								style={{
+									borderColor: "var(--text-primary)",
+									background: "var(--bg-surface)",
+								}}
+							>
+								<p
+									className="font-bold"
+									style={{ color: "var(--text-primary)" }}
+								>
+									{req.number}
+								</p>
+								<StatusBadge status={req.status} />
+							</article>
+						))}
 				</div>
 			)}
 
 			{/* 2. Conductors Access Management */}
 			{activeTab === "conductors" && (
 				<div className="grid gap-6 md:grid-cols-2">
+					{/* Left: Assign form */}
 					<div
-						className="border-2 p-4"
+						className="border-2 p-4 space-y-4"
 						style={{ background: "var(--bg-surface)" }}
 					>
-						<h3 className="mb-4 text-lg font-bold uppercase tracking-wide">
+						<h3 className="text-lg font-bold uppercase tracking-wide">
 							Assign Conductor to Bus
 						</h3>
-						<form onSubmit={handleGrantAccess} className="space-y-4">
-							<div className="flex gap-2">
-								<input
-									type="text"
-									placeholder="Search conductor (name/email/phone)..."
-									value={searchQuery}
-									onChange={(e) => setSearchQuery(e.target.value)}
-									className="flex-1 border-2 p-2 font-mono text-sm"
-								/>
-								<button
-									type="button"
-									onClick={handleConductorSearch}
-									className="border-2 px-3 font-bold text-xs uppercase"
-								>
-									Search
-								</button>
-							</div>
 
-							{foundConductors.length > 0 && (
-								<div>
-									<label className="block text-xs font-bold uppercase mb-1">
-										Select Conductor
-									</label>
+						{/* Search/filter bar */}
+						<div>
+							<label className="block text-xs font-bold uppercase mb-1">
+								Filter Conductors
+							</label>
+							<input
+								type="text"
+								placeholder="Type name, email, or phone to filter..."
+								value={searchQuery}
+								onChange={(e) => handleConductorSearch(e.target.value)}
+								className="w-full border-2 p-2 font-mono text-sm"
+								style={{
+									background: "var(--input-bg)",
+									color: "var(--input-text)",
+									borderColor: "var(--input-border)",
+								}}
+							/>
+						</div>
+
+						<form onSubmit={handleGrantAccess} className="space-y-4">
+							{/* Conductor picker */}
+							<div>
+								<label className="block text-xs font-bold uppercase mb-1">
+									Select Conductor
+									{conductorsLoading && (
+										<span className="ml-2 text-muted-foreground font-normal">Loading...</span>
+									)}
+								</label>
+								{foundConductors.length === 0 && !conductorsLoading ? (
+									<p className="text-xs text-muted-foreground border-2 p-3">
+										No conductors found. Make sure users with the
+										<strong> Conductor</strong> role exist in the system.
+									</p>
+								) : (
 									<select
 										value={selectedConductorId}
 										onChange={(e) => setSelectedConductorId(e.target.value)}
 										required
 										className="w-full border-2 p-2 font-mono text-sm"
+										style={{
+											background: "var(--input-bg)",
+											color: "var(--input-text)",
+											borderColor: "var(--input-border)",
+										}}
 									>
-										<option value="">-- Select Conductor --</option>
+										<option value="">
+											— Select Conductor ({foundConductors.length} available) —
+										</option>
 										{foundConductors.map((c) => (
 											<option key={c.id} value={c.id}>
-												{c.name} ({c.email})
+												{c.name ?? "(No name)"} — {c.email}
+												{c.phone ? ` • ${c.phone}` : ""}
 											</option>
 										))}
 									</select>
-								</div>
-							)}
+								)}
+							</div>
 
+							{/* Bus picker */}
 							<div>
 								<label className="block text-xs font-bold uppercase mb-1">
 									Assign to Bus
 								</label>
-								<select
-									value={selectedBusId}
-									onChange={(e) => setSelectedBusId(e.target.value)}
-									required
-									className="w-full border-2 p-2 font-mono text-sm"
-								>
-									<option value="">-- Select Bus --</option>
-									{buses.map((b) => (
-										<option key={b.id} value={b.id}>
-											{b.number} ({b.origin} - {b.destination})
-										</option>
-									))}
-								</select>
+								{buses.length === 0 ? (
+									<p className="text-xs text-muted-foreground border-2 p-3">
+										No approved buses found. Get a bus approved by admin first.
+									</p>
+								) : (
+									<select
+										value={selectedBusId}
+										onChange={(e) => setSelectedBusId(e.target.value)}
+										required
+										className="w-full border-2 p-2 font-mono text-sm"
+										style={{
+											background: "var(--input-bg)",
+											color: "var(--input-text)",
+											borderColor: "var(--input-border)",
+										}}
+									>
+										<option value="">— Select Bus —</option>
+										{buses.map((b) => (
+											<option key={b.id} value={b.id}>
+												{b.number} • {b.origin} → {b.destination}
+											</option>
+										))}
+									</select>
+								)}
 							</div>
 
 							<button
 								type="submit"
-								disabled={isPending}
-								className="w-full border-2 p-2 font-bold uppercase text-sm"
+								disabled={isPending || !selectedConductorId || !selectedBusId}
+								className="w-full border-2 p-2 font-bold uppercase text-sm neo-shadow transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:neo-shadow-none disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-x-0 disabled:translate-y-0 disabled:shadow-none"
 								style={{
 									background: "var(--cta-bg)",
 									color: "var(--text-primary)",
+									borderColor: "var(--text-primary)",
 								}}
 							>
-								{isPending ? "GRANTING ACCESS..." : "GRANT ACCESS CODE"}
+								{isPending ? "GRANTING ACCESS..." : "GRANT CONDUCTOR ACCESS"}
 							</button>
 						</form>
 					</div>
 
-					{/* List assignments */}
+					{/* Right: Active assignments */}
 					<div className="space-y-4">
-						<h3 className="text-lg font-bold uppercase">
-							Active Conductor Assignments
-						</h3>
-						<p className="text-xs text-muted-foreground">
-							Revoke assignments or view active codes generated for buses.
-						</p>
-						<p className="text-xs">
-							Conduct Search again or check details to view current active
-							links.
-						</p>
+						<div className="flex items-center justify-between">
+							<h3 className="text-lg font-bold uppercase">
+								Active Assignments
+							</h3>
+							<button
+								type="button"
+								onClick={loadAssignments}
+								className="text-xs border-2 px-2 py-1 font-bold uppercase"
+								style={{ borderColor: "var(--border-default)" }}
+							>
+								Refresh
+							</button>
+						</div>
+
+						{assignmentsLoading ? (
+							<p className="text-xs text-muted-foreground">Loading assignments...</p>
+						) : assignments.length === 0 ? (
+							<div
+								className="border-2 p-4 text-center"
+								style={{ borderStyle: "dashed" }}
+							>
+								<p className="text-sm font-bold uppercase" style={{ color: "var(--text-muted)" }}>
+									No active assignments
+								</p>
+								<p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
+									Use the form on the left to assign conductors to your buses.
+								</p>
+							</div>
+						) : (
+							<div className="space-y-3">
+								{assignments.map((a) => (
+									<article
+										key={a.accessId}
+										className="border-2 p-3 space-y-2"
+										style={{
+											background: "var(--bg-surface)",
+											borderColor: "var(--text-primary)",
+										}}
+									>
+										<div className="flex items-start justify-between gap-2">
+											<div>
+												<p
+													className="font-bold text-sm uppercase"
+													style={{ color: "var(--text-primary)" }}
+												>
+													{a.conductor.name ?? "(No name)"}
+												</p>
+												<p className="text-xs" style={{ color: "var(--text-muted)" }}>
+													{a.conductor.email}
+													{a.conductor.phone ? ` • ${a.conductor.phone}` : ""}
+												</p>
+											</div>
+											<button
+												type="button"
+												onClick={() =>
+													handleRevokeAccess(a.conductor.id, a.bus.id)
+												}
+												disabled={isPending}
+												className="shrink-0 border-2 px-2 py-1 text-xs font-bold uppercase"
+												style={{
+													background: "hsl(var(--destructive))",
+													color: "hsl(var(--destructive-foreground))",
+													borderColor: "var(--text-primary)",
+												}}
+											>
+												Revoke
+											</button>
+										</div>
+										<div
+											className="text-xs px-2 py-1 font-mono font-bold"
+											style={{
+												background: "var(--bg-surface-2)",
+												color: "var(--color-teal)",
+											}}
+										>
+											Bus {a.bus.number} • {a.bus.origin} → {a.bus.destination}
+										</div>
+										<div className="flex items-center justify-between">
+											<p className="text-xs" style={{ color: "var(--text-muted)" }}>
+												Code:{" "}
+												<span className="font-mono font-bold" style={{ color: "var(--color-amber)" }}>
+													{a.conductorCode}
+												</span>
+											</p>
+											<p className="text-xs" style={{ color: "var(--text-muted)" }}>
+												{new Date(a.grantedAt).toLocaleDateString("en-IN")}
+											</p>
+										</div>
+									</article>
+								))}
+							</div>
+						)}
 					</div>
 				</div>
 			)}

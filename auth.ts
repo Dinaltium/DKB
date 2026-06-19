@@ -1,8 +1,15 @@
 import { db } from "@/lib/db";
 import { getUserByEmail } from "@/lib/db/queries";
-import { accounts, sessions, users, verificationTokens } from "@/lib/db/schema";
+import {
+	accounts,
+	sessions,
+	userActiveSessions,
+	users,
+	verificationTokens,
+} from "@/lib/db/schema";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import bcrypt from "bcryptjs";
+import { and, eq } from "drizzle-orm";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";

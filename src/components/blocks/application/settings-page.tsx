@@ -640,6 +640,143 @@ export function SettingsPage({
 	defaultTab = "profile",
 	className,
 }: SettingsPageProps) {
+	const [activeSessions, setActiveSessions] = React.useState<
+		Array<{
+			id: string;
+			device: string;
+			location: string;
+			lastActive: string;
+			current: boolean;
+		}>
+	>([]);
+
+	React.useEffect(() => {
+		if (typeof window === "undefined") return;
+
+		let sessionId = window.localStorage.getItem("buslink_session_id");
+		if (!sessionId) {
+			sessionId =
+				typeof window.crypto?.randomUUID === "function"
+					? window.crypto.randomUUID()
+					: Math.random().toString(36).substring(2) + Date.now().toString(36);
+			window.localStorage.setItem("buslink_session_id", sessionId);
+		}
+
+		const parseUserAgent = async () => {
+			const ua = window.navigator.userAgent;
+			let browser = "Unknown Browser";
+			let os = "Unknown OS";
+
+			// Parse OS
+			if (/Windows/i.test(ua)) os = "Windows";
+			else if (/Macintosh|Mac OS X/i.test(ua)) os = "macOS";
+			else if (/iPhone|iPad|iPod/i.test(ua)) os = "iOS";
+			else if (/Android/i.test(ua)) os = "Android";
+			else if (/Linux/i.test(ua)) os = "Linux";
+
+			// Parse Brave (Brave uses a promise-based check to prevent fingerprinting)
+			const isBrave =
+				typeof (window.navigator as any).brave?.isBrave === "function"
+					? await (window.navigator as any).brave.isBrave()
+					: false;
+
+			if (isBrave) {
+				browser = "Brave";
+			} else if (/Chrome/i.test(ua) && !/Chromium|Edge|OPR/i.test(ua)) {
+				browser = "Chrome";
+			} else if (/Safari/i.test(ua) && !/Chrome|Chromium/i.test(ua)) {
+				browser = "Safari";
+			} else if (/Firefox/i.test(ua)) {
+				browser = "Firefox";
+			} else if (/Edg/i.test(ua)) {
+				browser = "Edge";
+			} else if (/OPR|Opera/i.test(ua)) {
+				browser = "Opera";
+			}
+
+			return `${browser} on ${os}`;
+		};
+
+		// Helper to format last active timestamp
+		const formatLastActive = (dateStr: string) => {
+			const diffMs = Date.now() - new Date(dateStr).getTime();
+			if (diffMs < 60000) return "Now";
+			const diffMins = Math.floor(diffMs / 60000);
+			if (diffMins < 60) return `${diffMins}m ago`;
+			const diffHours = Math.floor(diffMins / 60);
+			if (diffHours < 24) return `${diffHours}h ago`;
+			return new Date(dateStr).toLocaleDateString();
+		};
+
+		// Helper to update active sessions state from DB result
+		const updateState = (dbSessions: any[], currentId: string) => {
+			setActiveSessions(
+				dbSessions.map((s: any) => ({
+					id: s.id,
+					device: s.device,
+					location: s.location,
+					lastActive: formatLastActive(s.lastActive),
+					current: s.id === currentId,
+				})),
+			);
+		};
+
+		// First, load existing sessions from the database
+		fetch("/api/user-active-sessions")
+			.then((res) => {
+				if (!res.ok) throw new Error("Failed to fetch sessions");
+				return res.json();
+			})
+			.then((data) => {
+				if (Array.isArray(data.sessions)) {
+					updateState(data.sessions, sessionId!);
+				}
+			})
+			.catch(console.error);
+
+		// Parse UA and fetch location to register/update this session
+		parseUserAgent().then((currentDevice) => {
+			const registerSession = (loc: string) => {
+				fetch("/api/user-active-sessions", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						sessionId,
+						device: currentDevice,
+						location: loc,
+					}),
+				})
+					.then((res) => {
+						if (!res.ok) throw new Error("Failed to register session");
+						return res.json();
+					})
+					.then((data) => {
+						if (Array.isArray(data.sessions)) {
+							updateState(data.sessions, sessionId!);
+						}
+					})
+					.catch(console.error);
+			};
+
+			// Fetch IP location
+			fetch("https://ipapi.co/json/")
+				.then((res) => {
+					if (!res.ok) throw new Error("Failed to fetch location");
+					return res.json();
+				})
+				.then((data) => {
+					const loc =
+						data.city && data.region_code
+							? `${data.city}, ${data.region_code}`
+							: "Unknown Location";
+					registerSession(loc);
+				})
+				.catch(() => {
+					registerSession("Localhost / Unknown Location");
+				});
+		});
+	}, []);
+
 	return (
 		<div className={cn("max-w-4xl mx-auto py-8 px-4", className)}>
 			<div className="mb-8">
@@ -675,8 +812,9 @@ export function SettingsPage({
 					</TabsTrigger>
 				</TabsList>
 
-				<TabsContent value="profile">
+				<TabsContent value="profile" className="space-y-6">
 					<ProfileSettings />
+					<DangerZone />
 				</TabsContent>
 
 				<TabsContent value="notifications">
@@ -685,21 +823,43 @@ export function SettingsPage({
 
 				<TabsContent value="security">
 					<SecuritySettings
-						sessions={[
-							{
-								id: "1",
-								device: "Chrome on MacOS",
-								location: "San Francisco, CA",
-								lastActive: "Now",
-								current: true,
-							},
-							{
-								id: "2",
-								device: "Safari on iPhone",
-								location: "New York, NY",
-								lastActive: "2 hours ago",
-							},
-						]}
+						sessions={activeSessions}
+						onRevokeSession={(id) => {
+							const clientSessionId =
+								localStorage.getItem("buslink_session_id");
+							fetch("/api/user-active-sessions", {
+								method: "DELETE",
+								headers: { "Content-Type": "application/json" },
+								body: JSON.stringify({ sessionId: id }),
+							})
+								.then((res) => {
+									if (!res.ok) throw new Error("Failed to revoke session");
+									return res.json();
+								})
+								.then((data) => {
+									if (Array.isArray(data.sessions)) {
+										const formatLastActive = (dateStr: string) => {
+											const diffMs = Date.now() - new Date(dateStr).getTime();
+											if (diffMs < 60000) return "Now";
+											const diffMins = Math.floor(diffMs / 60000);
+											if (diffMins < 60) return `${diffMins}m ago`;
+											const diffHours = Math.floor(diffMins / 60);
+											if (diffHours < 24) return `${diffHours}h ago`;
+											return new Date(dateStr).toLocaleDateString();
+										};
+										setActiveSessions(
+											data.sessions.map((s: any) => ({
+												id: s.id,
+												device: s.device,
+												location: s.location,
+												lastActive: formatLastActive(s.lastActive),
+												current: s.id === clientSessionId,
+											})),
+										);
+									}
+								})
+								.catch(console.error);
+						}}
 					/>
 				</TabsContent>
 
@@ -726,10 +886,6 @@ export function SettingsPage({
 					</Card>
 				</TabsContent>
 			</Tabs>
-
-			<div className="mt-8">
-				<DangerZone />
-			</div>
 		</div>
 	);
 }

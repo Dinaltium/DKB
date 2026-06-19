@@ -315,6 +315,10 @@ export function LiveBusProvider({ children }: { children: React.ReactNode }) {
 
 	// ── Advance each bus 50 m every 2 seconds ─────────────────────────────────
 	useEffect(() => {
+		if (process.env.NEXT_PUBLIC_ENABLE_FAKE_MOVEMENT === "false") {
+			return;
+		}
+
 		const id = setInterval(() => {
 			setBusStates((prev) => {
 				const next = { ...prev };

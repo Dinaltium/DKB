@@ -179,6 +179,47 @@ export function AdminDashboard({
 
 	// Bus info modal
 	const [busInfoModal, setBusInfoModal] = useState<string | null>(null);
+	const [pendingBusRequestModal, setPendingBusRequestModal] = useState<
+		string | null
+	>(null);
+
+	const pendingRequestRow = useMemo(() => {
+		if (!pendingBusRequestModal) return null;
+		return (
+			busRequests.find((r) => r.request.id === pendingBusRequestModal) || null
+		);
+	}, [pendingBusRequestModal, busRequests]);
+
+	const pendingRequestBus = useMemo((): BusWithRouteIds | null => {
+		if (!pendingRequestRow) return null;
+		return {
+			id: pendingRequestRow.request.id,
+			number: pendingRequestRow.request.number,
+			operatorId: pendingRequestRow.request.operatorId,
+			licensePlate: pendingRequestRow.request.licensePlate,
+			origin: pendingRequestRow.request.origin,
+			destination: pendingRequestRow.request.destination,
+			fullFare: pendingRequestRow.request.fullFare,
+			driverName: pendingRequestRow.request.driverName,
+			conductorName: pendingRequestRow.request.conductorName,
+			status: "Not Running",
+			statusNote: "Pending Approval",
+			schedule: pendingRequestRow.request.schedule,
+			totalSeats: pendingRequestRow.request.totalSeats,
+			occupiedSeats: 0,
+			womenReservedTotal: pendingRequestRow.request.womenReservedTotal,
+			womenReservedAvailable: pendingRequestRow.request.womenReservedTotal,
+			studentCardAccepted: pendingRequestRow.request.studentCardAccepted,
+			studentDiscountPercent: pendingRequestRow.request.studentDiscountPercent,
+			votes: { onTime: 0, slightlyLate: 0, veryLate: 0 },
+			routeGeometry: null,
+			seatLayout: "2x2",
+			qrCodeData: null,
+			isLive: false,
+			updatedAt: new Date(),
+			routeStopIds: pendingRequestRow.request.routeStopIds,
+		};
+	}, [pendingRequestRow]);
 
 	const [importPreview, setImportPreview] = useState<Stop[] | null>(null);
 	const [stopSearch, setStopSearch] = useState("");
@@ -610,55 +651,69 @@ export function AdminDashboard({
 						</div>
 					))}
 
-					{busRequests.map((row) => (
-						<div
-							key={row.request.id}
-							className="border-2 p-3"
-							style={{
-								borderColor: "var(--text-primary)",
-								background: "var(--bg-surface)",
-							}}
-						>
-							<p className="font-bold" style={{ color: "var(--text-primary)" }}>
-								{row.request.number}
-							</p>
-							<p className="text-xs" style={{ color: "var(--text-muted)" }}>
-								{row.operator.companyName}
-							</p>
-							<div className="mt-2 flex gap-2">
-								<Button
-									type="button"
-									disabled={isPending}
-									variant="outline"
-									onClick={() =>
-										startTransition(async () => {
-											const r = await approveBusRequestAction(row.request.id);
-											if (r.success) toast.success("Bus request approved");
-											else toast.error(r.error ?? "Failed");
-										})
-									}
-									className="h-8 rounded-none border-2 border-foreground font-bold uppercase neo-shadow"
+					{busRequests
+						.filter((row) => row.request.status === "pending")
+						.map((row) => (
+							<div
+								key={row.request.id}
+								className="border-2 p-3"
+								style={{
+									borderColor: "var(--text-primary)",
+									background: "var(--bg-surface)",
+								}}
+							>
+								<p
+									className="font-bold"
+									style={{ color: "var(--text-primary)" }}
 								>
-									APPROVE
-								</Button>
-								<Button
-									type="button"
-									disabled={isPending}
-									variant="outline"
-									onClick={() =>
-										startTransition(async () => {
-											const r = await rejectBusRequestAction(row.request.id);
-											if (r.success) toast.success("Bus request rejected");
-											else toast.error(r.error ?? "Failed");
-										})
-									}
-									className="h-8 rounded-none border-2 border-destructive font-bold uppercase text-destructive neo-shadow"
-								>
-									REJECT
-								</Button>
+									{row.request.number}
+								</p>
+								<p className="text-xs" style={{ color: "var(--text-muted)" }}>
+									{row.operator.companyName}
+								</p>
+								<div className="mt-2 flex gap-2">
+									<Button
+										type="button"
+										disabled={isPending}
+										variant="outline"
+										onClick={() => setPendingBusRequestModal(row.request.id)}
+										className="h-8 rounded-none border-2 border-foreground bg-background font-bold uppercase text-foreground neo-shadow"
+									>
+										VIEW INFO
+									</Button>
+									<Button
+										type="button"
+										disabled={isPending}
+										variant="outline"
+										onClick={() =>
+											startTransition(async () => {
+												const r = await approveBusRequestAction(row.request.id);
+												if (r.success) toast.success("Bus request approved");
+												else toast.error(r.error ?? "Failed");
+											})
+										}
+										className="h-8 rounded-none border-2 border-foreground font-bold uppercase neo-shadow"
+									>
+										APPROVE
+									</Button>
+									<Button
+										type="button"
+										disabled={isPending}
+										variant="outline"
+										onClick={() =>
+											startTransition(async () => {
+												const r = await rejectBusRequestAction(row.request.id);
+												if (r.success) toast.success("Bus request rejected");
+												else toast.error(r.error ?? "Failed");
+											})
+										}
+										className="h-8 rounded-none border-2 border-destructive font-bold uppercase text-destructive neo-shadow"
+									>
+										REJECT
+									</Button>
+								</div>
 							</div>
-						</div>
-					))}
+						))}
 				</section>
 			)}
 
@@ -1148,6 +1203,102 @@ export function AdminDashboard({
 					payments={payments}
 					onClose={() => setBusInfoModal(null)}
 				/>
+			)}
+
+			{pendingBusRequestModal && pendingRequestRow && pendingRequestBus && (
+				<>
+					<div className="fixed inset-0 z-40 bg-black/60" />
+					<div
+						className="fixed left-1/2 top-1/2 z-50 flex w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden border-2 border-foreground"
+						style={{
+							background: "var(--bg-surface)",
+							maxHeight: "90vh",
+							boxShadow: "6px 6px 0 var(--shadow-color)",
+						}}
+					>
+						{/* Header */}
+						<div className="flex shrink-0 items-center justify-between border-b-2 border-foreground px-4 py-3">
+							<p
+								className="text-xl font-black uppercase tracking-wide"
+								style={{
+									fontFamily: "'Barlow Condensed', sans-serif",
+									color: "var(--text-primary)",
+								}}
+							>
+								Pending Bus Request: {pendingRequestBus.number}
+							</p>
+							<button
+								type="button"
+								onClick={() => setPendingBusRequestModal(null)}
+								className="flex h-8 w-8 items-center justify-center border-2 border-foreground font-black text-sm hover:bg-foreground hover:text-background transition-colors"
+							>
+								<X className="h-4 w-4" />
+							</button>
+						</div>
+
+						{/* Body */}
+						<div
+							className="flex-1 min-h-0 overflow-y-auto p-4"
+							style={{
+								scrollbarWidth: "thin",
+								scrollbarColor: "var(--text-primary) transparent",
+							}}
+						>
+							<BusInfoPanel
+								bus={pendingRequestBus}
+								allStops={stops}
+								operatorName={pendingRequestRow.operator.companyName}
+								mode="view"
+							/>
+						</div>
+
+						{/* Footer Actions */}
+						<div className="flex justify-end gap-2 border-t-2 border-foreground p-4 bg-background">
+							<Button
+								type="button"
+								disabled={isPending}
+								variant="outline"
+								onClick={() =>
+									startTransition(async () => {
+										const r = await approveBusRequestAction(
+											pendingRequestRow.request.id,
+										);
+										if (r.success) {
+											toast.success("Bus request approved");
+											setPendingBusRequestModal(null);
+										} else {
+											toast.error(r.error ?? "Failed");
+										}
+									})
+								}
+								className="h-10 rounded-none border-2 border-foreground font-bold uppercase neo-shadow"
+							>
+								APPROVE
+							</Button>
+							<Button
+								type="button"
+								disabled={isPending}
+								variant="outline"
+								onClick={() =>
+									startTransition(async () => {
+										const r = await rejectBusRequestAction(
+											pendingRequestRow.request.id,
+										);
+										if (r.success) {
+											toast.success("Bus request rejected");
+											setPendingBusRequestModal(null);
+										} else {
+											toast.error(r.error ?? "Failed");
+										}
+									})
+								}
+								className="h-10 rounded-none border-2 border-destructive font-bold uppercase text-destructive neo-shadow"
+							>
+								REJECT
+							</Button>
+						</div>
+					</div>
+				</>
 			)}
 
 			{importPreview && (

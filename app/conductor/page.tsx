@@ -1,368 +1,670 @@
 "use client";
 
-import { getNotificationsAction } from "@/lib/actions/notifications";
+import {
+	getConductorTripsAction,
+	getMyConductorAccessAction,
+} from "@/lib/actions/conductor";
 import {
 	activateTripAction,
 	advanceStopAction,
 	endTripAction,
 } from "@/lib/actions/trips";
-import { db } from "@/lib/db";
-import { and, eq } from "drizzle-orm";
-import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useEffect, useState, useTransition } from "react";
+import { toast } from "sonner";
 
-interface TripStop {
-	id: number;
-	stopName: string;
-	stopOrder: number;
-	arrivalTime12: string;
-	arrivalPeriod: string;
+// ── Types ─────────────────────────────────────────────────────────────────────
+
+interface BusAssignment {
+	bus: {
+		id: string;
+		number: string;
+		origin: string;
+		destination: string;
+		fullFare: number;
+		totalSeats: number;
+		occupiedSeats: number;
+		status: string;
+		driverName: string;
+		conductorName: string;
+		isLive: boolean;
+	};
+	conductorCode: string;
+	grantedAt: Date;
 }
 
-interface Trip {
+interface TripWithBus {
 	id: number;
 	busId: string;
 	routeId: number | null;
+	conductorId: string | null;
 	departureDate: string;
 	departureTime24: string;
 	status: string;
 	currentStopIdx: number;
 	isLive: boolean;
-	stops?: TripStop[];
+	bus: {
+		id: string;
+		number: string;
+		origin: string;
+		destination: string;
+	};
 }
 
-export default function ConductorDashboard() {
-	const [activeTrip, setActiveTrip] = useState<Trip | null>(null);
-	const [scheduledTrips, setScheduledTrips] = useState<Trip[]>([]);
+interface TripReport {
+	id: number;
+	tripId: number | null;
+	busId: string | null;
+	totalPassengers: number;
+	digitalTickets: number;
+	cashTickets: number;
+	totalRevenueInr: string;
+	createdAt: Date;
+}
+
+// ── Main Component ────────────────────────────────────────────────────────────
+
+export default function ConductorPage() {
+	const [data, setData] = useState<{
+		assignments: BusAssignment[];
+		recentReports: TripReport[];
+		summary: {
+			totalTrips: number;
+			totalEarnings: string;
+			totalPassengers: number;
+		};
+	} | null>(null);
+	const [trips, setTrips] = useState<TripWithBus[]>([]);
 	const [loading, setLoading] = useState(true);
-	const [message, setMessage] = useState("");
-	const [error, setError] = useState("");
-	const [report, setReport] = useState<any>(null);
+	const [activeTripId, setActiveTripId] = useState<number | null>(null);
+	const [isPending, startTransition] = useTransition();
 
-	// Fetch data on mount
+	// Find currently active trip
+	const activeTrip = trips.find((t) => t.status === "active");
+	const scheduledTrips = trips.filter((t) => t.status === "scheduled");
+
 	useEffect(() => {
-		async function fetchTrips() {
-			try {
-				setLoading(true);
-				// Call API to fetch conductor trips
-				const response = await fetch("/api/trips/search");
-				const resJson = await response.json();
-				if (resJson.success && resJson.data) {
-					// Filter active trip (started by this conductor or status is active)
-					const active = resJson.data.find((t: any) => t.status === "active");
-					const scheduled = resJson.data.filter(
-						(t: any) => t.status === "scheduled",
-					);
-					if (active) setActiveTrip(active);
-					setScheduledTrips(scheduled);
-				}
-			} catch (err: any) {
-				setError(`Failed to fetch trips data: ${err.message}`);
-			} finally {
-				setLoading(false);
-			}
-		}
-
-		fetchTrips();
+		loadAll();
 	}, []);
 
-	const handleActivate = async (tripId: number) => {
-		setMessage("");
-		setError("");
+	const loadAll = async () => {
+		setLoading(true);
 		try {
-			const res = await activateTripAction(tripId);
-			if (res.success && res.data) {
-				setMessage("Trip activated successfully!");
-				// Reload trip details or set state
-				window.location.reload();
-			} else {
-				setError(res.error || "Failed to activate trip");
+			const [accessRes, tripsRes] = await Promise.all([
+				getMyConductorAccessAction(),
+				getConductorTripsAction(),
+			]);
+			if (accessRes.success && accessRes.data) {
+				setData(accessRes.data);
+			}
+			if (tripsRes.success && tripsRes.data) {
+				setTrips(tripsRes.data as TripWithBus[]);
+				const active = tripsRes.data.find((t: any) => t.status === "active");
+				if (active) setActiveTripId(active.id);
 			}
 		} catch (err: any) {
-			setError(err.message || "An error occurred");
+			toast.error("Failed to load conductor data");
+		} finally {
+			setLoading(false);
 		}
+	};
+
+	const handleActivate = async (tripId: number) => {
+		startTransition(async () => {
+			const res = await activateTripAction(tripId);
+			if (res.success) {
+				toast.success("Trip activated! You are now live.");
+				setActiveTripId(tripId);
+				await loadAll();
+			} else {
+				toast.error(res.error || "Failed to activate trip");
+			}
+		});
 	};
 
 	const handleAdvanceStop = async () => {
-		if (!activeTrip) return;
-		setMessage("");
-		setError("");
-		try {
-			const res = await advanceStopAction(activeTrip.id);
+		if (!activeTripId) return;
+		startTransition(async () => {
+			const res = await advanceStopAction(activeTripId);
 			if (res.success && res.data) {
-				setMessage(`Advanced to stop: ${res.data.currentStop}`);
-				setActiveTrip((prev) => {
-					if (!prev) return null;
-					return {
-						...prev,
-						currentStopIdx: res.data!.currentStopIdx,
-					};
-				});
+				toast.success(
+					`Advanced → ${res.data.currentStop} (${res.data.remainingStops} stops left)`,
+				);
 			} else {
-				setError(res.error || "Failed to advance stop");
+				toast.error(res.error || "Failed to advance stop");
 			}
-		} catch (err: any) {
-			setError(err.message || "An error occurred");
-		}
+		});
 	};
 
 	const handleEndTrip = async () => {
-		if (!activeTrip) return;
-		if (
-			!confirm(
-				"Are you sure you want to end this trip? This will generate a trip report.",
-			)
-		)
-			return;
-		setMessage("");
-		setError("");
-		try {
-			const res = await endTripAction(activeTrip.id);
+		if (!activeTripId) return;
+		if (!confirm("End this trip? A trip report will be generated.")) return;
+		startTransition(async () => {
+			const res = await endTripAction(activeTripId);
 			if (res.success && res.data) {
-				setMessage("Trip ended successfully!");
-				setReport(res.data);
-				setActiveTrip(null);
+				toast.success(
+					`Trip complete! ₹${res.data.totalRevenueInr} collected from ${res.data.totalPassengers} passengers.`,
+				);
+				setActiveTripId(null);
+				await loadAll();
 			} else {
-				setError(res.error || "Failed to end trip");
+				toast.error(res.error || "Failed to end trip");
 			}
-		} catch (err: any) {
-			setError(err.message || "An error occurred");
-		}
+		});
 	};
+
+	// ── Loading ────────────────────────────────────────────────────────────────
 
 	if (loading) {
 		return (
-			<div style={{ padding: "20px", fontFamily: "sans-serif" }}>
-				<h2>Loading Conductor Dashboard...</h2>
+			<div
+				className="min-h-screen flex items-center justify-center"
+				style={{ background: "var(--bg-page)" }}
+			>
+				<div className="text-center space-y-2">
+					<div
+						className="w-10 h-10 border-4 border-t-transparent rounded-full animate-spin mx-auto"
+						style={{ borderColor: "var(--color-amber)", borderTopColor: "transparent" }}
+					/>
+					<p
+						className="text-sm font-bold uppercase tracking-widest"
+						style={{ color: "var(--text-muted)" }}
+					>
+						Loading your dashboard...
+					</p>
+				</div>
 			</div>
 		);
 	}
 
+	const assignment = data?.assignments?.[0] ?? null;
+	const summary = data?.summary ?? { totalTrips: 0, totalEarnings: "0.00", totalPassengers: 0 };
+	const reports = data?.recentReports ?? [];
+
+	// ── No Assignment State ────────────────────────────────────────────────────
+
+	if (!assignment) {
+		return (
+			<div
+				className="min-h-screen flex flex-col items-center justify-center gap-6 p-6"
+				style={{ background: "var(--bg-page)" }}
+			>
+				<div
+					className="border-4 p-8 max-w-md w-full text-center neo-shadow space-y-4"
+					style={{
+						borderColor: "var(--text-primary)",
+						background: "var(--bg-surface)",
+					}}
+				>
+					<div
+						className="text-5xl font-black"
+						style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+					>
+						🚌
+					</div>
+					<h1
+						className="text-2xl font-black uppercase"
+						style={{
+							fontFamily: "'Barlow Condensed', sans-serif",
+							color: "var(--text-primary)",
+						}}
+					>
+						No Bus Assigned
+					</h1>
+					<p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+						You don't have a bus assigned yet. Contact your operator to get a
+						bus assignment and conductor access code.
+					</p>
+					<Link
+						href="/dashboard"
+						className="inline-block border-2 px-4 py-2 text-xs font-bold uppercase neo-shadow transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:neo-shadow-none"
+						style={{
+							borderColor: "var(--text-primary)",
+							color: "var(--text-primary)",
+						}}
+					>
+						← Back to Dashboard
+					</Link>
+				</div>
+			</div>
+		);
+	}
+
+	const bus = assignment.bus;
+
+	// ── Full Dashboard ─────────────────────────────────────────────────────────
+
 	return (
 		<div
-			style={{
-				padding: "20px",
-				fontFamily: "monospace",
-				maxWidth: "800px",
-				margin: "0 auto",
-				border: "1px solid #ccc",
-				background: "#f9f9f9",
-			}}
+			className="min-h-screen p-4 md:p-6 space-y-5"
+			style={{ background: "var(--bg-page)" }}
 		>
-			<h1 style={{ borderBottom: "2px solid #333", paddingBottom: "10px" }}>
-				CONDUCTOR DASHBOARD
-			</h1>
-
-			{message && (
-				<div
-					style={{
-						color: "green",
-						background: "#e2f0d9",
-						padding: "10px",
-						margin: "10px 0",
-					}}
-				>
-					[SUCCESS] {message}
-				</div>
-			)}
-			{error && (
-				<div
-					style={{
-						color: "red",
-						background: "#fce4d6",
-						padding: "10px",
-						margin: "10px 0",
-					}}
-				>
-					[ERROR] {error}
-				</div>
-			)}
-
-			{/* Active Trip Info */}
-			{activeTrip ? (
-				<div
-					style={{
-						border: "2px solid #0056b3",
-						padding: "15px",
-						margin: "20px 0",
-						background: "#e8f4fd",
-					}}
-				>
-					<h2 style={{ margin: "0 0 10px 0", color: "#0056b3" }}>
-						ACTIVE TRIP IN PROGRESS
-					</h2>
-					<p>
-						<strong>Trip ID:</strong> {activeTrip.id}
-					</p>
-					<p>
-						<strong>Bus:</strong> {activeTrip.busId}
-					</p>
-					<p>
-						<strong>Current Stop Index:</strong> {activeTrip.currentStopIdx}
-					</p>
-
-					{activeTrip.stops && activeTrip.stops.length > 0 && (
-						<div>
-							<h3>Stops List:</h3>
-							<ol>
-								{activeTrip.stops.map((stop, idx) => (
-									<li
-										key={stop.id}
-										style={{
-											fontWeight:
-												idx === activeTrip.currentStopIdx ? "bold" : "normal",
-											color:
-												idx === activeTrip.currentStopIdx ? "blue" : "#333",
-											textDecoration:
-												idx < activeTrip.currentStopIdx
-													? "line-through"
-													: "none",
-										}}
-									>
-										{stop.stopName} ({stop.arrivalTime12} {stop.arrivalPeriod})
-										{idx === activeTrip.currentStopIdx &&
-											"  <-- CURRENT POSITION"}
-									</li>
-								))}
-							</ol>
-						</div>
-					)}
-
-					<div style={{ marginTop: "20px" }}>
-						<button
-							onClick={handleAdvanceStop}
+			{/* ── Header ─────────────────────────────────────────── */}
+			<div
+				className="border-2 p-4 neo-shadow"
+				style={{
+					borderColor: "var(--text-primary)",
+					background: "var(--bg-surface)",
+				}}
+			>
+				<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+					<div>
+						<p
+							className="text-xs font-bold uppercase tracking-widest"
+							style={{ color: "var(--color-amber)" }}
+						>
+							Conductor Panel
+						</p>
+						<h1
+							className="text-3xl font-black uppercase leading-none"
 							style={{
-								padding: "10px 15px",
-								background: "#007bff",
-								color: "white",
-								border: "none",
-								cursor: "pointer",
-								marginRight: "10px",
-								fontSize: "14px",
+								fontFamily: "'Barlow Condensed', sans-serif",
+								color: "var(--text-primary)",
 							}}
 						>
-							Advance Stop (Next Stop)
+							Bus {bus.number}
+						</h1>
+						<p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
+							{bus.origin} → {bus.destination}
+						</p>
+					</div>
+
+					{/* Live status pill */}
+					<div className="flex items-center gap-3">
+						{activeTrip ? (
+							<div
+								className="flex items-center gap-2 border-2 px-3 py-1"
+								style={{
+									borderColor: "hsl(var(--success))",
+									background: "var(--status-running-bg)",
+								}}
+							>
+								<span
+									className="w-2 h-2 rounded-full live-ping"
+									style={{ background: "hsl(var(--success))" }}
+								/>
+								<span
+									className="text-xs font-bold uppercase"
+									style={{ color: "hsl(var(--success))" }}
+								>
+									Live
+								</span>
+							</div>
+						) : (
+							<div
+								className="border-2 px-3 py-1"
+								style={{ borderColor: "var(--border-default)" }}
+							>
+								<span className="text-xs font-bold uppercase" style={{ color: "var(--text-muted)" }}>
+									Offline
+								</span>
+							</div>
+						)}
+					</div>
+				</div>
+			</div>
+
+			{/* ── Stats Row ──────────────────────────────────────── */}
+			<div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+				{[
+					{
+						label: "Total Trips",
+						value: summary.totalTrips,
+						color: "var(--color-teal)",
+					},
+					{
+						label: "Total Revenue",
+						value: `₹${Number(summary.totalEarnings).toLocaleString("en-IN")}`,
+						color: "var(--color-amber)",
+					},
+					{
+						label: "Passengers",
+						value: summary.totalPassengers,
+						color: "hsl(var(--primary))",
+					},
+					{
+						label: "Seats",
+						value: `${bus.occupiedSeats}/${bus.totalSeats}`,
+						color: "hsl(var(--info))",
+					},
+				].map((stat) => (
+					<div
+						key={stat.label}
+						className="border-2 p-3 neo-shadow"
+						style={{
+							borderColor: "var(--text-primary)",
+							background: "var(--bg-surface)",
+						}}
+					>
+						<p className="text-xs font-bold uppercase" style={{ color: "var(--text-muted)" }}>
+							{stat.label}
+						</p>
+						<p
+							className="text-2xl font-black"
+							style={{
+								fontFamily: "'Barlow Condensed', sans-serif",
+								color: stat.color,
+							}}
+						>
+							{stat.value}
+						</p>
+					</div>
+				))}
+			</div>
+
+			{/* ── Bus Card + Conductor Code ───────────────────────── */}
+			<div className="grid gap-4 md:grid-cols-2">
+				{/* Bus details */}
+				<div
+					className="border-2 p-4 space-y-3"
+					style={{
+						borderColor: "var(--text-primary)",
+						background: "var(--bg-surface)",
+					}}
+				>
+					<h2
+						className="text-sm font-bold uppercase tracking-wide"
+						style={{ color: "var(--text-muted)" }}
+					>
+						Your Assigned Bus
+					</h2>
+					<div className="space-y-2">
+						{[
+							["Bus Number", bus.number],
+							["Route", `${bus.origin} → ${bus.destination}`],
+							["Full Fare", `₹${bus.fullFare}`],
+							["Total Seats", bus.totalSeats],
+							["Registered Driver", bus.driverName],
+							["Registered Conductor", bus.conductorName],
+							[
+								"Bus Status",
+								<span
+									key="status"
+									className="font-bold"
+									style={{
+										color:
+											bus.status === "Running"
+												? "hsl(var(--success))"
+												: bus.status === "Delayed"
+													? "hsl(var(--warning))"
+													: "hsl(var(--destructive))",
+									}}
+								>
+									{bus.status}
+								</span>,
+							],
+						].map(([label, val]) => (
+							<div
+								key={String(label)}
+								className="flex items-center justify-between gap-2 text-sm"
+							>
+								<span style={{ color: "var(--text-muted)" }}>{label}</span>
+								<span className="font-bold text-right" style={{ color: "var(--text-primary)" }}>
+									{val}
+								</span>
+							</div>
+						))}
+					</div>
+				</div>
+
+				{/* Conductor code */}
+				<div
+					className="border-2 p-4 space-y-3"
+					style={{
+						borderColor: "var(--color-amber)",
+						background: "var(--bg-surface)",
+					}}
+				>
+					<h2
+						className="text-sm font-bold uppercase tracking-wide"
+						style={{ color: "var(--text-muted)" }}
+					>
+						Your Conductor Code
+					</h2>
+					<p
+						className="text-4xl font-black tracking-widest"
+						style={{
+							fontFamily: "'Barlow Condensed', sans-serif",
+							color: "var(--color-amber)",
+						}}
+					>
+						{assignment.conductorCode}
+					</p>
+					<p className="text-xs" style={{ color: "var(--text-muted)" }}>
+						This code identifies you as the conductor for Bus {bus.number}.
+						You'll need this to activate trips on this bus.
+					</p>
+					<p className="text-xs" style={{ color: "var(--text-muted)" }}>
+						Assigned:{" "}
+						<span className="font-bold">
+							{new Date(assignment.grantedAt).toLocaleDateString("en-IN", {
+								day: "numeric",
+								month: "short",
+								year: "numeric",
+							})}
+						</span>
+					</p>
+
+					<Link
+						href={`/bus/${bus.id}`}
+						className="inline-flex items-center gap-1 border-2 px-3 py-2 text-xs font-bold uppercase neo-shadow transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:neo-shadow-none"
+						style={{
+							borderColor: "var(--text-primary)",
+							color: "var(--text-primary)",
+						}}
+					>
+						View Bus Page →
+					</Link>
+				</div>
+			</div>
+
+			{/* ── Active Trip Control ────────────────────────────── */}
+			{activeTrip && (
+				<div
+					className="border-2 p-4 space-y-4"
+					style={{
+						borderColor: "hsl(var(--success))",
+						background: "var(--status-running-bg)",
+					}}
+				>
+					<div className="flex items-center justify-between">
+						<div>
+							<p
+								className="text-xs font-bold uppercase"
+								style={{ color: "hsl(var(--success))" }}
+							>
+								Active Trip In Progress
+							</p>
+							<p
+								className="text-xl font-black"
+								style={{
+									fontFamily: "'Barlow Condensed', sans-serif",
+									color: "var(--text-primary)",
+								}}
+							>
+								Trip #{activeTrip.id} — {activeTrip.bus.number}
+							</p>
+							<p className="text-xs mt-1" style={{ color: "var(--text-secondary)" }}>
+								{activeTrip.departureDate} at {activeTrip.departureTime24}
+							</p>
+						</div>
+					</div>
+
+					<div className="flex flex-wrap gap-3">
+						<button
+							type="button"
+							onClick={handleAdvanceStop}
+							disabled={isPending}
+							className="border-2 px-4 py-2 text-sm font-bold uppercase neo-shadow transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:neo-shadow-none disabled:opacity-50"
+							style={{
+								background: "var(--color-teal)",
+								color: "#fff",
+								borderColor: "var(--text-primary)",
+							}}
+						>
+							{isPending ? "Processing..." : "→ Advance to Next Stop"}
 						</button>
 						<button
+							type="button"
 							onClick={handleEndTrip}
+							disabled={isPending}
+							className="border-2 px-4 py-2 text-sm font-bold uppercase neo-shadow transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:neo-shadow-none disabled:opacity-50"
 							style={{
-								padding: "10px 15px",
-								background: "#dc3545",
-								color: "white",
-								border: "none",
-								cursor: "pointer",
-								fontSize: "14px",
+								background: "hsl(var(--destructive))",
+								color: "#fff",
+								borderColor: "var(--text-primary)",
 							}}
 						>
-							End Trip
+							End Trip & Generate Report
 						</button>
 					</div>
 				</div>
-			) : (
+			)}
+
+			{/* ── Scheduled Trips ────────────────────────────────── */}
+			{scheduledTrips.length > 0 && (
 				<div
+					className="border-2 p-4 space-y-3"
 					style={{
-						padding: "15px",
-						border: "1px solid #ccc",
-						background: "#fff",
-						margin: "20px 0",
+						borderColor: "var(--text-primary)",
+						background: "var(--bg-surface)",
 					}}
 				>
-					<h3>No Active Trip</h3>
-					<p>
-						Select a trip from scheduled trips below to activate and start
-						tracking.
+					<h2 className="text-sm font-bold uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>
+						Upcoming Trips for Your Bus
+					</h2>
+					<div className="space-y-2">
+						{scheduledTrips.map((t) => (
+							<div
+								key={t.id}
+								className="border-2 p-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+								style={{
+									borderColor: "var(--border-default)",
+									background: "var(--bg-surface-2)",
+								}}
+							>
+								<div>
+									<p
+										className="font-bold text-sm"
+										style={{ color: "var(--text-primary)" }}
+									>
+										Trip #{t.id} — {t.bus.number}
+									</p>
+									<p className="text-xs" style={{ color: "var(--text-muted)" }}>
+										{t.departureDate} at {t.departureTime24} •{" "}
+										{t.bus.origin} → {t.bus.destination}
+									</p>
+								</div>
+								<button
+									type="button"
+									onClick={() => handleActivate(t.id)}
+									disabled={isPending || !!activeTrip}
+									className="shrink-0 border-2 px-3 py-1 text-xs font-bold uppercase neo-shadow transition-all hover:translate-x-[4px] hover:translate-y-[4px] hover:neo-shadow-none disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-x-0 disabled:translate-y-0 disabled:shadow-none"
+									style={{
+										background: "var(--cta-bg)",
+										color: "var(--color-navy)",
+										borderColor: "var(--text-primary)",
+									}}
+								>
+									{activeTrip ? "Trip Active" : "Start Trip"}
+								</button>
+							</div>
+						))}
+					</div>
+				</div>
+			)}
+
+			{scheduledTrips.length === 0 && !activeTrip && (
+				<div
+					className="border-2 p-6 text-center"
+					style={{ borderStyle: "dashed", borderColor: "var(--border-medium)" }}
+				>
+					<p className="text-sm font-bold uppercase" style={{ color: "var(--text-muted)" }}>
+						No scheduled trips found
+					</p>
+					<p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
+						Ask your operator to schedule a trip for your bus.
 					</p>
 				</div>
 			)}
 
-			{/* Trip Report Summary */}
-			{report && (
+			{/* ── Recent Trip Reports ────────────────────────────── */}
+			{reports.length > 0 && (
 				<div
+					className="border-2 p-4 space-y-3"
 					style={{
-						border: "2px dashed green",
-						padding: "15px",
-						background: "#e2f0d9",
-						margin: "20px 0",
+						borderColor: "var(--text-primary)",
+						background: "var(--bg-surface)",
 					}}
 				>
-					<h3 style={{ margin: "0 0 10px 0", color: "green" }}>
-						TRIP COMPLETED REPORT
-					</h3>
-					<p>
-						<strong>Total Passengers:</strong> {report.totalPassengers}
-					</p>
-					<p>
-						<strong>Digital Tickets:</strong> {report.digitalTickets}
-					</p>
-					<p>
-						<strong>Cash Tickets:</strong> {report.cashTickets}
-					</p>
-					<p>
-						<strong>Total Revenue:</strong> ₹{report.totalRevenueInr}
-					</p>
-					<button
-						onClick={() => setReport(null)}
-						style={{ padding: "5px 10px" }}
-					>
-						Dismiss
-					</button>
-				</div>
-			)}
-
-			{/* Scheduled Trips */}
-			<div style={{ marginTop: "30px" }}>
-				<h2>SCHEDULED TRIPS</h2>
-				{scheduledTrips.length === 0 ? (
-					<p>No scheduled trips found.</p>
-				) : (
-					<table style={{ width: "100%", borderCollapse: "collapse" }}>
-						<thead>
-							<tr style={{ background: "#eee", textAlign: "left" }}>
-								<th style={{ padding: "10px", border: "1px solid #ddd" }}>
-									Trip ID
-								</th>
-								<th style={{ padding: "10px", border: "1px solid #ddd" }}>
-									Bus
-								</th>
-								<th style={{ padding: "10px", border: "1px solid #ddd" }}>
-									Departure
-								</th>
-								<th style={{ padding: "10px", border: "1px solid #ddd" }}>
-									Action
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							{scheduledTrips.map((t) => (
-								<tr key={t.id}>
-									<td style={{ padding: "10px", border: "1px solid #ddd" }}>
-										{t.id}
-									</td>
-									<td style={{ padding: "10px", border: "1px solid #ddd" }}>
-										{t.busId}
-									</td>
-									<td style={{ padding: "10px", border: "1px solid #ddd" }}>
-										{t.departureDate} {t.departureTime24}
-									</td>
-									<td style={{ padding: "10px", border: "1px solid #ddd" }}>
-										<button
-											onClick={() => handleActivate(t.id)}
-											style={{
-												padding: "5px 10px",
-												background: "#28a745",
-												color: "white",
-												border: "none",
-												cursor: "pointer",
-											}}
-										>
-											Start / Activate
-										</button>
-									</td>
+					<h2 className="text-sm font-bold uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>
+						Recent Trip Reports
+					</h2>
+					<div className="overflow-x-auto">
+						<table
+							className="w-full text-sm"
+							style={{ borderCollapse: "collapse" }}
+						>
+							<thead>
+								<tr
+									style={{
+										background: "var(--bg-surface-2)",
+										borderBottom: "2px solid var(--text-primary)",
+									}}
+								>
+									{["Trip #", "Bus", "Passengers", "Digital", "Cash", "Revenue", "Date"].map(
+										(h) => (
+											<th
+												key={h}
+												className="text-left px-3 py-2 text-xs font-bold uppercase"
+												style={{ color: "var(--text-muted)" }}
+											>
+												{h}
+											</th>
+										),
+									)}
 								</tr>
-							))}
-						</tbody>
-					</table>
-				)}
-			</div>
+							</thead>
+							<tbody>
+								{reports.map((r) => (
+									<tr
+										key={r.id}
+										style={{ borderBottom: "1px solid var(--border-default)" }}
+									>
+										<td className="px-3 py-2 font-mono font-bold" style={{ color: "var(--text-primary)" }}>
+											#{r.tripId ?? "—"}
+										</td>
+										<td className="px-3 py-2 text-xs" style={{ color: "var(--text-secondary)" }}>
+											{r.busId ?? "—"}
+										</td>
+										<td className="px-3 py-2 font-bold" style={{ color: "var(--text-primary)" }}>
+											{r.totalPassengers}
+										</td>
+										<td className="px-3 py-2 text-xs" style={{ color: "var(--color-teal)" }}>
+											{r.digitalTickets}
+										</td>
+										<td className="px-3 py-2 text-xs" style={{ color: "var(--text-secondary)" }}>
+											{r.cashTickets}
+										</td>
+										<td
+											className="px-3 py-2 font-bold"
+											style={{ color: "var(--color-amber)" }}
+										>
+											₹{Number(r.totalRevenueInr).toLocaleString("en-IN")}
+										</td>
+										<td className="px-3 py-2 text-xs" style={{ color: "var(--text-muted)" }}>
+											{new Date(r.createdAt).toLocaleDateString("en-IN", {
+												day: "numeric",
+												month: "short",
+											})}
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }
