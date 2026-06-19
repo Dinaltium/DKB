@@ -125,10 +125,11 @@ pnpm db:setup:prod
 | 1 | `pnpm db:push:prod` | `drizzle-kit push --force` against production. Creates / alters tables to match `lib/db/schema.ts`. **Destructive on drift** — review the diff if you've edited the schema since the last push. |
 | 2 | `pnpm db:seed:prod` | Upserts the 4 role accounts from the `SEED_*` env vars. Idempotent. Marks every seeded user as already onboarded. |
 | 3 | `pnpm db:seed-stops:prod` | Upserts ~90 Mangalore-area bus stops (name + lat/lng). Idempotent. |
+| 4 | `pnpm db:seed-routes:prod` | Upserts 5 Mangalore-area corridor routes with their stops and a fare matrix (≈130 fares total). Idempotent. |
 
-After this runs you should be able to sign in at the live site with the seeded credentials, and the search page will recognise stop names.
+After this runs you should be able to sign in at the live site with the seeded credentials, and the search page will recognise stop names and offer the seeded routes.
 
-> **Buses, routes, and fares are not seeded.** Sign in as the operator, go to the operator dashboard, and create a bus + route through the UI — or write a one-off TypeScript script if you want a demo fleet.
+> **Buses are not seeded.** Sign in as the operator and add a bus through the operator dashboard — buses bind to existing routes, so the routes already need to be there. To customise the routes themselves, edit the `ROUTES` array at the top of `scripts/seed-routes.ts` and re-run `pnpm db:seed-routes:prod`.
 
 To re-seed later (e.g. you rotated a test password), just edit `.env.production.local` and re-run `pnpm db:seed:prod`. Schema pushes are only needed when `lib/db/schema.ts` actually changed.
 
