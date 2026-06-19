@@ -8,7 +8,7 @@
 
 | Area | Choice |
 |------|--------|
-| **Framework** | [Next.js 15](https://nextjs.org) (App Router), React 19 |
+| **Framework** | [Next.js 16](https://nextjs.org) (App Router), React 19 |
 | **Language** | TypeScript (strict) |
 | **Styling** | [Tailwind CSS v4](https://tailwindcss.com), `tw-animate-css`, CSS variables in `app/globals.css` |
 | **UI primitives** | [shadcn/ui](https://ui.shadcn.com) style **base-nova**, plus **BoldKit** registry (`components.json` → `@boldkit`) |
@@ -238,6 +238,13 @@ dkbus/
 2. Copy env: create **`.env.local`** with at least `DATABASE_URL` and any Auth.js variables your app expects.
 3. Apply DB schema / seed as needed: e.g. `pnpm db:setup`
 4. Run: `pnpm dev` → open [http://localhost:3000](http://localhost:3000)
+
+---
+
+## Testing & Deployment
+
+- **[TESTING.md](./TESTING.md)** — how to run unit, component, and Playwright e2e tests; how to add new ones.
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** — Vercel deployment, environment-variable checklist, database setup, and the production go-live checklist.
 
 ---
 
