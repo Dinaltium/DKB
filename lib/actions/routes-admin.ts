@@ -4,8 +4,18 @@ import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { fares, routeStops, routes } from "@/lib/db/schema";
 import { getCoordinates } from "@/lib/services/location";
-import { and, asc, eq, sql } from "drizzle-orm";
+import { asc, eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+
+// Normalises the shape db.execute(raw sql) returns across drivers.
+// postgres-js (current): returns a RowList that is itself an array of rows.
+// neon-http (legacy):    returns { rows, rowCount, ... }.
+// Most call sites just need the array, so unwrap once here.
+function rowsOf<T>(result: unknown): T[] {
+	if (Array.isArray(result)) return result as T[];
+	const withRows = result as { rows?: T[] } | null | undefined;
+	return withRows?.rows ?? [];
+}
 
 // ── Route CRUD Actions ───────────────────────────────────────────────────────
 
@@ -368,7 +378,7 @@ export async function getFaresByRouteAction(routeId: number) {
 		ORDER BY sf.stop_order, st.stop_order
 	`);
 
-	return { success: true, data: queryResult.rows };
+	return { success: true, data: rowsOf(queryResult) };
 }
 
 export async function lookupFareAction(params: {
@@ -386,11 +396,12 @@ export async function lookupFareAction(params: {
 		  AND f.to_stop_id = ${params.toStopId}
 	`);
 
-	if (!queryResult.rows.length) {
+	const rows = rowsOf(queryResult);
+	if (!rows.length) {
 		return { success: false, error: "No fare set for this stop pair" };
 	}
 
-	return { success: true, data: queryResult.rows[0] };
+	return { success: true, data: rows[0] };
 }
 
 export async function deleteFareAction(fareId: number) {

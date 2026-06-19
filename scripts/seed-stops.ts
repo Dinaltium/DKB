@@ -51,12 +51,15 @@ if (!process.env.DATABASE_URL) {
 	process.exit(1);
 }
 
-import { neon } from "@neondatabase/serverless";
 import { sql } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/neon-http";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 import * as schema from "../lib/db/schema";
 
-const client = neon(process.env.DATABASE_URL!);
+const client = postgres(process.env.DATABASE_URL!, {
+	prepare: false,
+	max: 1,
+});
 const db = drizzle(client, { schema });
 
 // ── Stop data ──────────────────────────────────────────────────────────────────
@@ -267,4 +270,10 @@ async function main() {
 	}
 }
 
-main();
+main()
+	.then(() => client.end())
+	.catch(async (err) => {
+		console.error(err);
+		await client.end();
+		process.exit(1);
+	});

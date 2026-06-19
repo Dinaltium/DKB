@@ -1,20 +1,31 @@
-import { neon } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-http";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 import * as schema from "./schema";
 
-// neon() needs a syntactically valid Postgres URL at import time so that
-// Auth.js DrizzleAdapter can inspect the dialect during module evaluation
-// (this runs during `next build`, even on machines that have no real DB).
+// We use postgres.js + drizzle-orm/postgres-js so this works against any
+// vanilla Postgres — Neon, Supabase, RDS, a local container, anything that
+// speaks the wire protocol on port 5432/6543.
 //
-// In a real environment DATABASE_URL is set. When it isn't (CI without
-// secrets configured, first Vercel deploy without env vars, etc.) we fall
-// back to a never-reachable stub so the build succeeds. Actual queries
-// will still fail at runtime with a clear network error, which is the
-// behaviour we want.
+// At import time we just need a syntactically valid URL so Auth.js
+// DrizzleAdapter can inspect the dialect during `next build`. When
+// DATABASE_URL isn't set (CI without secrets, or a first deploy that has
+// not yet been configured), we fall back to a never-routable stub so the
+// build still succeeds. Real queries fail at runtime with a clear network
+// error.
 const STUB_URL = "postgres://stub:stub@stub.invalid:5432/stub";
-const sql = neon(process.env.DATABASE_URL || STUB_URL);
+const url = process.env.DATABASE_URL || STUB_URL;
 
-export const db = drizzle(sql, { schema });
+// `prepare: false` is required for Supabase's transaction-mode pooler
+// (port 6543). It's also a safe default for serverless deployments where
+// connections are short-lived. `max: 1` keeps each Vercel function
+// instance to a single connection.
+const client = postgres(url, {
+	prepare: false,
+	max: 1,
+	idle_timeout: 20,
+});
+
+export const db = drizzle(client, { schema });
 
 // Re-export schema so callers can do: import { db, users } from "@/lib/db"
 export * from "./schema";

@@ -1,54 +1,21 @@
 import { auth } from "@/auth";
-import { db } from "@/lib/db";
-import { userActiveSessions } from "@/lib/db/schema";
-import { and, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
+
+// Active-session revocation used to be checked here with a per-request DB
+// query, but that pinned us to an edge-compatible driver (Neon HTTP only).
+// Revocation is now handled in two places that both run on Node:
+//   - auth.ts jwt() callback refreshes role / onboarded / mustChangePassword
+//     against the DB every 5 minutes, so a revoked user loses their session
+//     within five minutes of the next request.
+//   - AppShell polls /api/auth/session every 10 seconds on the client and
+//     calls signOut() if the session ever comes back as 401.
+// That's enough for the threat model; nothing here needs to touch the DB.
 
 export default auth(async (req) => {
 	const { pathname } = req.nextUrl;
 	const session = req.auth;
 	const mustChangePwd = session?.user?.mustChangePassword;
 	const onboarded = session?.user?.onboarded;
-
-	// Verify active session DB state if authenticated
-	if (session?.user?.id) {
-		const sessionId = req.cookies.get("buslink_session_id")?.value;
-		if (sessionId) {
-			try {
-				const active = await db
-					.select()
-					.from(userActiveSessions)
-					.where(
-						and(
-							eq(userActiveSessions.id, sessionId),
-							eq(userActiveSessions.userId, session.user.id),
-						),
-					)
-					.limit(1);
-
-				if (active.length > 0 && active[0].revoked) {
-					// Session was revoked! Log out and redirect/unauthorize
-					const nextUrl = new URL("/auth", req.url);
-					const response = pathname.startsWith("/api/")
-						? NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-						: NextResponse.redirect(nextUrl);
-
-					response.cookies.delete({
-						name: "next-auth.session-token",
-						path: "/",
-					});
-					response.cookies.delete({
-						name: "__Secure-next-auth.session-token",
-						path: "/",
-					});
-					response.cookies.delete({ name: "buslink_session_id", path: "/" });
-					return response;
-				}
-			} catch (dbErr) {
-				console.error("[middleware] DB active session check failed:", dbErr);
-			}
-		}
-	}
 
 	// ── Redirect old standalone routes to unified dashboard ───────────────────
 	if (pathname.startsWith("/operator") || pathname.startsWith("/admin")) {

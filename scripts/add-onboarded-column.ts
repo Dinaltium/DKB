@@ -17,7 +17,12 @@ async function main() {
 	const result = await db.execute(
 		sql`UPDATE users SET onboarded_at = NOW() WHERE onboarded_at IS NULL AND (name IS NOT NULL OR phone IS NOT NULL)`,
 	);
-	console.log(`Backfilled ${result.rowCount ?? 0} existing user(s).`);
+	// postgres-js exposes `.count`, neon-http exposes `.rowCount` — handle both.
+	const n =
+		(result as unknown as { rowCount?: number; count?: number }).rowCount ??
+		(result as unknown as { rowCount?: number; count?: number }).count ??
+		0;
+	console.log(`Backfilled ${n} existing user(s).`);
 	console.log("Done.");
 }
 
