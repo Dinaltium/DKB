@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">BusLink</string>
+    <string name="title_activity_main">BusLink</string>
+    <string name="package_name">com.dkbus.buslink</string>
+    <string name="custom_url_scheme">com.dkbus.buslink</string>
+</resources>

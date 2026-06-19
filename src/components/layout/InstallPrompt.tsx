@@ -1,5 +1,6 @@
 "use client";
 
+import { isNative } from "@/lib/native";
 import { Download, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -22,7 +23,14 @@ export function InstallPrompt() {
 	useEffect(() => {
 		if (typeof window === "undefined") return;
 
-		// Already installed → don't show.
+		// Don't offer "Install" when we're already running inside the native
+		// Android shell — the user obviously already installed it.
+		if (isNative()) {
+			setInstalled(true);
+			return;
+		}
+
+		// Already installed as a PWA → don't show.
 		const standalone =
 			window.matchMedia("(display-mode: standalone)").matches ||
 			// iOS Safari

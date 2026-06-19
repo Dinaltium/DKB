@@ -70,3 +70,24 @@ BusLink/
 
 # ── Claude / agent metadata ──────────────────────────────────────────────────
 .claude/
+
+# ── Capacitor / Android build outputs ────────────────────────────────────────
+# We track the android/ project source (build.gradle, manifests, etc.) but
+# never the build artefacts, IDE config, or signing material.
+android/.gradle/
+android/.idea/
+android/build/
+android/app/build/
+android/local.properties
+android/captures/
+android/.cxx/
+android/app/release/
+*.jks
+*.keystore
+google-services.json
+# Capacitor copies the web app into the Android tree on every sync — these
+# files are derived, never edited by hand.
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
+
