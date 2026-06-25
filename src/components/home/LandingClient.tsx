@@ -121,8 +121,14 @@ function StatTile({ label, value, icon, loading }: StatTileProps) {
 	);
 }
 
-// ── Main landing (logged-out home) ────────────────────────────────────────────
-export function LandingClient() {
+// ── Main landing ──────────────────────────────────────────────────────────────
+// Accessible to everyone. When a session is passed in, a "welcome back" strip
+// with a dashboard shortcut renders above the hero so the page feels personal.
+export function LandingClient({
+	user,
+}: {
+	user?: { name?: string | null; role?: string | null } | null;
+}) {
 	const { tr } = useLanguage();
 	const { getPosition, buses } = useLiveBus();
 
@@ -137,8 +143,29 @@ export function LandingClient() {
 			.finally(() => setStatsLoading(false));
 	}, []);
 
+	const dashboardHref =
+		user?.role === "conductor" ? "/conductor" : "/dashboard";
+	const dashboardLabel =
+		user?.role === "conductor" ? "My Trip" : "My Dashboard";
+
 	return (
 		<AppShell title={tr("tagline")} subtitle={tr("corridorSubtitle")}>
+			{/* ── Signed-in welcome strip ── */}
+			{user && (
+				<section className="theme-bg-navy mb-6 flex flex-col gap-3 rounded-none border-2 border-foreground p-4 neo-shadow sm:flex-row sm:items-center sm:justify-between">
+					<p className="text-sm font-black uppercase tracking-wide text-white">
+						Welcome back{user.name ? `, ${user.name}` : ""}
+					</p>
+					<Link
+						href={dashboardHref}
+						className="theme-btn-primary brutal-transition brutal-hover inline-flex h-10 items-center justify-center gap-2 rounded-none border-2 px-4 text-xs font-bold uppercase tracking-wide neo-shadow hover:opacity-80"
+					>
+						{dashboardLabel}
+						<ArrowRight className="h-4 w-4" />
+					</Link>
+				</section>
+			)}
+
 			{/* ── Hero ── */}
 			<section className="theme-panel relative grid gap-6 overflow-hidden rounded-none border-2 p-5 neo-shadow md:grid-cols-2 md:gap-10 md:p-8">
 				{/* Corner accent block — pure BoldKit decoration */}

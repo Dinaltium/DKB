@@ -38,7 +38,10 @@ export default function AuthPage() {
 	const params = useSearchParams();
 	const router = useRouter();
 	const { isDark } = useTheme();
-	const callbackUrl = params.get("callbackUrl") ?? "/";
+	// Default post-login destination is the dashboard. The dashboard route
+	// itself re-routes by role (conductor → /conductor, etc.). Home stays
+	// reachable because this page no longer sends users there by default.
+	const callbackUrl = params.get("callbackUrl") ?? "/dashboard";
 	const urlError = params.get("error");
 
 	const [mode, setMode] = useState<Mode>("login");
