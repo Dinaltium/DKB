@@ -34,5 +34,5 @@
 		"next-env.d.ts",
 		".next/types/**/*.ts"
 	],
-	"exclude": ["node_modules", "BusLink"]
+	"exclude": ["node_modules", "BusLink", "capacitor.config.ts", "android"]
 }
