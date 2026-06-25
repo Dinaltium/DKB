@@ -112,10 +112,7 @@ export function InstallPrompt() {
 				<p className="text-sm font-bold uppercase tracking-wide">
 					Install BusLink
 				</p>
-				<p
-					className="truncate text-xs"
-					style={{ color: "var(--text-muted)" }}
-				>
+				<p className="truncate text-xs" style={{ color: "var(--text-muted)" }}>
 					Faster trips, works offline.
 				</p>
 			</div>

@@ -71,6 +71,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.2.2
         version: 4.3.0(vite@8.0.16(@types/node@20.19.43)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4))
+      aaf11-sdk:
+        specifier: ^0.1.0
+        version: 0.1.0(express@5.2.1)
       bcryptjs:
         specifier: ^3.0.3
         version: 3.0.3
@@ -2752,6 +2755,15 @@ packages:
 
   '@xtuc/long@4.2.2':
     resolution: {integrity: sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==}
+
+  aaf11-sdk@0.1.0:
+    resolution: {integrity: sha512-9xd8O43bXg7p2JESh4Ywizd02zM5eqvxLujr0wu7mmuUV7IKzgJt1DBqUkrDOj/8gWdXAcqh0Wj9W3TYaZTfhw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      express: ^4.0.0 || ^5.0.0
+    peerDependenciesMeta:
+      express:
+        optional: true
 
   accepts@2.0.0:
     resolution: {integrity: sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng==}
@@ -7741,6 +7753,10 @@ snapshots:
   '@xtuc/ieee754@1.2.0': {}
 
   '@xtuc/long@4.2.2': {}
+
+  aaf11-sdk@0.1.0(express@5.2.1):
+    optionalDependencies:
+      express: 5.2.1
 
   accepts@2.0.0:
     dependencies:

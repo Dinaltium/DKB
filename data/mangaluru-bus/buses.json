@@ -1,0 +1,8695 @@
+[
+	{
+		"uuid": "c203fbff-3f3c-4173-8e16-e761c1033361",
+		"busNumber": "1",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 1,
+				"slug": "car-street",
+				"name": "Car Street",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "mannagudda",
+				"name": "Mannagudda",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "chilimbi",
+				"name": "Chilimbi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "urwa-store",
+				"name": "Urwa Store",
+				"lat": 12.8997410863,
+				"lng": 74.835767277
+			},
+			{
+				"order": 6,
+				"slug": "kavoor",
+				"name": "Kavoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "mcf-colony",
+				"name": "MCF colony",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "kunjathbail",
+				"name": "Kunjathbail",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "577a7cd6-815c-4d58-b9be-bb59159f4f77",
+		"busNumber": "1A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 2,
+				"slug": "urwa-store",
+				"name": "Urwa Store",
+				"lat": 12.8997410863,
+				"lng": 74.835767277
+			},
+			{
+				"order": 3,
+				"slug": "kuloor",
+				"name": "Kuloor",
+				"lat": 12.9245607888,
+				"lng": 74.82885595
+			},
+			{
+				"order": 4,
+				"slug": "tannirbhavi-beach",
+				"name": "Tannirbhavi Beach",
+				"lat": 12.8869893554,
+				"lng": 74.816287192
+			}
+		]
+	},
+	{
+		"uuid": "9058612f-1c41-47cf-8de7-d35a8622fd26",
+		"busNumber": "1B",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "car-street",
+				"name": "Car Street",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "mannagudda",
+				"name": "Mannagudda",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "chilimbi",
+				"name": "Chilimbi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "urwa-store",
+				"name": "Urwa Store",
+				"lat": 12.8997410863,
+				"lng": 74.835767277
+			},
+			{
+				"order": 6,
+				"slug": "kodikal",
+				"name": "Kodikal",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "4311ce45-12dc-4676-97de-251fcfab7908",
+		"busNumber": "1C",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "hampankatta",
+				"name": "Hampankatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "shedigudde",
+				"name": "Shedigudde",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 4,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "kodikal-cross",
+				"name": "Kodikal Cross",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "kodikal",
+				"name": "Kodikal",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "90a3d2a0-5520-4b9d-be75-dcb795fe6e88",
+		"busNumber": "2",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 2,
+				"slug": "ashoknagar",
+				"name": "Ashoknagar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "baikampady",
+				"name": "Baikampady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "surathkal",
+				"name": "Surathkal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "mukka",
+				"name": "Mukka",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "dec8e117-8707-4c05-87c1-e072ad27ae1b",
+		"busNumber": "2A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 2,
+				"slug": "ashoknagar",
+				"name": "Ashoknagar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "baikampady",
+				"name": "Baikampady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "surathkal",
+				"name": "Surathkal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "mukka",
+				"name": "Mukka",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "sasihitlu",
+				"name": "Sasihitlu",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "8195662c-0d51-4293-9d12-fa3c42250e57",
+		"busNumber": "2B",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "bengare",
+				"name": "Bengare",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 1,
+				"slug": "tannirbhavi-beach",
+				"name": "Tannirbhavi Beach",
+				"lat": 12.8869893554,
+				"lng": 74.816287192
+			},
+			{
+				"order": 2,
+				"slug": "kuloor",
+				"name": "Kuloor",
+				"lat": 12.9245607888,
+				"lng": 74.82885595
+			},
+			{
+				"order": 3,
+				"slug": "panambur",
+				"name": "Panambur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "jokatta",
+				"name": "Jokatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "kaana",
+				"name": "Kaana",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "port-temple",
+				"name": "Port Temple",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "bajpe",
+				"name": "Bajpe",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "b8c6f120-120d-4530-bf8e-e56f5c491daf",
+		"busNumber": "2C",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 2,
+				"slug": "ashoknagar",
+				"name": "Ashoknagar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "baikampady",
+				"name": "Baikampady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "baikampady-industrial-estate",
+				"name": "Baikampady Industrial Estate",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "jokatte",
+				"name": "Jokatte",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "45cacbf6-1d22-4fd3-8d50-27aafd32cc32",
+		"busNumber": "2D",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 2,
+				"slug": "ashoknagar",
+				"name": "Ashoknagar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "baikampady",
+				"name": "Baikampady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "baikampady-industrial-estate",
+				"name": "Baikampady Industrial Estate",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "jokatte",
+				"name": "Jokatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "parkodi",
+				"name": "Parkodi",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "365bb94f-e1b5-4419-95bd-4f7dc728a55e",
+		"busNumber": "2E",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 1,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 3,
+				"slug": "ashoknagar",
+				"name": "Ashoknagar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "baikampady",
+				"name": "Baikampady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "baikampady-industrial-estate",
+				"name": "Baikampady Industrial Estate",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "jokatte",
+				"name": "Jokatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "kalavar",
+				"name": "Kalavar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "bajpe",
+				"name": "Bajpe",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "417ee62d-e230-483a-aa95-db692d0c6b70",
+		"busNumber": "2F",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 1,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 3,
+				"slug": "ashoknagar",
+				"name": "Ashoknagar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "baikampady",
+				"name": "Baikampady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "baikampady-industrial-estate",
+				"name": "Baikampady Industrial Estate",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "jokatte",
+				"name": "Jokatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "kalavar",
+				"name": "Kalavar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "bajpe",
+				"name": "Bajpe",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "87e121c0-276f-4183-a746-0b19dc3eda6f",
+		"busNumber": "3",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "falnir",
+				"name": "Falnir",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "bendoorwell",
+				"name": "Bendoorwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "kadri",
+				"name": "Kadri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "bikkarnakatta",
+				"name": "Bikkarnakatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "kulshekar",
+				"name": "Kulshekar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "kudupu",
+				"name": "Kudupu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "vamanjoor",
+				"name": "Vamanjoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "moodushedde",
+				"name": "Moodushedde",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "c9b1914a-0534-4f07-8748-aacc5f36d185",
+		"busNumber": "3A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "bendoorwell",
+				"name": "Bendoorwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "kadri",
+				"name": "Kadri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "bikkarnakatta",
+				"name": "Bikkarnakatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "kulshekar",
+				"name": "Kulshekar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "kudupu",
+				"name": "Kudupu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "vamanjoor",
+				"name": "Vamanjoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "moodushedde",
+				"name": "Moodushedde",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "5419986e-6f47-41b9-90e7-6ef908bf3036",
+		"busNumber": "3B",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "mangaladevi",
+				"name": "Mangaladevi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 1,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kadri",
+				"name": "Kadri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "bikkarnakatta",
+				"name": "Bikkarnakatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "kulshekar",
+				"name": "Kulshekar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "kudupu",
+				"name": "Kudupu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "vamanjoor",
+				"name": "Vamanjoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "moodushedde",
+				"name": "Moodushedde",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "f3140d2e-84b3-4896-be3b-0f1a974ea3ce",
+		"busNumber": "3C",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "mangaladevi",
+				"name": "Mangaladevi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 1,
+				"slug": "valencia",
+				"name": "Valencia",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "nanthoor",
+				"name": "Nanthoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kudpu-temple",
+				"name": "Kudpu Temple",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "mangala-jyoti",
+				"name": "Mangala Jyoti",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "moodushedde",
+				"name": "Moodushedde",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "89cd00d8-7534-4be2-b8ea-78449a171e74",
+		"busNumber": "3D",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "bunts-hostel",
+				"name": "Bunts Hostel",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kadri",
+				"name": "Kadri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "vamanjoor",
+				"name": "Vamanjoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "ulaibettu",
+				"name": "Ulaibettu",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "0ca79c46-5817-4274-9b12-f996b46d1226",
+		"busNumber": "4",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "falnir",
+				"name": "Falnir",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "bendoorwell",
+				"name": "Bendoorwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "kadri",
+				"name": "Kadri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "bikkarnakatta",
+				"name": "Bikkarnakatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "kulshekar",
+				"name": "Kulshekar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "kulshekar-chowki",
+				"name": "Kulshekar Chowki",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "eb1c9206-f167-4458-ab44-aa3667cdd22b",
+		"busNumber": "4A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "falnir",
+				"name": "Falnir",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "bendoorwell",
+				"name": "Bendoorwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "kadri",
+				"name": "Kadri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "nanthoor",
+				"name": "Nanthoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "kulshekar",
+				"name": "Kulshekar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "kaikamba",
+				"name": "Kaikamba",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "neermarga",
+				"name": "Neermarga",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "merlapadavu",
+				"name": "Merlapadavu",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "2f65c191-e7f1-4309-be8e-a861b2174443",
+		"busNumber": "4C",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "falnir",
+				"name": "Falnir",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "bendoorwell",
+				"name": "Bendoorwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "kadri",
+				"name": "Kadri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "nanthoor",
+				"name": "Nanthoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "kulshekar",
+				"name": "Kulshekar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "kaikamba",
+				"name": "Kaikamba",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "neermarga",
+				"name": "Neermarga",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "82cc21e7-e4b7-4ff9-94c8-f7f16190e744",
+		"busNumber": "5",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "bendoorwell",
+				"name": "Bendoorwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "nandi-gudda",
+				"name": "Nandi Gudda",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "marnamikatta",
+				"name": "Marnamikatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "morgans-gate-rd",
+				"name": "Morgans Gate Rd",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "38a84411-297c-4047-a92d-5365c7c3fede",
+		"busNumber": "6A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "bendoorwell",
+				"name": "Bendoorwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "kadri",
+				"name": "Kadri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "bikkarnakatta",
+				"name": "Bikkarnakatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "kulshekar",
+				"name": "Kulshekar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "shaktinagar",
+				"name": "Shaktinagar",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "1cebd2a2-822e-4848-994e-0ab901c14929",
+		"busNumber": "6B",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "falnir",
+				"name": "Falnir",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "bendoorwell",
+				"name": "Bendoorwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "kadri",
+				"name": "Kadri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "bikkarnakatta",
+				"name": "Bikkarnakatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "kulshekar",
+				"name": "Kulshekar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "shaktinagar",
+				"name": "Shaktinagar",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "af7ab10a-7b41-4cf7-83c0-4ac2e040721a",
+		"busNumber": "6C",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "bunts-hostel",
+				"name": "Bunts Hostel",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "kadri",
+				"name": "Kadri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "bikkarnakatta",
+				"name": "Bikkarnakatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "kulshekar",
+				"name": "Kulshekar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "shaktinagar",
+				"name": "Shaktinagar",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "8fe708f2-390b-43c4-8f67-0468a3a2e1f4",
+		"busNumber": "7",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "car-street",
+				"name": "Car Street",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "alake",
+				"name": "Alake",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "mannagudda",
+				"name": "Mannagudda",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "chilimbi",
+				"name": "Chilimbi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "urwa-store",
+				"name": "Urwa Store",
+				"lat": 12.8997410863,
+				"lng": 74.835767277
+			}
+		]
+	},
+	{
+		"uuid": "bb1327fd-ed66-4810-aa7a-3f6123d14eab",
+		"busNumber": "9",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "balmatta",
+				"name": "Balmatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "pumpwell",
+				"name": "Pumpwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "nagori",
+				"name": "Nagori",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "padil",
+				"name": "Padil",
+				"lat": 12.871429286911,
+				"lng": 74.885603693825
+			},
+			{
+				"order": 7,
+				"slug": "karmar",
+				"name": "Karmar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "bajal-jalligudde-cross",
+				"name": "Bajal Jalligudde Cross",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "bajal-church",
+				"name": "Bajal Church",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "c7b9b4e5-4d08-42e2-8a11-8e150ede26a5",
+		"busNumber": "9A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "pandeshwar",
+				"name": "Pandeshwar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "jeppu",
+				"name": "Jeppu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "morgans-gate-rd",
+				"name": "Morgans Gate Rd",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "jeppupatna",
+				"name": "Jeppupatna",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "ekkur",
+				"name": "Ekkur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "mugeru",
+				"name": "Mugeru",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "bajal-jalligudde-cross",
+				"name": "Bajal Jalligudde Cross",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "bajal-pakkaladka",
+				"name": "Bajal Pakkaladka",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "jm-road",
+				"name": "J.M. Road",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "eca102bd-012e-4589-a9ee-d05acd670172",
+		"busNumber": "9B",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "pumpwell",
+				"name": "Pumpwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "ekkur",
+				"name": "Ekkur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "mugeru",
+				"name": "Mugeru",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "bajal-jalligudde-cross",
+				"name": "Bajal Jalligudde Cross",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "bajal-pakkaladka",
+				"name": "Bajal Pakkaladka",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "jm-road",
+				"name": "J.M. Road",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "8fc1581d-ca56-41b7-ab2f-e2a9c5809056",
+		"busNumber": "10A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "balmatta",
+				"name": "Balmatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "pumpwell",
+				"name": "Pumpwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "nagori",
+				"name": "Nagori",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "padil",
+				"name": "Padil",
+				"lat": 12.871429286911,
+				"lng": 74.885603693825
+			},
+			{
+				"order": 7,
+				"slug": "kannurbettu",
+				"name": "Kannurbettu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "adyar",
+				"name": "Adyar",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "92da0b0c-e112-474a-8c34-ad3d2c8b05c7",
+		"busNumber": "10B",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "balmatta",
+				"name": "Balmatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "pumpwell",
+				"name": "Pumpwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "nagori",
+				"name": "Nagori",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "padil",
+				"name": "Padil",
+				"lat": 12.871429286911,
+				"lng": 74.885603693825
+			},
+			{
+				"order": 7,
+				"slug": "kannurbettu",
+				"name": "Kannurbettu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "adyar",
+				"name": "Adyar",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "08a05977-eeb0-4628-a332-9d89f919e0b3",
+		"busNumber": "11A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "falnir",
+				"name": "Falnir",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "nagori",
+				"name": "Nagori",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "garodi",
+				"name": "Garodi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "padil",
+				"name": "Padil",
+				"lat": 12.871429286911,
+				"lng": 74.885603693825
+			},
+			{
+				"order": 6,
+				"slug": "kannurbettu",
+				"name": "Kannurbettu",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "a0fd0b22-d5be-4dce-849d-46a47c189f5e",
+		"busNumber": "11B",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "falnir",
+				"name": "Falnir",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "nagori",
+				"name": "Nagori",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "garodi",
+				"name": "Garodi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "padil",
+				"name": "Padil",
+				"lat": 12.871429286911,
+				"lng": 74.885603693825
+			},
+			{
+				"order": 6,
+				"slug": "jalligudde",
+				"name": "Jalligudde",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "ac99e89c-e258-4e3a-80c0-9dc325d69aed",
+		"busNumber": "11C",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "mangaladevi",
+				"name": "Mangaladevi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 1,
+				"slug": "morgans-gate-rd",
+				"name": "Morgans Gate Rd",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "nandi-gudda",
+				"name": "Nandi Gudda",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "nagori",
+				"name": "Nagori",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "garodi",
+				"name": "Garodi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "padil",
+				"name": "Padil",
+				"lat": 12.871429286911,
+				"lng": 74.885603693825
+			},
+			{
+				"order": 7,
+				"slug": "bajal-jalligudde-cross",
+				"name": "Bajal Jalligudde Cross",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "jalligudde",
+				"name": "Jalligudde",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "99389684-ecae-413f-9e45-3fcf50c3ce41",
+		"busNumber": "12A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "bunts-hostel",
+				"name": "Bunts Hostel",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "kadri",
+				"name": "Kadri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "bikkarnakatta",
+				"name": "Bikkarnakatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "kulshekar",
+				"name": "Kulshekar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "kudupu",
+				"name": "Kudupu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "vamanjoor",
+				"name": "Vamanjoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "gurupura",
+				"name": "Gurupura",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "kaikamba",
+				"name": "Kaikamba",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "addoor",
+				"name": "Addoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "polali",
+				"name": "Polali",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "0d9e4a46-610d-43e5-87c6-53de4b608dfb",
+		"busNumber": "12B",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "bunts-hostel",
+				"name": "Bunts Hostel",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "kadri",
+				"name": "Kadri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "bikkarnakatta",
+				"name": "Bikkarnakatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "kulshekar",
+				"name": "Kulshekar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "kudupu",
+				"name": "Kudupu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "vamanjoor",
+				"name": "Vamanjoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "gurupura",
+				"name": "Gurupura",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "kaikamba",
+				"name": "Kaikamba",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "addoor",
+				"name": "Addoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "polali",
+				"name": "Polali",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "kolthamajal",
+				"name": "Kolthamajal",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "415685e5-c638-42c6-ab3c-bbeab10e1762",
+		"busNumber": "13",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "car-street",
+				"name": "Car Street",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "mannagudda",
+				"name": "Mannagudda",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "chilimbi",
+				"name": "Chilimbi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "urwa-store",
+				"name": "Urwa Store",
+				"lat": 12.8997410863,
+				"lng": 74.835767277
+			}
+		]
+	},
+	{
+		"uuid": "18f0e79f-caad-427e-925c-deba1c79e9df",
+		"busNumber": "13A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "car-street",
+				"name": "Car Street",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "mannagudda",
+				"name": "Mannagudda",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "chilimbi",
+				"name": "Chilimbi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "urwa-store",
+				"name": "Urwa Store",
+				"lat": 12.8997410863,
+				"lng": 74.835767277
+			},
+			{
+				"order": 6,
+				"slug": "kottara",
+				"name": "Kottara",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "5758ddbe-5510-40ed-8bfc-f56b4bc9cd41",
+		"busNumber": "13C",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 3,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "kuloor",
+				"name": "Kuloor",
+				"lat": 12.9245607888,
+				"lng": 74.82885595
+			},
+			{
+				"order": 5,
+				"slug": "kudremukh-housing-colony",
+				"name": "Kudremukh Housing Colony",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "hudco-colony",
+				"name": "Hudco Colony",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "govt-womens-polytechnic",
+				"name": "Govt. Womens polytechnic",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "govt-quarters",
+				"name": "Govt. Quarters",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "kavoor",
+				"name": "Kavoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "bondel",
+				"name": "Bondel",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "1706364e-500f-4183-8f98-482a484f83a9",
+		"busNumber": "13D",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 3,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "kuloor",
+				"name": "Kuloor",
+				"lat": 12.9245607888,
+				"lng": 74.82885595
+			},
+			{
+				"order": 5,
+				"slug": "kudremukh-housing-colony",
+				"name": "Kudremukh Housing Colony",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "hudco-colony",
+				"name": "Hudco Colony",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "govt-womens-polytechnic",
+				"name": "Govt. Womens polytechnic",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "govt-quarters",
+				"name": "Govt. Quarters",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "kavoor",
+				"name": "Kavoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "bondel",
+				"name": "Bondel",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "padangady",
+				"name": "Padangady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "pacchanady-beggari-colony",
+				"name": "Pacchanady Beggari Colony",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "7bce27ec-f25b-4996-aaa8-ba63c3d87898",
+		"busNumber": "13E",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "mangaladevi",
+				"name": "Mangaladevi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 1,
+				"slug": "bendoorwell",
+				"name": "Bendoorwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 4,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "kuloor",
+				"name": "Kuloor",
+				"lat": 12.9245607888,
+				"lng": 74.82885595
+			},
+			{
+				"order": 6,
+				"slug": "kudremukh-housing-colony",
+				"name": "Kudremukh Housing Colony",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "hudco-colony",
+				"name": "Hudco Colony",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "govt-womens-polytechnic",
+				"name": "Govt. Womens polytechnic",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "govt-quarters",
+				"name": "Govt. Quarters",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "kavoor",
+				"name": "Kavoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "bondel",
+				"name": "Bondel",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "a20998b3-f335-4f12-a033-176983a993b0",
+		"busNumber": "14A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "bendoorwell",
+				"name": "Bendoorwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "kadri",
+				"name": "Kadri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "nanthoor",
+				"name": "Nanthoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "akashavani",
+				"name": "Akashavani",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "kpt",
+				"name": "KPT",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "yeyyadi",
+				"name": "Yeyyadi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "konchadi",
+				"name": "Konchadi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "padangady",
+				"name": "Padangady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "bondel",
+				"name": "Bondel",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "0398b872-bb28-4f56-92a2-80554307cb35",
+		"busNumber": "14B",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "falnir",
+				"name": "Falnir",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "bendoorwell",
+				"name": "Bendoorwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "kadri",
+				"name": "Kadri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "nanthoor",
+				"name": "Nanthoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "akashavani",
+				"name": "Akashavani",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "kpt",
+				"name": "KPT",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "yeyyadi",
+				"name": "Yeyyadi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "konchadi",
+				"name": "Konchadi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "padangady",
+				"name": "Padangady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "bondel",
+				"name": "Bondel",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "8360f3d9-3bcf-485c-b4f9-790480e89852",
+		"busNumber": "14C",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "mangaladevi",
+				"name": "Mangaladevi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 1,
+				"slug": "morgans-gate-rd",
+				"name": "Morgans Gate Rd",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "attavar",
+				"name": "Attavar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "yemmekere",
+				"name": "Yemmekere",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "nandi-gudda",
+				"name": "Nandi Gudda",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "kadri",
+				"name": "Kadri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "nanthoor",
+				"name": "Nanthoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "akashavani",
+				"name": "Akashavani",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "kpt",
+				"name": "KPT",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "yeyyadi",
+				"name": "Yeyyadi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "konchadi",
+				"name": "Konchadi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "padangady",
+				"name": "Padangady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 14,
+				"slug": "bondel",
+				"name": "Bondel",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "012d24ed-8893-47c5-8769-fee702047613",
+		"busNumber": "15",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "mangaladevi",
+				"name": "Mangaladevi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 1,
+				"slug": "morgans-gate-rd",
+				"name": "Morgans Gate Rd",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "nandi-gudda",
+				"name": "Nandi Gudda",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "kadri-market",
+				"name": "Kadri Market",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "nanthoor",
+				"name": "Nanthoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "akashavani",
+				"name": "Akashavani",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "bejai",
+				"name": "Bejai",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "ksrtc-bus-stand",
+				"name": "KSRTC Bus Stand",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "bharat-mall",
+				"name": "Bharat Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 12,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "kuloor",
+				"name": "Kuloor",
+				"lat": 12.9245607888,
+				"lng": 74.82885595
+			},
+			{
+				"order": 14,
+				"slug": "baikampady",
+				"name": "Baikampady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "surathkal",
+				"name": "Surathkal",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "15b8a860-88f7-4895-8159-c9cf544d718d",
+		"busNumber": "15A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "mangaladevi",
+				"name": "Mangaladevi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 1,
+				"slug": "morgans-gate-rd",
+				"name": "Morgans Gate Rd",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "nandi-gudda",
+				"name": "Nandi Gudda",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "kadri-market",
+				"name": "Kadri Market",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "nanthoor",
+				"name": "Nanthoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "akashavani",
+				"name": "Akashavani",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "bejai",
+				"name": "Bejai",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "ksrtc-bus-stand",
+				"name": "KSRTC Bus Stand",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "bharat-mall",
+				"name": "Bharat Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 12,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "kuloor",
+				"name": "Kuloor",
+				"lat": 12.9245607888,
+				"lng": 74.82885595
+			},
+			{
+				"order": 14,
+				"slug": "baikampady",
+				"name": "Baikampady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "surathkal",
+				"name": "Surathkal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 16,
+				"slug": "krishnapur",
+				"name": "Krishnapur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 17,
+				"slug": "katipalla",
+				"name": "Katipalla",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "0bc86179-11cd-48a5-809d-1a74ae5fed3e",
+		"busNumber": "15B",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "mangaladevi",
+				"name": "Mangaladevi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 1,
+				"slug": "morgans-gate-rd",
+				"name": "Morgans Gate Rd",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "nandi-gudda",
+				"name": "Nandi Gudda",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "kadri-market",
+				"name": "Kadri Market",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "nanthoor",
+				"name": "Nanthoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "akashavani",
+				"name": "Akashavani",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "bejai",
+				"name": "Bejai",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "ksrtc-bus-stand",
+				"name": "KSRTC Bus Stand",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "bharat-mall",
+				"name": "Bharat Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 12,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "kuloor",
+				"name": "Kuloor",
+				"lat": 12.9245607888,
+				"lng": 74.82885595
+			},
+			{
+				"order": 14,
+				"slug": "baikampady",
+				"name": "Baikampady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "surathkal",
+				"name": "Surathkal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 16,
+				"slug": "krishnapur",
+				"name": "Krishnapur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 17,
+				"slug": "katipalla",
+				"name": "Katipalla",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 18,
+				"slug": "chelairpadavu",
+				"name": "Chelairpadavu",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "7aa640bb-aff7-46cf-9532-6cd7ba17ea09",
+		"busNumber": "16",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "mission-street",
+				"name": "Mission Street",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "azizzudin-road",
+				"name": "Azizzudin Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kandathpalli",
+				"name": "Kandathpalli",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "mandi",
+				"name": "Mandi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "gokarnath-temple",
+				"name": "Gokarnath Temple",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "kudroli",
+				"name": "Kudroli",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "bokkapatna",
+				"name": "Bokkapatna",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "boloor",
+				"name": "Boloor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "sulthan-battery",
+				"name": "Sulthan Battery",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "a651cec0-7df1-4d8b-8205-d16110af6afc",
+		"busNumber": "16A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "car-street",
+				"name": "Car Street",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "alake",
+				"name": "Alake",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kudroli",
+				"name": "Kudroli",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "bokkapatna",
+				"name": "Bokkapatna",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "boloor",
+				"name": "Boloor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "sulthan-battery",
+				"name": "Sulthan Battery",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "427922e6-d8cf-4e11-ba5f-7a4f9e2ab3ad",
+		"busNumber": "17",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 6,
+				"slug": "saibeen-complex",
+				"name": "Saibeen Complex",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "bharat-mall",
+				"name": "Bharat Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "ksrtc-bus-stand",
+				"name": "KSRTC Bus Stand",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "kapikad",
+				"name": "Kapikad",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "balebail",
+				"name": "Balebail",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "kottara-cross",
+				"name": "Kottara Cross",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "kuntikana",
+				"name": "Kuntikana",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "konchadi",
+				"name": "Konchadi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 14,
+				"slug": "mullakadu",
+				"name": "Mullakadu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "kavoor",
+				"name": "Kavoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 16,
+				"slug": "maravoor",
+				"name": "Maravoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 17,
+				"slug": "kunjathbail",
+				"name": "Kunjathbail",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "d85dbe34-7976-4b62-a6fd-cab5ad24b2eb",
+		"busNumber": "17A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 6,
+				"slug": "saibeen-complex",
+				"name": "Saibeen Complex",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "bharat-mall",
+				"name": "Bharat Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "ksrtc-bus-stand",
+				"name": "KSRTC Bus Stand",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "kapikad",
+				"name": "Kapikad",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "balebail",
+				"name": "Balebail",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "kottara-cross",
+				"name": "Kottara Cross",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "kuntikana",
+				"name": "Kuntikana",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "konchadi",
+				"name": "Konchadi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 14,
+				"slug": "mullakadu",
+				"name": "Mullakadu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "kavoor",
+				"name": "Kavoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 16,
+				"slug": "maravoor",
+				"name": "Maravoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 17,
+				"slug": "kunjathbail",
+				"name": "Kunjathbail",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "151c2b3b-9efb-4054-a337-9256d3808d18",
+		"busNumber": "17B",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 6,
+				"slug": "saibeen-complex",
+				"name": "Saibeen Complex",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "bharat-mall",
+				"name": "Bharat Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "ksrtc-bus-stand",
+				"name": "KSRTC Bus Stand",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "kapikad",
+				"name": "Kapikad",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "balebail",
+				"name": "Balebail",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "kottara-cross",
+				"name": "Kottara Cross",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "kuntikana",
+				"name": "Kuntikana",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "konchadi",
+				"name": "Konchadi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 14,
+				"slug": "mullakadu",
+				"name": "Mullakadu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "kavoor",
+				"name": "Kavoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 16,
+				"slug": "maravoor",
+				"name": "Maravoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 17,
+				"slug": "kunjathbail",
+				"name": "Kunjathbail",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "2f02e27b-8cbc-4c96-b34f-8dd6b84ada6f",
+		"busNumber": "18",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "pandeshwar",
+				"name": "Pandeshwar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "hoige-bazar",
+				"name": "Hoige Bazar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "bolar",
+				"name": "Bolar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "jeppu-market",
+				"name": "Jeppu Market",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "morgans-gate-rd",
+				"name": "Morgans Gate Rd",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "5fc66598-a991-49fa-b19e-01a5ef0405c2",
+		"busNumber": "19",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "hampankatta",
+				"name": "Hampankatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 7,
+				"slug": "saibeen-complex",
+				"name": "Saibeen Complex",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "bharat-mall",
+				"name": "Bharat Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "ksrtc-bus-stand",
+				"name": "KSRTC Bus Stand",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "bejai",
+				"name": "Bejai",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "kpt",
+				"name": "KPT",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "yeyyadi",
+				"name": "Yeyyadi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "konchadi",
+				"name": "Konchadi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 14,
+				"slug": "padavinangadi",
+				"name": "Padavinangadi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "bondel",
+				"name": "Bondel",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 16,
+				"slug": "pacchanady",
+				"name": "Pacchanady",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "66259ad8-b880-44b4-a040-4bc8d361c51e",
+		"busNumber": "21",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "bunts-hostel",
+				"name": "Bunts Hostel",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "kadri",
+				"name": "Kadri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "nanthoor",
+				"name": "Nanthoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "bikkarnakatta",
+				"name": "Bikkarnakatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "kulshekar",
+				"name": "Kulshekar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "kaikamba",
+				"name": "Kaikamba",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "neermarga",
+				"name": "Neermarga",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "5e393d05-73eb-4dad-bf18-dc55bf1df2ee",
+		"busNumber": "22",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "bunts-hostel",
+				"name": "Bunts Hostel",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "nanthoor",
+				"name": "Nanthoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "bikkarnakatta",
+				"name": "Bikkarnakatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "kulshekar",
+				"name": "Kulshekar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "vamanjoor",
+				"name": "Vamanjoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "gurupura",
+				"name": "Gurupura",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "kaikamba",
+				"name": "Kaikamba",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "bajpe",
+				"name": "Bajpe",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "9b6fbb40-1ab9-4020-a50b-fa597bb5f514",
+		"busNumber": "22A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "bunts-hostel",
+				"name": "Bunts Hostel",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "nanthoor",
+				"name": "Nanthoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "bikkarnakatta",
+				"name": "Bikkarnakatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "kulshekar",
+				"name": "Kulshekar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "vamanjoor",
+				"name": "Vamanjoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "gurupura",
+				"name": "Gurupura",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "kaikamba",
+				"name": "Kaikamba",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "bajpe",
+				"name": "Bajpe",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "bajpe-aerodrome",
+				"name": "Bajpe Aerodrome",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "d54045e8-f4a4-4e21-871f-d90400952b77",
+		"busNumber": "23",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "balmatta",
+				"name": "Balmatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "pumpwell",
+				"name": "Pumpwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "nagori",
+				"name": "Nagori",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "garodi",
+				"name": "Garodi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "padil",
+				"name": "Padil",
+				"lat": 12.871429286911,
+				"lng": 74.885603693825
+			},
+			{
+				"order": 8,
+				"slug": "faisalnagar",
+				"name": "Faisalnagar",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "25b40773-e047-448e-a355-96edd3aff0db",
+		"busNumber": "27",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "attavar",
+				"name": "Attavar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "nandi-gudda",
+				"name": "Nandi Gudda",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "marnamikatta",
+				"name": "Marnamikatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "mangaladevi",
+				"name": "Mangaladevi",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "b7f0541b-cfaa-4e1f-999a-28f9ba0031f4",
+		"busNumber": "27A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "attavar",
+				"name": "Attavar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "nandi-gudda",
+				"name": "Nandi Gudda",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "marnamikatta",
+				"name": "Marnamikatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "mangaladevi",
+				"name": "Mangaladevi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "mulihitlu",
+				"name": "Mulihitlu",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "a754be4f-b9a2-4cf0-996b-9edfc07e927c",
+		"busNumber": "29",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "pandeshwar",
+				"name": "Pandeshwar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "yemmekere",
+				"name": "Yemmekere",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "bolar",
+				"name": "Bolar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "jeppu-market",
+				"name": "Jeppu Market",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "morgans-gate-rd",
+				"name": "Morgans Gate Rd",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "4cc4955d-0a38-4860-9ff4-a53d972887d1",
+		"busNumber": "30",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "balmatta",
+				"name": "Balmatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "kadri",
+				"name": "Kadri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "nanthoor",
+				"name": "Nanthoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "bikkarnakatta",
+				"name": "Bikkarnakatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "maroli",
+				"name": "Maroli",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "padil",
+				"name": "Padil",
+				"lat": 12.871429286911,
+				"lng": 74.885603693825
+			}
+		]
+	},
+	{
+		"uuid": "c404c419-eb30-43cc-8f3e-c6bbceb96294",
+		"busNumber": "30A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "balmatta",
+				"name": "Balmatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "kadri",
+				"name": "Kadri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "nanthoor",
+				"name": "Nanthoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "bikkarnakatta",
+				"name": "Bikkarnakatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "maroli",
+				"name": "Maroli",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "padil",
+				"name": "Padil",
+				"lat": 12.871429286911,
+				"lng": 74.885603693825
+			},
+			{
+				"order": 10,
+				"slug": "kannurbettu",
+				"name": "Kannurbettu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "adyar",
+				"name": "Adyar",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "54f48e6d-f7a5-4814-821b-bc7cbb74dbdf",
+		"busNumber": "30B",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "balmatta",
+				"name": "Balmatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "kadri",
+				"name": "Kadri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "nanthoor",
+				"name": "Nanthoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "bikkarnakatta",
+				"name": "Bikkarnakatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "maroli",
+				"name": "Maroli",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "padil",
+				"name": "Padil",
+				"lat": 12.871429286911,
+				"lng": 74.885603693825
+			},
+			{
+				"order": 10,
+				"slug": "kannurbettu",
+				"name": "Kannurbettu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "adyar",
+				"name": "Adyar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "adyar-launch-jetty",
+				"name": "Adyar Launch Jetty",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "f1b73ddc-ed3a-4d2e-8982-220be3da1947",
+		"busNumber": "31",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "canara-college",
+				"name": "Canara College",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "mannagudda",
+				"name": "Mannagudda",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "urwa-market",
+				"name": "Urwa Market",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "shediguri",
+				"name": "Shediguri",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "f4d64c3b-8dd4-4a6b-b208-6ba11cb13c5d",
+		"busNumber": "31A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "canara-college",
+				"name": "Canara College",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 7,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "urwa-market",
+				"name": "Urwa Market",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "ashoknagar",
+				"name": "Ashoknagar",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "cb113b7f-afe8-458e-a6b9-4d3d01366102",
+		"busNumber": "31B",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "car-street",
+				"name": "Car Street",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "mannagudda",
+				"name": "Mannagudda",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "urwa-market",
+				"name": "Urwa Market",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ashoknagar",
+				"name": "Ashoknagar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "dombel",
+				"name": "Dombel",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "603666f9-08ea-4fb6-bca1-746b6bcb6624",
+		"busNumber": "33",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 6,
+				"slug": "saibeen-complex",
+				"name": "Saibeen Complex",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "bharat-mall",
+				"name": "Bharat Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "ksrtc-bus-stand",
+				"name": "KSRTC Bus Stand",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "kapikad",
+				"name": "Kapikad",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "balebail",
+				"name": "Balebail",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "kottara-cross",
+				"name": "Kottara Cross",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "kuntikana",
+				"name": "Kuntikana",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "derebail",
+				"name": "Derebail",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 14,
+				"slug": "konchadi",
+				"name": "Konchadi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "akashbhavan",
+				"name": "Akashbhavan",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "0930edaa-ff28-4e6b-bba6-7ed1e7654f96",
+		"busNumber": "37",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "balmatta",
+				"name": "Balmatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "kadri",
+				"name": "Kadri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "nanthoor",
+				"name": "Nanthoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "bikkarnakatta",
+				"name": "Bikkarnakatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "maroli",
+				"name": "Maroli",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "padil",
+				"name": "Padil",
+				"lat": 12.871429286911,
+				"lng": 74.885603693825
+			}
+		]
+	},
+	{
+		"uuid": "74347809-3b13-4cf1-9242-580f966e02c9",
+		"busNumber": "41A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 6,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "kuloor",
+				"name": "Kuloor",
+				"lat": 12.9245607888,
+				"lng": 74.82885595
+			},
+			{
+				"order": 8,
+				"slug": "baikampady",
+				"name": "Baikampady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "surathkal",
+				"name": "Surathkal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "krishnapur",
+				"name": "Krishnapur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "katipalla",
+				"name": "Katipalla",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "chelairpadavu",
+				"name": "Chelairpadavu",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "3d6948d1-a2f4-4f50-8285-3a0c20bf45b9",
+		"busNumber": "42",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "balmatta",
+				"name": "Balmatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "pumpwell",
+				"name": "Pumpwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "thokkottu",
+				"name": "Thokkottu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "kotekar",
+				"name": "Kotekar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "beeri",
+				"name": "Beeri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "talapady",
+				"name": "Talapady",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "a20876e1-057e-4c27-aabd-57452678fadd",
+		"busNumber": "43",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "balmatta",
+				"name": "Balmatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "pumpwell",
+				"name": "Pumpwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "thokkottu",
+				"name": "Thokkottu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "kotekar",
+				"name": "Kotekar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "beeri",
+				"name": "Beeri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "talapady",
+				"name": "Talapady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "kinya",
+				"name": "Kinya",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "2c82afe3-f1ba-4d04-8437-a8b706ebf2c6",
+		"busNumber": "44A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "balmatta",
+				"name": "Balmatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "pumpwell",
+				"name": "Pumpwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "thokkottu",
+				"name": "Thokkottu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "ullal",
+				"name": "Ullal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "someshwar",
+				"name": "Someshwar",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "f0c6b897-cb3d-44b1-893f-7d325ed10562",
+		"busNumber": "44B",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "balmatta",
+				"name": "Balmatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "pumpwell",
+				"name": "Pumpwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "thokkottu",
+				"name": "Thokkottu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "kotekar",
+				"name": "Kotekar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "eliyar-padavu",
+				"name": "Eliyar Padavu",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "8bde4f3f-24a2-4fec-8bca-724e4b21e2f4",
+		"busNumber": "44C",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "balmatta",
+				"name": "Balmatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "pumpwell",
+				"name": "Pumpwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "thokkottu",
+				"name": "Thokkottu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "ullal",
+				"name": "Ullal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "ullal-launch-jetty",
+				"name": "Ullal Launch Jetty",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "4795a494-cf1a-49b2-98d0-83e56aaa1a88",
+		"busNumber": "44D",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "balmatta",
+				"name": "Balmatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "pumpwell",
+				"name": "Pumpwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "thokkottu",
+				"name": "Thokkottu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "ullal",
+				"name": "Ullal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "kotepura",
+				"name": "Kotepura",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "8856e963-d05d-4889-a5d9-25e1a30c04b7",
+		"busNumber": "45",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 6,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "chilimbi",
+				"name": "Chilimbi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "urwa-store",
+				"name": "Urwa Store",
+				"lat": 12.8997410863,
+				"lng": 74.835767277
+			},
+			{
+				"order": 9,
+				"slug": "kottara-chowki",
+				"name": "Kottara Chowki",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "kuloor",
+				"name": "Kuloor",
+				"lat": 12.9245607888,
+				"lng": 74.82885595
+			},
+			{
+				"order": 11,
+				"slug": "panambur",
+				"name": "Panambur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "surathkal",
+				"name": "Surathkal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "kana",
+				"name": "Kana",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 14,
+				"slug": "krishnapur",
+				"name": "Krishnapur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "katipalla",
+				"name": "Katipalla",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "3b020b6c-4c0a-4a59-a447-3efdc80ee05a",
+		"busNumber": "45A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 6,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "chilimbi",
+				"name": "Chilimbi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "urwa-store",
+				"name": "Urwa Store",
+				"lat": 12.8997410863,
+				"lng": 74.835767277
+			},
+			{
+				"order": 9,
+				"slug": "kottara-chowki",
+				"name": "Kottara Chowki",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "kuloor",
+				"name": "Kuloor",
+				"lat": 12.9245607888,
+				"lng": 74.82885595
+			},
+			{
+				"order": 11,
+				"slug": "panambur",
+				"name": "Panambur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "surathkal",
+				"name": "Surathkal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "kana",
+				"name": "Kana",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 14,
+				"slug": "krishnapur",
+				"name": "Krishnapur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "katipalla",
+				"name": "Katipalla",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 16,
+				"slug": "chokkabettu",
+				"name": "Chokkabettu",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "6b454ba4-f758-414a-8f17-ace4662309fe",
+		"busNumber": "45B",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 6,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "chilimbi",
+				"name": "Chilimbi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "urwa-store",
+				"name": "Urwa Store",
+				"lat": 12.8997410863,
+				"lng": 74.835767277
+			},
+			{
+				"order": 9,
+				"slug": "kottara-chowki",
+				"name": "Kottara Chowki",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "kuloor",
+				"name": "Kuloor",
+				"lat": 12.9245607888,
+				"lng": 74.82885595
+			},
+			{
+				"order": 11,
+				"slug": "panambur",
+				"name": "Panambur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "surathkal",
+				"name": "Surathkal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "kana",
+				"name": "Kana",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 14,
+				"slug": "krishnapur",
+				"name": "Krishnapur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "katipalla",
+				"name": "Katipalla",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 16,
+				"slug": "chokkabettu",
+				"name": "Chokkabettu",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "e0c9407b-f331-4ae5-8a04-5ba4bc6c88f7",
+		"busNumber": "45C",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 6,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "chilimbi",
+				"name": "Chilimbi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "urwa-store",
+				"name": "Urwa Store",
+				"lat": 12.8997410863,
+				"lng": 74.835767277
+			},
+			{
+				"order": 9,
+				"slug": "kottara-chowki",
+				"name": "Kottara Chowki",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "kuloor",
+				"name": "Kuloor",
+				"lat": 12.9245607888,
+				"lng": 74.82885595
+			},
+			{
+				"order": 11,
+				"slug": "panambur",
+				"name": "Panambur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "surathkal",
+				"name": "Surathkal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "kana",
+				"name": "Kana",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 14,
+				"slug": "krishnapur",
+				"name": "Krishnapur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "katipalla",
+				"name": "Katipalla",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 16,
+				"slug": "mangalpete",
+				"name": "Mangalpete",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 17,
+				"slug": "kaikamba",
+				"name": "Kaikamba",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "ebd6e2dd-4315-4690-a09e-47f30b4e93c2",
+		"busNumber": "45D",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 6,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "chilimbi",
+				"name": "Chilimbi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "urwa-store",
+				"name": "Urwa Store",
+				"lat": 12.8997410863,
+				"lng": 74.835767277
+			},
+			{
+				"order": 9,
+				"slug": "kottara-chowki",
+				"name": "Kottara Chowki",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "kuloor",
+				"name": "Kuloor",
+				"lat": 12.9245607888,
+				"lng": 74.82885595
+			},
+			{
+				"order": 11,
+				"slug": "panambur",
+				"name": "Panambur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "surathkal",
+				"name": "Surathkal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "kana",
+				"name": "Kana",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 14,
+				"slug": "krishnapur",
+				"name": "Krishnapur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "katipalla",
+				"name": "Katipalla",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 16,
+				"slug": "mangalpete",
+				"name": "Mangalpete",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 17,
+				"slug": "mrpl",
+				"name": "MRPL",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 18,
+				"slug": "kuthethur",
+				"name": "Kuthethur",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "73f4d776-d01a-4db0-9cc7-4ea3b831b315",
+		"busNumber": "45E",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 6,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "chilimbi",
+				"name": "Chilimbi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "urwa-store",
+				"name": "Urwa Store",
+				"lat": 12.8997410863,
+				"lng": 74.835767277
+			},
+			{
+				"order": 9,
+				"slug": "kottara-chowki",
+				"name": "Kottara Chowki",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "kuloor",
+				"name": "Kuloor",
+				"lat": 12.9245607888,
+				"lng": 74.82885595
+			},
+			{
+				"order": 11,
+				"slug": "panambur",
+				"name": "Panambur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "surathkal",
+				"name": "Surathkal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "kana",
+				"name": "Kana",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 14,
+				"slug": "krishnapur",
+				"name": "Krishnapur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "katipalla",
+				"name": "Katipalla",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 16,
+				"slug": "mangalpete",
+				"name": "Mangalpete",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 17,
+				"slug": "mrpl",
+				"name": "MRPL",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 18,
+				"slug": "kaithakurneri",
+				"name": "Kaithakurneri",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "575a50e2-19ac-4f5d-9c3e-a29492b84642",
+		"busNumber": "45F",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 6,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "chilimbi",
+				"name": "Chilimbi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "urwa-store",
+				"name": "Urwa Store",
+				"lat": 12.8997410863,
+				"lng": 74.835767277
+			},
+			{
+				"order": 9,
+				"slug": "kottara-chowki",
+				"name": "Kottara Chowki",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "kuloor",
+				"name": "Kuloor",
+				"lat": 12.9245607888,
+				"lng": 74.82885595
+			},
+			{
+				"order": 11,
+				"slug": "panambur",
+				"name": "Panambur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "surathkal",
+				"name": "Surathkal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "kana",
+				"name": "Kana",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 14,
+				"slug": "krishnapur",
+				"name": "Krishnapur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "katipalla",
+				"name": "Katipalla",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 16,
+				"slug": "kaikamba",
+				"name": "Kaikamba",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "d174cf7c-cc03-4dfc-acd8-371713820fb7",
+		"busNumber": "45G",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 6,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "chilimbi",
+				"name": "Chilimbi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "urwa-store",
+				"name": "Urwa Store",
+				"lat": 12.8997410863,
+				"lng": 74.835767277
+			},
+			{
+				"order": 9,
+				"slug": "kottara-chowki",
+				"name": "Kottara Chowki",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "kuloor",
+				"name": "Kuloor",
+				"lat": 12.9245607888,
+				"lng": 74.82885595
+			},
+			{
+				"order": 11,
+				"slug": "panambur",
+				"name": "Panambur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "surathkal",
+				"name": "Surathkal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "kana",
+				"name": "Kana",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 14,
+				"slug": "mason-road",
+				"name": "Mason Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "janatha-colony",
+				"name": "Janatha Colony",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "e50c28bf-4a5d-48da-8c14-8c114bedabc1",
+		"busNumber": "45H",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 6,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "chilimbi",
+				"name": "Chilimbi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "urwa-store",
+				"name": "Urwa Store",
+				"lat": 12.8997410863,
+				"lng": 74.835767277
+			},
+			{
+				"order": 9,
+				"slug": "kottara-chowki",
+				"name": "Kottara Chowki",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "kuloor",
+				"name": "Kuloor",
+				"lat": 12.9245607888,
+				"lng": 74.82885595
+			},
+			{
+				"order": 11,
+				"slug": "panambur",
+				"name": "Panambur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "surathkal",
+				"name": "Surathkal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "kana",
+				"name": "Kana",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 14,
+				"slug": "krishnapur",
+				"name": "Krishnapur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "katipalla",
+				"name": "Katipalla",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 16,
+				"slug": "madhyapadavu",
+				"name": "Madhyapadavu",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "c0d07f77-229e-4b61-8609-1c6ec929a2bc",
+		"busNumber": "47",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 6,
+				"slug": "saibeen-complex",
+				"name": "Saibeen Complex",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "bharat-mall",
+				"name": "Bharat Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "ksrtc-bus-stand",
+				"name": "KSRTC Bus Stand",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "kapikad",
+				"name": "Kapikad",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "balebail",
+				"name": "Balebail",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "kottara-cross",
+				"name": "Kottara Cross",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "kuntikana",
+				"name": "Kuntikana",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "kavoor",
+				"name": "Kavoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 14,
+				"slug": "maravoor",
+				"name": "Maravoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "bajpe",
+				"name": "Bajpe",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "43f92749-f3f3-42e7-8d79-370e527ca7f6",
+		"busNumber": "47A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 6,
+				"slug": "saibeen-complex",
+				"name": "Saibeen Complex",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "bharat-mall",
+				"name": "Bharat Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "ksrtc-bus-stand",
+				"name": "KSRTC Bus Stand",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "kapikad",
+				"name": "Kapikad",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "balebail",
+				"name": "Balebail",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "kottara-cross",
+				"name": "Kottara Cross",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "kuntikana",
+				"name": "Kuntikana",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "kavoor",
+				"name": "Kavoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 14,
+				"slug": "maravoor",
+				"name": "Maravoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "bajpe",
+				"name": "Bajpe",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "abe6e07a-cabd-4ba8-8a26-5817f3d7e1a9",
+		"busNumber": "47B",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 6,
+				"slug": "saibeen-complex",
+				"name": "Saibeen Complex",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "bharat-mall",
+				"name": "Bharat Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "ksrtc-bus-stand",
+				"name": "KSRTC Bus Stand",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "kapikad",
+				"name": "Kapikad",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "balebail",
+				"name": "Balebail",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "kottara-cross",
+				"name": "Kottara Cross",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "kuntikana",
+				"name": "Kuntikana",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "kavoor",
+				"name": "Kavoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 14,
+				"slug": "maravoor",
+				"name": "Maravoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "bajpe",
+				"name": "Bajpe",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 16,
+				"slug": "bajpe-aerodrome",
+				"name": "Bajpe Aerodrome",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "d8432fcc-499a-4538-a9d3-54c73b6fdfb0",
+		"busNumber": "47C",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 6,
+				"slug": "saibeen-complex",
+				"name": "Saibeen Complex",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "bharat-mall",
+				"name": "Bharat Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "ksrtc-bus-stand",
+				"name": "KSRTC Bus Stand",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "kapikad",
+				"name": "Kapikad",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "balebail",
+				"name": "Balebail",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "kottara-cross",
+				"name": "Kottara Cross",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "kuntikana",
+				"name": "Kuntikana",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "kavoor",
+				"name": "Kavoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 14,
+				"slug": "maravoor",
+				"name": "Maravoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "bajpe",
+				"name": "Bajpe",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 16,
+				"slug": "bajpe-aerodrome",
+				"name": "Bajpe Aerodrome",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 17,
+				"slug": "bhatrakere",
+				"name": "Bhatrakere",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 18,
+				"slug": "kattalsara",
+				"name": "Kattalsara",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "1c566b6f-e7a7-4820-b6a0-7cc724baaba8",
+		"busNumber": "48",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "bunts-hostel",
+				"name": "Bunts Hostel",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "mallikatte",
+				"name": "Mallikatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "kadri",
+				"name": "Kadri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "nanthoor",
+				"name": "Nanthoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "kpt",
+				"name": "KPT",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "yeyyadi",
+				"name": "Yeyyadi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "konchadi",
+				"name": "Konchadi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "bondel",
+				"name": "Bondel",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "kavoor",
+				"name": "Kavoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "maravoor",
+				"name": "Maravoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "bajpe",
+				"name": "Bajpe",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "337582f5-3998-4439-b17c-f6ee86425d5e",
+		"busNumber": "48A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "hampankatta",
+				"name": "Hampankatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 7,
+				"slug": "saibeen-complex",
+				"name": "Saibeen Complex",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "bharat-mall",
+				"name": "Bharat Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "ksrtc-bus-stand",
+				"name": "KSRTC Bus Stand",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "bejai",
+				"name": "Bejai",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "bejai-church",
+				"name": "Bejai Church",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "yeyyadi",
+				"name": "Yeyyadi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "konchadi",
+				"name": "Konchadi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 14,
+				"slug": "bondel",
+				"name": "Bondel",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "kavoor",
+				"name": "Kavoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 16,
+				"slug": "maravoor",
+				"name": "Maravoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 17,
+				"slug": "bajpe",
+				"name": "Bajpe",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "8a793268-e997-45bb-8a31-c797feb54d18",
+		"busNumber": "51",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "balmatta",
+				"name": "Balmatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "pumpwell",
+				"name": "Pumpwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "thokkottu",
+				"name": "Thokkottu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "deralakatte",
+				"name": "Deralakatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "mangalore-university",
+				"name": "Mangalore University",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "konaje",
+				"name": "Konaje",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "3c230cc5-c152-4515-816a-00562421fb1e",
+		"busNumber": "51A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "balmatta",
+				"name": "Balmatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "pumpwell",
+				"name": "Pumpwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "thokkottu",
+				"name": "Thokkottu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "deralakatte",
+				"name": "Deralakatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "mangalore-university",
+				"name": "Mangalore University",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "konaje",
+				"name": "Konaje",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "inoli",
+				"name": "Inoli",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "d07046ce-f0e3-47f7-98f3-75f5978a4a55",
+		"busNumber": "53",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 6,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "chilimbi",
+				"name": "Chilimbi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "urwa-store",
+				"name": "Urwa Store",
+				"lat": 12.8997410863,
+				"lng": 74.835767277
+			},
+			{
+				"order": 9,
+				"slug": "kottara-chowki",
+				"name": "Kottara Chowki",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "kuloor",
+				"name": "Kuloor",
+				"lat": 12.9245607888,
+				"lng": 74.82885595
+			},
+			{
+				"order": 11,
+				"slug": "panambur",
+				"name": "Panambur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "surathkal",
+				"name": "Surathkal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 13,
+				"slug": "kana",
+				"name": "Kana",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 14,
+				"slug": "krishnapur",
+				"name": "Krishnapur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 15,
+				"slug": "katipalla",
+				"name": "Katipalla",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 16,
+				"slug": "soorinje",
+				"name": "Soorinje",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 17,
+				"slug": "tibar",
+				"name": "Tibar",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "caddf2a8-45b6-4c55-8053-abfec808126f",
+		"busNumber": "53A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 1,
+				"slug": "pumpwell",
+				"name": "Pumpwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "nanthoor",
+				"name": "Nanthoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kadri",
+				"name": "Kadri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "kuloor",
+				"name": "Kuloor",
+				"lat": 12.9245607888,
+				"lng": 74.82885595
+			},
+			{
+				"order": 5,
+				"slug": "surathkal",
+				"name": "Surathkal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "chokkabettu",
+				"name": "Chokkabettu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "katipalla",
+				"name": "Katipalla",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "soorinje",
+				"name": "Soorinje",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "tibar",
+				"name": "Tibar",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "c09e1c53-b54a-46f2-ba80-19f5eec90fb6",
+		"busNumber": "54",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "balmatta",
+				"name": "Balmatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "pumpwell",
+				"name": "Pumpwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "thokkottu",
+				"name": "Thokkottu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "beeri",
+				"name": "Beeri",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "maddur",
+				"name": "Maddur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "natekal",
+				"name": "Natekal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "manjanady",
+				"name": "Manjanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "thaudugoli",
+				"name": "Thaudugoli",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "a7c20e5e-102b-47e1-b44b-0ad1483ca6a5",
+		"busNumber": "54A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "balmatta",
+				"name": "Balmatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "pumpwell",
+				"name": "Pumpwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "thokkottu",
+				"name": "Thokkottu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "deralakatte",
+				"name": "Deralakatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "natekal",
+				"name": "Natekal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "manjanady",
+				"name": "Manjanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "thaudugoli",
+				"name": "Thaudugoli",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "33e5eed0-1004-43e8-b808-3d7ac4dd4364",
+		"busNumber": "55",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "balmatta",
+				"name": "Balmatta",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "jyothi",
+				"name": "Jyothi",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kankanady",
+				"name": "Kankanady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "pumpwell",
+				"name": "Pumpwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "thokkottu",
+				"name": "Thokkottu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "kuthar",
+				"name": "Kuthar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "deralakatte",
+				"name": "Deralakatte",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 8,
+				"slug": "natekal",
+				"name": "Natekal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "konaje",
+				"name": "Konaje",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "fajir",
+				"name": "Fajir",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "harekal",
+				"name": "Harekal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 12,
+				"slug": "pavoor",
+				"name": "Pavoor",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "515ba32f-dadf-428b-97e7-7ba39d4b42d6",
+		"busNumber": "59",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "state-bank",
+				"name": "State Bank",
+				"lat": 12.8634484,
+				"lng": 74.836904
+			},
+			{
+				"order": 1,
+				"slug": "ks-rao-road",
+				"name": "K.S. Rao Road",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "pvs",
+				"name": "PVS",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "empire-mall",
+				"name": "Empire Mall",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "ballalbagh",
+				"name": "Ballalbagh",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "lalbagh",
+				"name": "Lalbagh",
+				"lat": 12.8855978817,
+				"lng": 74.838757459
+			},
+			{
+				"order": 6,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "kuloor",
+				"name": "Kuloor",
+				"lat": 12.9245607888,
+				"lng": 74.82885595
+			},
+			{
+				"order": 8,
+				"slug": "baikampady",
+				"name": "Baikampady",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 9,
+				"slug": "chitrapur",
+				"name": "Chitrapur",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 10,
+				"slug": "hosabettu",
+				"name": "Hosabettu",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 11,
+				"slug": "surathkal",
+				"name": "Surathkal",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "4b994314-dfd3-439b-bcfc-14171f778ee6",
+		"busNumber": "60",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "anandanagar",
+				"name": "Anandanagar",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 1,
+				"slug": "nandanapura",
+				"name": "Nandanapura",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "bejai-museum",
+				"name": "Bejai Museum",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "kadri-temple",
+				"name": "Kadri Temple",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "mangalore-junction",
+				"name": "Mangalore Junction",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "valencia",
+				"name": "Valencia",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 7,
+				"slug": "gorigudde",
+				"name": "Gorigudde",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "171493e9-c1d2-460e-a034-06dcd6ed010a",
+		"busNumber": "61",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "kodikal",
+				"name": "Kodikal",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 1,
+				"slug": "kodikal-cross",
+				"name": "Kodikal Cross",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "ladyhill",
+				"name": "Ladyhill",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "bejai-museum",
+				"name": "Bejai Museum",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "kadri-temple",
+				"name": "Kadri Temple",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 5,
+				"slug": "pumpwell",
+				"name": "Pumpwell",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "padil",
+				"name": "Padil",
+				"lat": 12.871429286911,
+				"lng": 74.885603693825
+			},
+			{
+				"order": 7,
+				"slug": "mangalore-junction",
+				"name": "Mangalore Junction",
+				"lat": null,
+				"lng": null
+			}
+		]
+	},
+	{
+		"uuid": "30c6a723-903c-4fcb-9aeb-a622c9b8b6fe",
+		"busNumber": "62A",
+		"direction": "both",
+		"hasLocal": true,
+		"hasGovt": false,
+		"hasExpress": false,
+		"stops": [
+			{
+				"order": 0,
+				"slug": "padil-railway-station",
+				"name": "Padil Railway Station",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 1,
+				"slug": "kpt",
+				"name": "KPT",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 2,
+				"slug": "bondel",
+				"name": "Bondel",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 3,
+				"slug": "kavoor",
+				"name": "Kavoor",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 4,
+				"slug": "kuloor",
+				"name": "Kuloor",
+				"lat": 12.9245607888,
+				"lng": 74.82885595
+			},
+			{
+				"order": 5,
+				"slug": "kaikamba",
+				"name": "Kaikamba",
+				"lat": null,
+				"lng": null
+			},
+			{
+				"order": 6,
+				"slug": "kaatipalla",
+				"name": "Kaatipalla",
+				"lat": null,
+				"lng": null
+			}
+		]
+	}
+]

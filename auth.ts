@@ -77,8 +77,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 				token.mustChangePassword =
 					(user as { mustChangePassword?: boolean }).mustChangePassword ??
 					false;
-				token.onboarded =
-					(user as { onboarded?: boolean }).onboarded ?? false;
+				token.onboarded = (user as { onboarded?: boolean }).onboarded ?? false;
 			}
 
 			if (token.email) {

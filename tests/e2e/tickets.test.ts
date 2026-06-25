@@ -16,47 +16,46 @@ test.describe("Tickets E2E Flow", () => {
 		// Submit search
 		await page.locator('button[type="submit"]').click();
 
-		// Wait for search results
-		// In mock or seeded DB, if results exist, click book. Otherwise, verify message.
-		const resultsHeading = page.locator("h2:has-text('RESULTS')");
-		await expect(resultsHeading).toBeVisible();
+		// Results section heading always renders after a search.
+		await expect(page.getByRole("heading", { name: /Results/i })).toBeVisible();
 
-		const firstBookButton = page.locator("a:has-text('BOOK TICKET')").first();
-		if (await firstBookButton.isVisible()) {
-			await firstBookButton.click();
+		// Each result card is a link with a "Book" call-to-action. When the DB has
+		// matching trips we exercise the full booking + payment flow; otherwise we
+		// assert the empty-state copy.
+		const firstBookLink = page.locator("a:has-text('Book')").first();
+		if (await firstBookLink.isVisible()) {
+			await firstBookLink.click();
 
-			// Verify trip detail page is loaded
-			await expect(page.locator("h1")).toContainText(/TRIP BOOKING/i);
+			// Trip detail page (AppShell title "Book Ticket").
+			await expect(page.locator("h1")).toContainText(/Book Ticket/i);
 
-			// Fill booking details
-			await page
-				.locator('input[placeholder="Guest Name"]')
-				.fill("Guest Traveller");
-			await page
-				.locator('input[placeholder="Guest Phone Number"]')
-				.fill("9988776655");
+			// Fill guest booking details.
+			await page.getByPlaceholder("Full Name").fill("Guest Traveller");
+			await page.getByPlaceholder("Phone Number").fill("9988776655");
 
-			// Book
+			// Submit booking → moves to the payment step.
 			await page.locator("button:has-text('CONFIRM BOOKING')").click();
 
-			// Verify payment form is shown
-			await expect(page.locator("h3:has-text('PAYMENT STEPS')")).toBeVisible();
+			// Payment details section appears.
+			await expect(
+				page.getByRole("heading", { name: /Payment Details/i }),
+			).toBeVisible();
 
-			// Fill mock UPI reference
-			await page
-				.locator('input[placeholder*="Reference"]')
-				.fill("TXN987654321");
+			// Enter a mock UPI transaction reference.
+			await page.getByPlaceholder("e.g. 123456789012").fill("TXN987654321");
 
-			// Confirm payment
+			// Confirm payment.
 			await page.locator("button:has-text('CONFIRM PAYMENT')").click();
 
-			// Verify success toast or redirect
+			// Verify success feedback.
 			await expect(page.locator("body")).toContainText(
-				/Payment confirmed|valid/i,
+				/Payment confirmed|active|valid/i,
 			);
 		} else {
-			// No active trip found in DB
-			await expect(page.locator("body")).toContainText(/No trips found/i);
+			// No matching trips seeded — assert the empty-state copy.
+			await expect(page.locator("body")).toContainText(
+				/No trips match those stops yet/i,
+			);
 		}
 	});
 });

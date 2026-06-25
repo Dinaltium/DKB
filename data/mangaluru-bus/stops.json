@@ -1,0 +1,1376 @@
+[
+	{
+		"slug": "car-street",
+		"name": "Car Street",
+		"address": "",
+		"lat": 12.8702004,
+		"lng": 74.8366794,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "mannagudda",
+		"name": "Mannagudda",
+		"address": "",
+		"lat": 12.8819149,
+		"lng": 74.8353565,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "ladyhill",
+		"name": "Ladyhill",
+		"address": "",
+		"lat": 12.8883693,
+		"lng": 74.8373673,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "chilimbi",
+		"name": "Chilimbi",
+		"address": "",
+		"lat": 12.8935984,
+		"lng": 74.837515,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "urwa-store",
+		"name": "Urwa Store",
+		"address": "",
+		"lat": 12.8997410863,
+		"lng": 74.835767277,
+		"coordSrc": "site"
+	},
+	{
+		"slug": "kavoor",
+		"name": "Kavoor",
+		"address": "",
+		"lat": 12.8857729,
+		"lng": 74.8412105,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "mcf-colony",
+		"name": "MCF colony",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "kunjathbail",
+		"name": "Kunjathbail",
+		"address": "",
+		"lat": 12.9420168,
+		"lng": 74.8540408,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "state-bank",
+		"name": "State Bank",
+		"address": "Statebank, Mangaluru, Karnataka 575001",
+		"lat": 12.8634484,
+		"lng": 74.836904,
+		"coordSrc": "site"
+	},
+	{
+		"slug": "lalbagh",
+		"name": "Lalbagh",
+		"address": "",
+		"lat": 12.8855978817,
+		"lng": 74.838757459,
+		"coordSrc": "site"
+	},
+	{
+		"slug": "kuloor",
+		"name": "Kuloor",
+		"address": "",
+		"lat": 12.9245607888,
+		"lng": 74.82885595,
+		"coordSrc": "site"
+	},
+	{
+		"slug": "tannirbhavi-beach",
+		"name": "Tannirbhavi Beach",
+		"address": "",
+		"lat": 12.8869893554,
+		"lng": 74.816287192,
+		"coordSrc": "site"
+	},
+	{
+		"slug": "kodikal",
+		"name": "Kodikal",
+		"address": "",
+		"lat": 12.9074593,
+		"lng": 74.8297538,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "hampankatta",
+		"name": "Hampankatta",
+		"address": "",
+		"lat": 12.8691203,
+		"lng": 74.843432,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "shedigudde",
+		"name": "Shedigudde",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "kodikal-cross",
+		"name": "Kodikal Cross",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "balmatta",
+		"name": "Balmatta",
+		"address": "",
+		"lat": 12.8791877,
+		"lng": 74.8584005,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "jyothi",
+		"name": "Jyothi",
+		"address": "",
+		"lat": 12.8688855,
+		"lng": 74.8479308,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "kankanady",
+		"name": "Kankanady",
+		"address": "",
+		"lat": 12.8646481,
+		"lng": 74.8600033,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "pumpwell",
+		"name": "Pumpwell",
+		"address": "",
+		"lat": 12.8696153,
+		"lng": 74.86606,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "nagori",
+		"name": "Nagori",
+		"address": "",
+		"lat": 12.8699595,
+		"lng": 74.8745171,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "padil",
+		"name": "Padil",
+		"address": "Padil, Mangaluru, Karnataka 575007",
+		"lat": 12.871429286911,
+		"lng": 74.885603693825,
+		"coordSrc": "site"
+	},
+	{
+		"slug": "kannurbettu",
+		"name": "Kannurbettu",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "adyar",
+		"name": "Adyar",
+		"address": "",
+		"lat": 12.8683434,
+		"lng": 74.9310047,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "falnir",
+		"name": "Falnir",
+		"address": "",
+		"lat": 12.8688855,
+		"lng": 74.8479308,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "garodi",
+		"name": "Garodi",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "jalligudde",
+		"name": "Jalligudde",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "mangaladevi",
+		"name": "Mangaladevi",
+		"address": "",
+		"lat": 12.8492308,
+		"lng": 74.8452609,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "morgans-gate-rd",
+		"name": "Morgans Gate Rd",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "nandi-gudda",
+		"name": "Nandi Gudda",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "bajal-jalligudde-cross",
+		"name": "Bajal Jalligudde Cross",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "bunts-hostel",
+		"name": "Bunts Hostel",
+		"address": "",
+		"lat": 12.8764943,
+		"lng": 74.8479289,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "mallikatte",
+		"name": "Mallikatte",
+		"address": "",
+		"lat": 12.8783034,
+		"lng": 74.8553269,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "kadri",
+		"name": "Kadri",
+		"address": "",
+		"lat": 12.8897288,
+		"lng": 74.8501424,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "bikkarnakatta",
+		"name": "Bikkarnakatta",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "kulshekar",
+		"name": "Kulshekar",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "kudupu",
+		"name": "Kudupu",
+		"address": "",
+		"lat": 12.8849079,
+		"lng": 74.8794308,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "vamanjoor",
+		"name": "Vamanjoor",
+		"address": "",
+		"lat": 12.8849079,
+		"lng": 74.8794308,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "gurupura",
+		"name": "Gurupura",
+		"address": "",
+		"lat": 12.9382816,
+		"lng": 74.9279894,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "kaikamba",
+		"name": "Kaikamba",
+		"address": "",
+		"lat": 12.9939439,
+		"lng": 74.8348033,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "addoor",
+		"name": "Addoor",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "polali",
+		"name": "Polali",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "kolthamajal",
+		"name": "Kolthamajal",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "kottara",
+		"name": "Kottara",
+		"address": "",
+		"lat": 12.902033,
+		"lng": 74.8368503,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "ks-rao-road",
+		"name": "K.S. Rao Road",
+		"address": "",
+		"lat": 12.870785,
+		"lng": 74.8419848,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "kudremukh-housing-colony",
+		"name": "Kudremukh Housing Colony",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "hudco-colony",
+		"name": "Hudco Colony",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "govt-womens-polytechnic",
+		"name": "Govt. Womens polytechnic",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "govt-quarters",
+		"name": "Govt. Quarters",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "bondel",
+		"name": "Bondel",
+		"address": "",
+		"lat": 12.9262123,
+		"lng": 74.8584061,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "padangady",
+		"name": "Padangady",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "pacchanady-beggari-colony",
+		"name": "Pacchanady Beggari Colony",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "bendoorwell",
+		"name": "Bendoorwell",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "nanthoor",
+		"name": "Nanthoor",
+		"address": "Nanthoor",
+		"lat": 12.8847697,
+		"lng": 74.8607701,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "akashavani",
+		"name": "Akashavani",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "kpt",
+		"name": "KPT",
+		"address": "",
+		"lat": 12.8918834,
+		"lng": 74.853987,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "yeyyadi",
+		"name": "Yeyyadi",
+		"address": "",
+		"lat": 12.8979468,
+		"lng": 74.861564,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "konchadi",
+		"name": "Konchadi",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "attavar",
+		"name": "Attavar",
+		"address": "",
+		"lat": 12.860548,
+		"lng": 74.8480626,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "yemmekere",
+		"name": "Yemmekere",
+		"address": "",
+		"lat": 12.8499951,
+		"lng": 74.8411897,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "kadri-market",
+		"name": "Kadri Market",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "bejai",
+		"name": "Bejai",
+		"address": "",
+		"lat": 12.8857729,
+		"lng": 74.8412105,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "ksrtc-bus-stand",
+		"name": "KSRTC Bus Stand",
+		"address": "",
+		"lat": 12.8846856,
+		"lng": 74.8417756,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "bharat-mall",
+		"name": "Bharat Mall",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "baikampady",
+		"name": "Baikampady",
+		"address": "",
+		"lat": 12.9492098,
+		"lng": 74.8201304,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "surathkal",
+		"name": "Surathkal",
+		"address": "",
+		"lat": 12.9890235,
+		"lng": 74.8017211,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "krishnapur",
+		"name": "Krishnapur",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "katipalla",
+		"name": "Katipalla",
+		"address": "",
+		"lat": 13.0004744,
+		"lng": 74.8310401,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "chelairpadavu",
+		"name": "Chelairpadavu",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "mission-street",
+		"name": "Mission Street",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "azizzudin-road",
+		"name": "Azizzudin Road",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "kandathpalli",
+		"name": "Kandathpalli",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "mandi",
+		"name": "Mandi",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "gokarnath-temple",
+		"name": "Gokarnath Temple",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "kudroli",
+		"name": "Kudroli",
+		"address": "",
+		"lat": 12.8765518,
+		"lng": 74.8302397,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "bokkapatna",
+		"name": "Bokkapatna",
+		"address": "",
+		"lat": 12.8790089,
+		"lng": 74.827776,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "boloor",
+		"name": "Boloor",
+		"address": "",
+		"lat": 12.8866121,
+		"lng": 74.8247716,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "sulthan-battery",
+		"name": "Sulthan Battery",
+		"address": "",
+		"lat": 12.8897236,
+		"lng": 74.8215995,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "alake",
+		"name": "Alake",
+		"address": "",
+		"lat": 12.8736233,
+		"lng": 74.833866,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "pvs",
+		"name": "PVS",
+		"address": "",
+		"lat": 12.8738292,
+		"lng": 74.8408795,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "empire-mall",
+		"name": "Empire Mall",
+		"address": "",
+		"lat": 12.879568,
+		"lng": 74.8406548,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "ballalbagh",
+		"name": "Ballalbagh",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "saibeen-complex",
+		"name": "Saibeen Complex",
+		"address": "",
+		"lat": 12.8852147,
+		"lng": 74.8394237,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "kapikad",
+		"name": "Kapikad",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "balebail",
+		"name": "Balebail",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "kottara-cross",
+		"name": "Kottara Cross",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "kuntikana",
+		"name": "Kuntikana",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "mullakadu",
+		"name": "Mullakadu",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "maravoor",
+		"name": "Maravoor",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "pandeshwar",
+		"name": "Pandeshwar",
+		"address": "",
+		"lat": 12.85684,
+		"lng": 74.8379984,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "hoige-bazar",
+		"name": "Hoige Bazar",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "bolar",
+		"name": "Bolar",
+		"address": "",
+		"lat": 12.8468042,
+		"lng": 74.8430182,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "jeppu-market",
+		"name": "Jeppu Market",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "padavinangadi",
+		"name": "Padavinangadi",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "pacchanady",
+		"name": "Pacchanady",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "neermarga",
+		"name": "Neermarga",
+		"address": "",
+		"lat": 12.8932996,
+		"lng": 74.9096665,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "canara-college",
+		"name": "Canara College",
+		"address": "",
+		"lat": 12.8788605,
+		"lng": 74.8417948,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "urwa-market",
+		"name": "Urwa Market",
+		"address": "",
+		"lat": 12.8890788,
+		"lng": 74.8302454,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "shediguri",
+		"name": "Shediguri",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "ashoknagar",
+		"name": "Ashoknagar",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "dombel",
+		"name": "Dombel",
+		"address": "",
+		"lat": 12.903011,
+		"lng": 74.8232353,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "thokkottu",
+		"name": "Thokkottu",
+		"address": "",
+		"lat": 12.8174705,
+		"lng": 74.8452304,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "deralakatte",
+		"name": "Deralakatte",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "mangalore-university",
+		"name": "Mangalore University",
+		"address": "",
+		"lat": 12.8650148,
+		"lng": 74.8410816,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "konaje",
+		"name": "Konaje",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "inoli",
+		"name": "Inoli",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "bejai-museum",
+		"name": "Bejai Museum",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "kadri-temple",
+		"name": "Kadri Temple",
+		"address": "",
+		"lat": 12.8805253,
+		"lng": 74.8543594,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "mangalore-junction",
+		"name": "Mangalore Junction",
+		"address": "",
+		"lat": 12.866628,
+		"lng": 74.8792308,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "mukka",
+		"name": "Mukka",
+		"address": "",
+		"lat": 13.021575,
+		"lng": 74.7902222,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "sasihitlu",
+		"name": "Sasihitlu",
+		"address": "",
+		"lat": 13.0260878,
+		"lng": 74.7879522,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "bengare",
+		"name": "Bengare",
+		"address": "",
+		"lat": 12.8618908,
+		"lng": 74.836454,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "panambur",
+		"name": "Panambur",
+		"address": "",
+		"lat": 12.9469448,
+		"lng": 74.8123039,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "jokatta",
+		"name": "Jokatta",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "kaana",
+		"name": "Kaana",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "port-temple",
+		"name": "Port Temple",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "bajpe",
+		"name": "Bajpe",
+		"address": "",
+		"lat": 12.9808517,
+		"lng": 74.8841277,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "baikampady-industrial-estate",
+		"name": "Baikampady Industrial Estate",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "jokatte",
+		"name": "Jokatte",
+		"address": "",
+		"lat": 12.9605751,
+		"lng": 74.8442917,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "parkodi",
+		"name": "Parkodi",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "kalavar",
+		"name": "Kalavar",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "bajpe-aerodrome",
+		"name": "Bajpe Aerodrome",
+		"address": "",
+		"lat": 12.9546178,
+		"lng": 74.8847182,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "faisalnagar",
+		"name": "Faisalnagar",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "marnamikatta",
+		"name": "Marnamikatta",
+		"address": "",
+		"lat": 12.8527191,
+		"lng": 74.8516075,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "mulihitlu",
+		"name": "Mulihitlu",
+		"address": "",
+		"lat": 12.8453185,
+		"lng": 74.8471599,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "kotekar",
+		"name": "Kotekar",
+		"address": "",
+		"lat": 12.9137869,
+		"lng": 74.8561886,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "beeri",
+		"name": "Beeri",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "talapady",
+		"name": "Talapady",
+		"address": "",
+		"lat": 12.7673913,
+		"lng": 74.8697907,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "padil-railway-station",
+		"name": "Padil Railway Station",
+		"address": "",
+		"lat": 12.8752966,
+		"lng": 74.894361,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "kaatipalla",
+		"name": "Kaatipalla",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "moodushedde",
+		"name": "Moodushedde",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "valencia",
+		"name": "Valencia",
+		"address": "",
+		"lat": 12.8644153,
+		"lng": 74.8583112,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "kudpu-temple",
+		"name": "Kudpu Temple",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "mangala-jyoti",
+		"name": "Mangala Jyoti",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "ulaibettu",
+		"name": "Ulaibettu",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "maroli",
+		"name": "Maroli",
+		"address": "",
+		"lat": 12.8753585,
+		"lng": 74.8798521,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "adyar-launch-jetty",
+		"name": "Adyar Launch Jetty",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "derebail",
+		"name": "Derebail",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "akashbhavan",
+		"name": "Akashbhavan",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "kinya",
+		"name": "Kinya",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "kottara-chowki",
+		"name": "Kottara Chowki",
+		"address": "",
+		"lat": 12.9102126,
+		"lng": 74.8363056,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "kana",
+		"name": "Kana",
+		"address": "",
+		"lat": 12.9806013,
+		"lng": 74.8172073,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "soorinje",
+		"name": "Soorinje",
+		"address": "",
+		"lat": 13.0243211,
+		"lng": 74.8392103,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "tibar",
+		"name": "Tibar",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "chokkabettu",
+		"name": "Chokkabettu",
+		"address": "",
+		"lat": 12.9967761,
+		"lng": 74.8059738,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "kulshekar-chowki",
+		"name": "Kulshekar Chowki",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "merlapadavu",
+		"name": "Merlapadavu",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "ullal",
+		"name": "Ullal",
+		"address": "",
+		"lat": 12.7923655,
+		"lng": 74.8548862,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "someshwar",
+		"name": "Someshwar",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "eliyar-padavu",
+		"name": "Eliyar Padavu",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "ullal-launch-jetty",
+		"name": "Ullal Launch Jetty",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "kotepura",
+		"name": "Kotepura",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "mangalpete",
+		"name": "Mangalpete",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "mrpl",
+		"name": "MRPL",
+		"address": "",
+		"lat": 12.9892788,
+		"lng": 74.8309479,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "kuthethur",
+		"name": "Kuthethur",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "kaithakurneri",
+		"name": "Kaithakurneri",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "mason-road",
+		"name": "Mason Road",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "janatha-colony",
+		"name": "Janatha Colony",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "madhyapadavu",
+		"name": "Madhyapadavu",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "bhatrakere",
+		"name": "Bhatrakere",
+		"address": "",
+		"lat": 12.9961008,
+		"lng": 74.8865088,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "kattalsara",
+		"name": "Kattalsara",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "bejai-church",
+		"name": "Bejai Church",
+		"address": "",
+		"lat": 12.8840049,
+		"lng": 74.846583,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "maddur",
+		"name": "Maddur",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "natekal",
+		"name": "Natekal",
+		"address": "",
+		"lat": 12.8020234,
+		"lng": 74.9037226,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "manjanady",
+		"name": "Manjanady",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "thaudugoli",
+		"name": "Thaudugoli",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "kuthar",
+		"name": "Kuthar",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "fajir",
+		"name": "Fajir",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "harekal",
+		"name": "Harekal",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "pavoor",
+		"name": "Pavoor",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "chitrapur",
+		"name": "Chitrapur",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "hosabettu",
+		"name": "Hosabettu",
+		"address": "",
+		"lat": 12.962852,
+		"lng": 74.7985323,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "anandanagar",
+		"name": "Anandanagar",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "nandanapura",
+		"name": "Nandanapura",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "gorigudde",
+		"name": "Gorigudde",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "shaktinagar",
+		"name": "Shaktinagar",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "karmar",
+		"name": "Karmar",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "bajal-church",
+		"name": "Bajal Church",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "jeppu",
+		"name": "Jeppu",
+		"address": "",
+		"lat": 12.8545047,
+		"lng": 74.8564146,
+		"coordSrc": "seed"
+	},
+	{
+		"slug": "jeppupatna",
+		"name": "Jeppupatna",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "ekkur",
+		"name": "Ekkur",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "mugeru",
+		"name": "Mugeru",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "bajal-pakkaladka",
+		"name": "Bajal Pakkaladka",
+		"address": "",
+		"lat": null,
+		"lng": null
+	},
+	{
+		"slug": "jm-road",
+		"name": "J.M. Road",
+		"address": "",
+		"lat": 12.8791191,
+		"lng": 74.8409182,
+		"coordSrc": "seed"
+	}
+]

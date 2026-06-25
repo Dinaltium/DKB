@@ -15,9 +15,9 @@ import {
 	updateBusStatusAction,
 } from "@/lib/actions/bus";
 import {
-	grantConductorAccessAction,
 	getAllConductorsAction,
 	getOperatorConductorAssignmentsAction,
+	grantConductorAccessAction,
 	revokeConductorAccessAction,
 	searchConductorsAction,
 } from "@/lib/actions/conductor";
@@ -422,7 +422,9 @@ export function OperatorDashboard({
 								<label className="block text-xs font-bold uppercase mb-1">
 									Select Conductor
 									{conductorsLoading && (
-										<span className="ml-2 text-muted-foreground font-normal">Loading...</span>
+										<span className="ml-2 text-muted-foreground font-normal">
+											Loading...
+										</span>
 									)}
 								</label>
 								{foundConductors.length === 0 && !conductorsLoading ? (
@@ -518,16 +520,24 @@ export function OperatorDashboard({
 						</div>
 
 						{assignmentsLoading ? (
-							<p className="text-xs text-muted-foreground">Loading assignments...</p>
+							<p className="text-xs text-muted-foreground">
+								Loading assignments...
+							</p>
 						) : assignments.length === 0 ? (
 							<div
 								className="border-2 p-4 text-center"
 								style={{ borderStyle: "dashed" }}
 							>
-								<p className="text-sm font-bold uppercase" style={{ color: "var(--text-muted)" }}>
+								<p
+									className="text-sm font-bold uppercase"
+									style={{ color: "var(--text-muted)" }}
+								>
 									No active assignments
 								</p>
-								<p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
+								<p
+									className="text-xs mt-1"
+									style={{ color: "var(--text-muted)" }}
+								>
 									Use the form on the left to assign conductors to your buses.
 								</p>
 							</div>
@@ -550,7 +560,10 @@ export function OperatorDashboard({
 												>
 													{a.conductor.name ?? "(No name)"}
 												</p>
-												<p className="text-xs" style={{ color: "var(--text-muted)" }}>
+												<p
+													className="text-xs"
+													style={{ color: "var(--text-muted)" }}
+												>
 													{a.conductor.email}
 													{a.conductor.phone ? ` • ${a.conductor.phone}` : ""}
 												</p>
@@ -581,13 +594,22 @@ export function OperatorDashboard({
 											Bus {a.bus.number} • {a.bus.origin} → {a.bus.destination}
 										</div>
 										<div className="flex items-center justify-between">
-											<p className="text-xs" style={{ color: "var(--text-muted)" }}>
+											<p
+												className="text-xs"
+												style={{ color: "var(--text-muted)" }}
+											>
 												Code:{" "}
-												<span className="font-mono font-bold" style={{ color: "var(--color-amber)" }}>
+												<span
+													className="font-mono font-bold"
+													style={{ color: "var(--color-amber)" }}
+												>
 													{a.conductorCode}
 												</span>
 											</p>
-											<p className="text-xs" style={{ color: "var(--text-muted)" }}>
+											<p
+												className="text-xs"
+												style={{ color: "var(--text-muted)" }}
+											>
 												{new Date(a.grantedAt).toLocaleDateString("en-IN")}
 											</p>
 										</div>

@@ -164,7 +164,10 @@ export default function ConductorPage() {
 				<div className="text-center space-y-2">
 					<div
 						className="w-10 h-10 border-4 border-t-transparent rounded-full animate-spin mx-auto"
-						style={{ borderColor: "var(--color-amber)", borderTopColor: "transparent" }}
+						style={{
+							borderColor: "var(--color-amber)",
+							borderTopColor: "transparent",
+						}}
 					/>
 					<p
 						className="text-sm font-bold uppercase tracking-widest"
@@ -178,7 +181,11 @@ export default function ConductorPage() {
 	}
 
 	const assignment = data?.assignments?.[0] ?? null;
-	const summary = data?.summary ?? { totalTrips: 0, totalEarnings: "0.00", totalPassengers: 0 };
+	const summary = data?.summary ?? {
+		totalTrips: 0,
+		totalEarnings: "0.00",
+		totalPassengers: 0,
+	};
 	const reports = data?.recentReports ?? [];
 
 	// ── No Assignment State ────────────────────────────────────────────────────
@@ -264,7 +271,10 @@ export default function ConductorPage() {
 						>
 							Bus {bus.number}
 						</h1>
-						<p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
+						<p
+							className="text-sm mt-1"
+							style={{ color: "var(--text-secondary)" }}
+						>
 							{bus.origin} → {bus.destination}
 						</p>
 					</div>
@@ -295,7 +305,10 @@ export default function ConductorPage() {
 								className="border-2 px-3 py-1"
 								style={{ borderColor: "var(--border-default)" }}
 							>
-								<span className="text-xs font-bold uppercase" style={{ color: "var(--text-muted)" }}>
+								<span
+									className="text-xs font-bold uppercase"
+									style={{ color: "var(--text-muted)" }}
+								>
 									Offline
 								</span>
 							</div>
@@ -336,7 +349,10 @@ export default function ConductorPage() {
 							background: "var(--bg-surface)",
 						}}
 					>
-						<p className="text-xs font-bold uppercase" style={{ color: "var(--text-muted)" }}>
+						<p
+							className="text-xs font-bold uppercase"
+							style={{ color: "var(--text-muted)" }}
+						>
 							{stat.label}
 						</p>
 						<p
@@ -399,7 +415,10 @@ export default function ConductorPage() {
 								className="flex items-center justify-between gap-2 text-sm"
 							>
 								<span style={{ color: "var(--text-muted)" }}>{label}</span>
-								<span className="font-bold text-right" style={{ color: "var(--text-primary)" }}>
+								<span
+									className="font-bold text-right"
+									style={{ color: "var(--text-primary)" }}
+								>
 									{val}
 								</span>
 							</div>
@@ -484,7 +503,10 @@ export default function ConductorPage() {
 							>
 								Trip #{activeTrip.id} — {activeTrip.bus.number}
 							</p>
-							<p className="text-xs mt-1" style={{ color: "var(--text-secondary)" }}>
+							<p
+								className="text-xs mt-1"
+								style={{ color: "var(--text-secondary)" }}
+							>
 								{activeTrip.departureDate} at {activeTrip.departureTime24}
 							</p>
 						</div>
@@ -530,7 +552,10 @@ export default function ConductorPage() {
 						background: "var(--bg-surface)",
 					}}
 				>
-					<h2 className="text-sm font-bold uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>
+					<h2
+						className="text-sm font-bold uppercase tracking-wide"
+						style={{ color: "var(--text-muted)" }}
+					>
 						Upcoming Trips for Your Bus
 					</h2>
 					<div className="space-y-2">
@@ -551,8 +576,8 @@ export default function ConductorPage() {
 										Trip #{t.id} — {t.bus.number}
 									</p>
 									<p className="text-xs" style={{ color: "var(--text-muted)" }}>
-										{t.departureDate} at {t.departureTime24} •{" "}
-										{t.bus.origin} → {t.bus.destination}
+										{t.departureDate} at {t.departureTime24} • {t.bus.origin} →{" "}
+										{t.bus.destination}
 									</p>
 								</div>
 								<button
@@ -579,7 +604,10 @@ export default function ConductorPage() {
 					className="border-2 p-6 text-center"
 					style={{ borderStyle: "dashed", borderColor: "var(--border-medium)" }}
 				>
-					<p className="text-sm font-bold uppercase" style={{ color: "var(--text-muted)" }}>
+					<p
+						className="text-sm font-bold uppercase"
+						style={{ color: "var(--text-muted)" }}
+					>
 						No scheduled trips found
 					</p>
 					<p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
@@ -597,7 +625,10 @@ export default function ConductorPage() {
 						background: "var(--bg-surface)",
 					}}
 				>
-					<h2 className="text-sm font-bold uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>
+					<h2
+						className="text-sm font-bold uppercase tracking-wide"
+						style={{ color: "var(--text-muted)" }}
+					>
 						Recent Trip Reports
 					</h2>
 					<div className="overflow-x-auto">
@@ -612,17 +643,23 @@ export default function ConductorPage() {
 										borderBottom: "2px solid var(--text-primary)",
 									}}
 								>
-									{["Trip #", "Bus", "Passengers", "Digital", "Cash", "Revenue", "Date"].map(
-										(h) => (
-											<th
-												key={h}
-												className="text-left px-3 py-2 text-xs font-bold uppercase"
-												style={{ color: "var(--text-muted)" }}
-											>
-												{h}
-											</th>
-										),
-									)}
+									{[
+										"Trip #",
+										"Bus",
+										"Passengers",
+										"Digital",
+										"Cash",
+										"Revenue",
+										"Date",
+									].map((h) => (
+										<th
+											key={h}
+											className="text-left px-3 py-2 text-xs font-bold uppercase"
+											style={{ color: "var(--text-muted)" }}
+										>
+											{h}
+										</th>
+									))}
 								</tr>
 							</thead>
 							<tbody>
@@ -631,19 +668,34 @@ export default function ConductorPage() {
 										key={r.id}
 										style={{ borderBottom: "1px solid var(--border-default)" }}
 									>
-										<td className="px-3 py-2 font-mono font-bold" style={{ color: "var(--text-primary)" }}>
+										<td
+											className="px-3 py-2 font-mono font-bold"
+											style={{ color: "var(--text-primary)" }}
+										>
 											#{r.tripId ?? "—"}
 										</td>
-										<td className="px-3 py-2 text-xs" style={{ color: "var(--text-secondary)" }}>
+										<td
+											className="px-3 py-2 text-xs"
+											style={{ color: "var(--text-secondary)" }}
+										>
 											{r.busId ?? "—"}
 										</td>
-										<td className="px-3 py-2 font-bold" style={{ color: "var(--text-primary)" }}>
+										<td
+											className="px-3 py-2 font-bold"
+											style={{ color: "var(--text-primary)" }}
+										>
 											{r.totalPassengers}
 										</td>
-										<td className="px-3 py-2 text-xs" style={{ color: "var(--color-teal)" }}>
+										<td
+											className="px-3 py-2 text-xs"
+											style={{ color: "var(--color-teal)" }}
+										>
 											{r.digitalTickets}
 										</td>
-										<td className="px-3 py-2 text-xs" style={{ color: "var(--text-secondary)" }}>
+										<td
+											className="px-3 py-2 text-xs"
+											style={{ color: "var(--text-secondary)" }}
+										>
 											{r.cashTickets}
 										</td>
 										<td
@@ -652,7 +704,10 @@ export default function ConductorPage() {
 										>
 											₹{Number(r.totalRevenueInr).toLocaleString("en-IN")}
 										</td>
-										<td className="px-3 py-2 text-xs" style={{ color: "var(--text-muted)" }}>
+										<td
+											className="px-3 py-2 text-xs"
+											style={{ color: "var(--text-muted)" }}
+										>
 											{new Date(r.createdAt).toLocaleDateString("en-IN", {
 												day: "numeric",
 												month: "short",

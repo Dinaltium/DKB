@@ -1,18 +1,18 @@
 "use client";
 
 import { AppShell } from "@/components/layout/AppShell";
+import {
+	AlertTriangle,
+	ArrowRight,
+	Check,
+	Copy,
+	Loader2,
+	MessageSquare,
+	Phone,
+} from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { use, useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
-import {
-	Copy,
-	Check,
-	Phone,
-	MessageSquare,
-	ArrowRight,
-	AlertTriangle,
-	Loader2,
-} from "lucide-react";
 
 export default function TripDetailPage({
 	params,
@@ -42,7 +42,9 @@ export default function TripDetailPage({
 	const [upiApp, setUpiApp] = useState("generic");
 
 	// Offline payment states
-	const [offlineMethod, setOfflineMethod] = useState<"ussd" | "sms" | null>(null);
+	const [offlineMethod, setOfflineMethod] = useState<"ussd" | "sms" | null>(
+		null,
+	);
 	const [copiedUpi, setCopiedUpi] = useState(false);
 	const [copiedAmount, setCopiedAmount] = useState(false);
 	const [copiedSms, setCopiedSms] = useState(false);
@@ -228,21 +230,36 @@ export default function TripDetailPage({
 						<span className="bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 uppercase tracking-wide border">
 							{trip.registration_number || "Active Bus"}
 						</span>
-						<h2 className="text-3xl font-extrabold uppercase mt-2" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+						<h2
+							className="text-3xl font-extrabold uppercase mt-2"
+							style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+						>
 							{trip.bus_name || trip.busId}
 						</h2>
 						<p className="text-sm text-muted-foreground mt-1 flex items-center gap-1">
-							<strong>Route:</strong> {trip.start_city} <ArrowRight className="h-3 w-3" /> {trip.end_city}
+							<strong>Route:</strong> {trip.start_city}{" "}
+							<ArrowRight className="h-3 w-3" /> {trip.end_city}
 						</p>
 
-						<div className="grid grid-cols-2 gap-4 border-t-2 mt-4 pt-4 border-dashed" style={{ borderColor: "var(--border-default)" }}>
+						<div
+							className="grid grid-cols-2 gap-4 border-t-2 mt-4 pt-4 border-dashed"
+							style={{ borderColor: "var(--border-default)" }}
+						>
 							<div>
-								<p className="text-[10px] font-bold uppercase text-muted-foreground">Departure</p>
-								<p className="text-sm font-bold">{trip.departureDate} at {trip.departureTime24}</p>
+								<p className="text-[10px] font-bold uppercase text-muted-foreground">
+									Departure
+								</p>
+								<p className="text-sm font-bold">
+									{trip.departureDate} at {trip.departureTime24}
+								</p>
 							</div>
 							<div>
-								<p className="text-[10px] font-bold uppercase text-muted-foreground">Available Seats</p>
-								<p className="text-sm font-bold text-teal-600">{trip.available_seats} / {trip.total_seats}</p>
+								<p className="text-[10px] font-bold uppercase text-muted-foreground">
+									Available Seats
+								</p>
+								<p className="text-sm font-bold text-teal-600">
+									{trip.available_seats} / {trip.total_seats}
+								</p>
 							</div>
 						</div>
 					</div>
@@ -272,7 +289,10 @@ export default function TripDetailPage({
 										onChange={(e) => setSeatCount(Number(e.target.value))}
 										required
 										className="w-full border-2 p-2 font-mono text-sm"
-										style={{ background: "var(--input-bg)", color: "var(--input-text)" }}
+										style={{
+											background: "var(--input-bg)",
+											color: "var(--input-text)",
+										}}
 									/>
 								</div>
 
@@ -287,7 +307,10 @@ export default function TripDetailPage({
 											value={guestName}
 											onChange={(e) => setGuestName(e.target.value)}
 											className="w-full border-2 p-2 font-mono text-sm"
-											style={{ background: "var(--input-bg)", color: "var(--input-text)" }}
+											style={{
+												background: "var(--input-bg)",
+												color: "var(--input-text)",
+											}}
 										/>
 										<input
 											type="text"
@@ -295,7 +318,10 @@ export default function TripDetailPage({
 											value={guestPhone}
 											onChange={(e) => setGuestPhone(e.target.value)}
 											className="w-full border-2 p-2 font-mono text-sm"
-											style={{ background: "var(--input-bg)", color: "var(--input-text)" }}
+											style={{
+												background: "var(--input-bg)",
+												color: "var(--input-text)",
+											}}
 										/>
 									</div>
 								</div>
@@ -308,7 +334,10 @@ export default function TripDetailPage({
 										onChange={(e) => setUseDiscount(e.target.checked)}
 										className="h-4 w-4"
 									/>
-									<label htmlFor="useDiscount" className="text-xs font-bold uppercase cursor-pointer">
+									<label
+										htmlFor="useDiscount"
+										className="text-xs font-bold uppercase cursor-pointer"
+									>
 										Apply Bus Pass / Student discount
 									</label>
 								</div>
@@ -339,10 +368,15 @@ export default function TripDetailPage({
 							</h3>
 
 							{/* Fare breakdown details */}
-							<div className="p-4 border-2 bg-yellow-50/50" style={{ borderColor: "var(--border-default)" }}>
+							<div
+								className="p-4 border-2 bg-yellow-50/50"
+								style={{ borderColor: "var(--border-default)" }}
+							>
 								<div className="flex justify-between items-center text-sm font-semibold">
 									<span>Ticket UID:</span>
-									<span className="font-mono">{ticketResult.ticket.ticketUid}</span>
+									<span className="font-mono">
+										{ticketResult.ticket.ticketUid}
+									</span>
 								</div>
 								<div className="flex justify-between items-center text-xs mt-2">
 									<span className="text-muted-foreground">Original Price:</span>
@@ -350,18 +384,25 @@ export default function TripDetailPage({
 								</div>
 								{ticketResult.fare_breakdown.discount_type && (
 									<div className="flex justify-between items-center text-xs text-teal-600 font-semibold mt-1">
-										<span>Discount ({ticketResult.fare_breakdown.discount_type}):</span>
+										<span>
+											Discount ({ticketResult.fare_breakdown.discount_type}):
+										</span>
 										<span>-₹{ticketResult.fare_breakdown.discount_inr}</span>
 									</div>
 								)}
 								<div className="flex justify-between items-center text-lg font-extrabold mt-3 border-t pt-2 border-dashed">
 									<span>You Pay:</span>
-									<span className="theme-text-teal">₹{ticketResult.fare_breakdown.you_pay_inr}</span>
+									<span className="theme-text-teal">
+										₹{ticketResult.fare_breakdown.you_pay_inr}
+									</span>
 								</div>
 							</div>
 
 							{/* Payment Method Switcher */}
-							<div className="flex gap-2 border-b pb-3" style={{ borderColor: "var(--border-default)" }}>
+							<div
+								className="flex gap-2 border-b pb-3"
+								style={{ borderColor: "var(--border-default)" }}
+							>
 								<button
 									onClick={() => setOfflineMethod(null)}
 									className={`px-3 py-1.5 border-2 text-xs font-bold uppercase tracking-wide brutal-transition brutal-hover cursor-pointer ${!offlineMethod ? "bg-black text-white" : "bg-white"}`}
@@ -394,21 +435,27 @@ export default function TripDetailPage({
 											className="border-2 p-3 text-center text-xs font-bold uppercase bg-blue-50 hover:bg-blue-100 flex flex-col items-center justify-center gap-1.5 brutal-transition brutal-hover neo-shadow"
 											onClick={() => setUpiApp("gpay")}
 										>
-											<span className="text-lg font-extrabold text-blue-600">GPay</span>
+											<span className="text-lg font-extrabold text-blue-600">
+												GPay
+											</span>
 										</a>
 										<a
 											href={ticketResult.upi_links.phonepe}
 											className="border-2 p-3 text-center text-xs font-bold uppercase bg-purple-50 hover:bg-purple-100 flex flex-col items-center justify-center gap-1.5 brutal-transition brutal-hover neo-shadow"
 											onClick={() => setUpiApp("phonepe")}
 										>
-											<span className="text-lg font-extrabold text-purple-600">PhonePe</span>
+											<span className="text-lg font-extrabold text-purple-600">
+												PhonePe
+											</span>
 										</a>
 										<a
 											href={ticketResult.upi_links.paytm}
 											className="border-2 p-3 text-center text-xs font-bold uppercase bg-cyan-50 hover:bg-cyan-100 flex flex-col items-center justify-center gap-1.5 brutal-transition brutal-hover neo-shadow"
 											onClick={() => setUpiApp("paytm")}
 										>
-											<span className="text-lg font-extrabold text-cyan-600">Paytm</span>
+											<span className="text-lg font-extrabold text-cyan-600">
+												Paytm
+											</span>
 										</a>
 									</div>
 								</div>
@@ -420,14 +467,33 @@ export default function TripDetailPage({
 									<div className="p-4 border bg-gray-50 flex items-start gap-2.5">
 										<Phone className="h-5 w-5 text-gray-700 shrink-0 mt-0.5" />
 										<div className="text-xs space-y-1">
-											<p className="font-bold">Offline USSD Payment Steps (*99#):</p>
+											<p className="font-bold">
+												Offline USSD Payment Steps (*99#):
+											</p>
 											<ol className="list-decimal list-inside space-y-1 mt-1.5">
-												<li>Dial <span className="font-mono font-bold bg-gray-200 px-1 py-0.5">*99#</span> from registered SIM</li>
-												<li>Select <span className="font-bold">1 (Send Money)</span></li>
-												<li>Select <span className="font-bold">3 (UPI ID / VPA)</span></li>
+												<li>
+													Dial{" "}
+													<span className="font-mono font-bold bg-gray-200 px-1 py-0.5">
+														*99#
+													</span>{" "}
+													from registered SIM
+												</li>
+												<li>
+													Select{" "}
+													<span className="font-bold">1 (Send Money)</span>
+												</li>
+												<li>
+													Select{" "}
+													<span className="font-bold">3 (UPI ID / VPA)</span>
+												</li>
 												<li>Enter operator UPI VPA below</li>
 												<li>Enter Amount below</li>
-												<li>Enter remarks: <span className="font-mono font-bold bg-gray-200 px-1 py-0.5">BusLink</span></li>
+												<li>
+													Enter remarks:{" "}
+													<span className="font-mono font-bold bg-gray-200 px-1 py-0.5">
+														BusLink
+													</span>
+												</li>
 											</ol>
 										</div>
 									</div>
@@ -435,7 +501,9 @@ export default function TripDetailPage({
 									{/* VPA Copy field */}
 									<div className="space-y-3.5">
 										<div>
-											<p className="text-[10px] font-bold uppercase text-muted-foreground mb-1">Operator VPA / UPI ID</p>
+											<p className="text-[10px] font-bold uppercase text-muted-foreground mb-1">
+												Operator VPA / UPI ID
+											</p>
 											<div className="flex border-2 bg-white">
 												<input
 													type="text"
@@ -448,13 +516,19 @@ export default function TripDetailPage({
 													onClick={() => handleCopyText(ownerUpiAddress, "upi")}
 													className="px-3 border-l-2 bg-gray-100 hover:bg-gray-200 brutal-transition flex items-center justify-center cursor-pointer"
 												>
-													{copiedUpi ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
+													{copiedUpi ? (
+														<Check className="h-4 w-4 text-green-600" />
+													) : (
+														<Copy className="h-4 w-4" />
+													)}
 												</button>
 											</div>
 										</div>
 
 										<div>
-											<p className="text-[10px] font-bold uppercase text-muted-foreground mb-1">Exact Amount</p>
+											<p className="text-[10px] font-bold uppercase text-muted-foreground mb-1">
+												Exact Amount
+											</p>
 											<div className="flex border-2 bg-white">
 												<input
 													type="text"
@@ -464,10 +538,16 @@ export default function TripDetailPage({
 												/>
 												<button
 													type="button"
-													onClick={() => handleCopyText(String(youPayAmount), "amount")}
+													onClick={() =>
+														handleCopyText(String(youPayAmount), "amount")
+													}
 													className="px-3 border-l-2 bg-gray-100 hover:bg-gray-200 brutal-transition flex items-center justify-center cursor-pointer"
 												>
-													{copiedAmount ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
+													{copiedAmount ? (
+														<Check className="h-4 w-4 text-green-600" />
+													) : (
+														<Copy className="h-4 w-4" />
+													)}
 												</button>
 											</div>
 										</div>
@@ -483,14 +563,18 @@ export default function TripDetailPage({
 										<div className="text-xs space-y-1">
 											<p className="font-bold">Offline SMS Banking Payment:</p>
 											<p className="mt-1">
-												You can send the payment payload message below to your bank's SMS banking gateway or open your SMS app directly.
+												You can send the payment payload message below to your
+												bank's SMS banking gateway or open your SMS app
+												directly.
 											</p>
 										</div>
 									</div>
 
 									{/* SMS payload */}
 									<div>
-										<p className="text-[10px] font-bold uppercase text-muted-foreground mb-1">Pre-filled SMS Body</p>
+										<p className="text-[10px] font-bold uppercase text-muted-foreground mb-1">
+											Pre-filled SMS Body
+										</p>
 										<div className="flex border-2 bg-white">
 											<textarea
 												readOnly
@@ -503,7 +587,11 @@ export default function TripDetailPage({
 												onClick={() => handleCopyText(smsPayBody, "sms")}
 												className="px-3 border-l-2 bg-gray-100 hover:bg-gray-200 brutal-transition flex items-center justify-center cursor-pointer"
 											>
-												{copiedSms ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
+												{copiedSms ? (
+													<Check className="h-4 w-4 text-green-600" />
+												) : (
+													<Copy className="h-4 w-4" />
+												)}
 											</button>
 										</div>
 									</div>
@@ -521,7 +609,11 @@ export default function TripDetailPage({
 							)}
 
 							{/* Confirm payment step */}
-							<form onSubmit={handleConfirmPayment} className="space-y-3.5 border-t pt-4" style={{ borderColor: "var(--border-default)" }}>
+							<form
+								onSubmit={handleConfirmPayment}
+								className="space-y-3.5 border-t pt-4"
+								style={{ borderColor: "var(--border-default)" }}
+							>
 								<div>
 									<label className="block text-xs font-bold uppercase mb-1">
 										Enter UPI Transaction Reference ID (from app / SMS / USSD)
@@ -533,7 +625,10 @@ export default function TripDetailPage({
 										placeholder="e.g. 123456789012"
 										required
 										className="w-full border-2 p-2 font-mono text-sm"
-										style={{ background: "var(--input-bg)", color: "var(--input-text)" }}
+										style={{
+											background: "var(--input-bg)",
+											color: "var(--input-text)",
+										}}
 									/>
 								</div>
 
@@ -547,7 +642,10 @@ export default function TripDetailPage({
 											value={upiApp}
 											onChange={(e) => setUpiApp(e.target.value)}
 											className="w-full border-2 p-2 font-mono text-sm"
-											style={{ background: "var(--input-bg)", color: "var(--input-text)" }}
+											style={{
+												background: "var(--input-bg)",
+												color: "var(--input-text)",
+											}}
 										>
 											<option value="generic">Default UPI App</option>
 											<option value="gpay">Google Pay</option>
@@ -592,11 +690,20 @@ export default function TripDetailPage({
 						<h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
 							🛡️ Security Note
 						</h3>
-						<p className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-							Keep your transaction IDs safe. Do not share confirmation screenshots with anyone except the conductor upon boarding. 
+						<p
+							className="text-xs leading-relaxed"
+							style={{ color: "var(--text-secondary)" }}
+						>
+							Keep your transaction IDs safe. Do not share confirmation
+							screenshots with anyone except the conductor upon boarding.
 						</p>
-						<p className="text-xs leading-relaxed mt-2" style={{ color: "var(--text-secondary)" }}>
-							If you are using USSD or SMS banking, please make sure you dial or send the message from the SIM card registered with your bank account.
+						<p
+							className="text-xs leading-relaxed mt-2"
+							style={{ color: "var(--text-secondary)" }}
+						>
+							If you are using USSD or SMS banking, please make sure you dial or
+							send the message from the SIM card registered with your bank
+							account.
 						</p>
 					</div>
 
@@ -610,11 +717,20 @@ export default function TripDetailPage({
 						<h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
 							💡 Offline Help
 						</h3>
-						<p className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-							No mobile internet? No problem! Toggle to the **USSD** or **SMS** tab. 
+						<p
+							className="text-xs leading-relaxed"
+							style={{ color: "var(--text-secondary)" }}
+						>
+							No mobile internet? No problem! Toggle to the **USSD** or **SMS**
+							tab.
 						</p>
-						<p className="text-xs leading-relaxed mt-2" style={{ color: "var(--text-secondary)" }}>
-							These modes let you query your bank account directly over cellular network channels. Copy the VPA or text payload and dial *99# to finalize payment offline!
+						<p
+							className="text-xs leading-relaxed mt-2"
+							style={{ color: "var(--text-secondary)" }}
+						>
+							These modes let you query your bank account directly over cellular
+							network channels. Copy the VPA or text payload and dial *99# to
+							finalize payment offline!
 						</p>
 					</div>
 				</div>

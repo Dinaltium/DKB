@@ -547,27 +547,9 @@
 	position: relative;
 	background: var(--bg-surface);
 }
-
-.ticket-stub::before,
-.ticket-stub::after {
-	content: "";
-	position: absolute;
-	top: 50%;
-	width: 1rem;
-	height: 1rem;
-	border: 2px solid hsl(var(--foreground));
-	border-radius: 9999px;
-	background: var(--ticket-hole-bg);
-	transform: translateY(-50%);
-}
-
-.ticket-stub::before {
-	left: -0.625rem;
-}
-
-.ticket-stub::after {
-	right: -0.625rem;
-}
+/* Hole-punch pseudo-elements removed per design call. Keeping the class so
+   existing callsites (PassengerDashboard, PaymentDrawer, BusMap, etc.)
+   continue to inherit the ticket-style background without a rename. */
 
 /* Full-height page wrapper */
 .buslink-page {

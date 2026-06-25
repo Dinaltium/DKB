@@ -1,6 +1,7 @@
 // app/components/RouteTracer.tsx
 "use client";
 
+import { watchPosition } from "@/lib/native";
 import { useEffect, useRef, useState } from "react";
 
 interface TracePoint {
@@ -18,43 +19,54 @@ export function RouteTracer({ busId, onSave }: RouteTracerProps) {
 	const [tracing, setTracing] = useState(false);
 	const [points, setPoints] = useState<TracePoint[]>([]);
 	const [error, setError] = useState<string>("");
-	const watchIdRef = useRef<number | null>(null);
+	// Holds the watcher cleanup fn returned by the native helper. null when
+	// not tracing. A ref because the unmount effect must reach the latest one.
+	const stopWatchRef = useRef<(() => void) | null>(null);
+	// Synchronous mirror of `tracing` so the async watch callback can detect a
+	// stop that happened before the watchPosition promise resolved.
+	const tracingRef = useRef(false);
 
-	function startTrace() {
-		if (!navigator.geolocation) {
-			setError("Geolocation not supported on this device");
-			return;
-		}
+	async function startTrace() {
 		setPoints([]);
 		setTracing(true);
+		tracingRef.current = true;
 		setError("");
 
-		// Record GPS position every 5 seconds while driving
-		watchIdRef.current = navigator.geolocation.watchPosition(
-			(pos) => {
+		// watchPosition resolves to a cleanup fn. On native it routes through
+		// the Capacitor Geolocation plugin (with permission prompt); on web it
+		// falls back to navigator.geolocation. Both feed the same callback.
+		try {
+			const stop = await watchPosition((pos) => {
 				setPoints((prev) => [
 					...prev,
 					{
-						lat: pos.coords.latitude,
-						lng: pos.coords.longitude,
-						timestamp: Date.now(),
+						lat: pos.lat,
+						lng: pos.lng,
+						timestamp: pos.timestamp,
 					},
 				]);
-			},
-			(err) => setError(`GPS error: ${err.message}`),
-			{
-				enableHighAccuracy: true,
-				maximumAge: 0,
-				timeout: 10000,
-			},
-		);
+			});
+			// Tracing may have been stopped before the promise resolved.
+			if (!tracingRef.current) {
+				stop();
+				return;
+			}
+			stopWatchRef.current = stop;
+		} catch (err) {
+			setError(
+				`GPS error: ${err instanceof Error ? err.message : String(err)}`,
+			);
+			setTracing(false);
+			tracingRef.current = false;
+		}
 	}
 
 	function stopTrace() {
-		if (watchIdRef.current !== null) {
-			navigator.geolocation.clearWatch(watchIdRef.current);
-			watchIdRef.current = null;
+		if (stopWatchRef.current !== null) {
+			stopWatchRef.current();
+			stopWatchRef.current = null;
 		}
+		tracingRef.current = false;
 		setTracing(false);
 
 		// Simplify points — keep every 5th point to reduce noise
@@ -74,8 +86,9 @@ export function RouteTracer({ busId, onSave }: RouteTracerProps) {
 
 	useEffect(() => {
 		return () => {
-			if (watchIdRef.current !== null) {
-				navigator.geolocation.clearWatch(watchIdRef.current);
+			if (stopWatchRef.current !== null) {
+				stopWatchRef.current();
+				stopWatchRef.current = null;
 			}
 		};
 	}, []);

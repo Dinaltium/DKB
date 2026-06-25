@@ -318,4 +318,3 @@ export async function linkTicketToAccountAction(guestPhone: string) {
 		data: updated.map((r) => r.ticketUid),
 	};
 }
-

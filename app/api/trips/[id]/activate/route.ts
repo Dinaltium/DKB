@@ -1,6 +1,6 @@
+import { createHmac } from "node:crypto";
 import { auth } from "@/auth";
 import { activateTripAction } from "@/lib/actions/trips";
-import { createHmac } from "node:crypto";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(

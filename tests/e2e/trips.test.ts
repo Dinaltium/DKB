@@ -6,10 +6,10 @@ test.describe("Trip Search & Listings E2E", () => {
 	}) => {
 		await page.goto("/trips");
 
-		// Verify title
-		await expect(page.locator("h1")).toContainText(/BUS TRIP SEARCH/i);
+		// AppShell renders the page title as the <h1>.
+		await expect(page.locator("h1")).toContainText(/Find a Trip/i);
 
-		// Fill search queries
+		// Fill search queries (placeholders are "e.g. Mangalore" / "e.g. Udupi").
 		const fromInput = page.locator('input[placeholder*="Mangalore"]');
 		const toInput = page.locator('input[placeholder*="Udupi"]');
 

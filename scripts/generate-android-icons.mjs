@@ -84,4 +84,6 @@ await sharp({
 	.toFile(path.join(splashDir, "splash.png"));
 console.log("✓ drawable/splash.png (1080×1920)");
 
-console.log("\nDone. Run `pnpm cap:sync` to push these into the Android build.");
+console.log(
+	"\nDone. Run `pnpm cap:sync` to push these into the Android build.",
+);

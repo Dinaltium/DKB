@@ -111,10 +111,7 @@ export function OnboardingForm({ initialName, initialEmail }: Props) {
 					className="theme-input brutal-transition brutal-focus h-12 w-full rounded-none border-2 border-foreground px-3 text-base outline-none neo-shadow"
 					style={inputStyle}
 				/>
-				<p
-					className="mt-1 text-[11px]"
-					style={{ color: "var(--text-muted)" }}
-				>
+				<p className="mt-1 text-[11px]" style={{ color: "var(--text-muted)" }}>
 					We send ticket QR + trip alerts here. Never shared.
 				</p>
 			</div>

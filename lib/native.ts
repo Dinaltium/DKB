@@ -68,9 +68,7 @@ export interface PushRegistration {
  */
 export async function registerPush(): Promise<PushRegistration | null> {
 	if (!isNative()) return null;
-	const { PushNotifications } = await import(
-		"@capacitor/push-notifications"
-	);
+	const { PushNotifications } = await import("@capacitor/push-notifications");
 
 	const perm = await PushNotifications.requestPermissions();
 	if (perm.receive !== "granted") return null;

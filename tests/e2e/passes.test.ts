@@ -7,44 +7,56 @@ test.describe("Passes E2E Flow", () => {
 		// Go to registration page
 		await page.goto("/auth?callbackUrl=/dashboard");
 
-		// Click on Register tab
+		// Switch to the Register tab
 		await page.locator("button:has-text('Register')").click();
 
 		// Fill in details for a new random user
 		const randomEmail = `testpassuser_${Date.now()}@example.com`;
+		await page.getByPlaceholder("Full name").fill("Pass Tester User");
+		await page.getByPlaceholder("Email address").fill(randomEmail);
 		await page
-			.locator('input[placeholder="Full name"]')
-			.fill("Pass Tester User");
-		await page.locator('input[placeholder="Email address"]').fill(randomEmail);
-		await page.locator('input[placeholder="Password"]').fill("SuperSecure123!");
-		await page
-			.locator('input[placeholder="Confirm password"]')
+			.getByPlaceholder("Password", { exact: true })
 			.fill("SuperSecure123!");
+		await page.getByPlaceholder("Confirm password").fill("SuperSecure123!");
 
 		// Submit registration
 		await page.locator("button:has-text('Create Account')").click();
 
-		// Wait for redirection to dashboard
-		await expect(page).toHaveURL(/.*dashboard/);
+		// Newly-registered passengers are routed through a one-step onboarding
+		// (name + phone) before they can reach the dashboard.
+		await expect(
+			page.getByRole("heading", { name: /Welcome aboard/i }),
+		).toBeVisible({ timeout: 15000 });
+		await page.getByPlaceholder("+91 98765 43210").fill("9876543210");
+		await page.locator("button:has-text('Continue')").click();
+
+		// Onboarding redirects to "/"; go to the passenger dashboard and confirm
+		// we land on it (AppShell title "My Dashboard") rather than relying on a
+		// loose URL match.
+		await page.waitForURL((url) => !url.pathname.startsWith("/onboarding"), {
+			timeout: 15000,
+		});
+		await page.goto("/dashboard");
+		await expect(
+			page.getByRole("heading", { name: /My Dashboard/i }),
+		).toBeVisible({ timeout: 15000 });
 
 		// Select "Bus Passes" sub-tab
 		await page.locator("button:has-text('Bus Passes')").click();
 
 		// Verify applying for bus pass is visible
 		await expect(
-			page.locator("h3:has-text('Apply for Bus Pass')"),
+			page.getByRole("heading", { name: /Apply for Bus Pass/i }),
 		).toBeVisible();
 
 		// Fill student pass details
+		await page.getByPlaceholder("Enter your name").fill("Pass Tester User");
 		await page
-			.locator('input[placeholder="Enter your name"]')
-			.fill("Pass Tester User");
-		await page
-			.locator('input[placeholder="College Name"]')
+			.getByPlaceholder("College Name")
 			.fill("Mangalore Institute of Tech");
-		await page.locator('input[placeholder="ID Number"]').fill("MIT12345");
-		await page.locator('input[placeholder="YYYY"]').fill("2028");
-		await page.locator('input[placeholder*="Txn Ref"]').fill("TXN-PASS-50R");
+		await page.getByPlaceholder("ID Number").fill("MIT12345");
+		await page.getByPlaceholder("YYYY").fill("2028");
+		await page.getByPlaceholder(/Txn Ref/i).fill("TXN-PASS-50R");
 
 		// Submit application
 		await page.locator("button:has-text('SUBMIT APPLICATION')").click();

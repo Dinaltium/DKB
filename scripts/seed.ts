@@ -141,6 +141,11 @@ async function seedOperators() {
 
 	const hashed = await hashPassword(password);
 
+	// Test VPA for the seeded operator. Real operators will edit theirs in
+	// settings. Mock mode never sends to a real bank, so any string is fine;
+	// real mode will fail at the UPI app if this isn't a valid live VPA.
+	const seedUpiId = process.env.SEED_OPERATOR_UPI_ID?.trim() || "dkbus@upi";
+
 	await db
 		.insert(schema.users)
 		.values({
@@ -149,6 +154,7 @@ async function seedOperators() {
 			email,
 			password: hashed,
 			role: "operator",
+			upiId: seedUpiId,
 		})
 		.onConflictDoUpdate({
 			target: schema.users.email,
@@ -156,6 +162,7 @@ async function seedOperators() {
 				name: companyName,
 				password: hashed,
 				role: "operator",
+				upiId: seedUpiId,
 				updatedAt: new Date(),
 			},
 		});

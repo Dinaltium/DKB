@@ -90,10 +90,7 @@ export function BottomNav({ pendingCount = 0 }: BottomNavProps) {
 	);
 }
 
-function buildItems(
-	role: string | undefined,
-	pendingCount: number,
-): NavItem[] {
+function buildItems(role: string | undefined, pendingCount: number): NavItem[] {
 	if (!role) {
 		// Unauthenticated
 		return [

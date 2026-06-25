@@ -1,7 +1,7 @@
 "use client";
 
-import { applyPassAction, getMyPassesAction } from "@/lib/actions/passes";
 import { DocUploadField } from "@/components/shared/DocUploadField";
+import { applyPassAction, getMyPassesAction } from "@/lib/actions/passes";
 import { saveTravelHistoryAction } from "@/lib/actions/travelHistory";
 import type { Payment, TravelHistory } from "@/lib/db/schema";
 import { Clock, MapPin, Receipt } from "lucide-react";
@@ -20,11 +20,7 @@ interface Props {
 	};
 }
 
-export function PassengerDashboard({
-	travelHistory,
-	payments,
-	user,
-}: Props) {
+export function PassengerDashboard({ travelHistory, payments, user }: Props) {
 	const [activeSubTab, setActiveSubTab] = useState<
 		"history" | "passes" | "payments"
 	>("history");
@@ -50,7 +46,13 @@ export function PassengerDashboard({
 
 	const handleSaveScannedTicket = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if (!ocrBusNumber || !ocrFromStop || !ocrToStop || !ocrFare || !ocrTravelDate) {
+		if (
+			!ocrBusNumber ||
+			!ocrFromStop ||
+			!ocrToStop ||
+			!ocrFare ||
+			!ocrTravelDate
+		) {
 			toast.error("Please fill in all scanned ticket fields");
 			return;
 		}
@@ -97,8 +99,6 @@ export function PassengerDashboard({
 			toast.error(`Failed to load passes: ${(err as Error).message}`);
 		}
 	};
-
-
 
 	const handleApplyPass = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -205,21 +205,30 @@ export function PassengerDashboard({
 									Log Physical Bus Ticket
 								</h3>
 								<p className="text-[10px] text-muted-foreground mt-0.5">
-									Upload a photo of your ticket. Our OCR will scan and calculate if you were overcharged!
+									Upload a photo of your ticket. Our OCR will scan and calculate
+									if you were overcharged!
 								</p>
 							</div>
 							<button
 								type="button"
 								onClick={() => setShowScanner(!showScanner)}
 								className="theme-btn-secondary brutal-transition brutal-hover px-3 py-1.5 border-2 text-xs font-bold uppercase tracking-wide neo-shadow cursor-pointer"
-								style={{ background: showScanner ? "var(--status-stopped-bg)" : "var(--cta-bg)", color: "var(--text-primary)" }}
+								style={{
+									background: showScanner
+										? "var(--status-stopped-bg)"
+										: "var(--cta-bg)",
+									color: "var(--text-primary)",
+								}}
 							>
 								{showScanner ? "Close Scanner" : "📷 Scan Ticket"}
 							</button>
 						</div>
 
 						{showScanner && (
-							<div className="mt-4 space-y-4 border-t pt-4" style={{ borderColor: "var(--border-default)" }}>
+							<div
+								className="mt-4 space-y-4 border-t pt-4"
+								style={{ borderColor: "var(--border-default)" }}
+							>
 								<DocUploadField
 									label="Upload Bus Ticket Image"
 									placeholder="Scanning image..."
@@ -232,7 +241,8 @@ export function PassengerDashboard({
 										if (fields.from_stop) setOcrFromStop(fields.from_stop);
 										if (fields.to_stop) setOcrToStop(fields.to_stop);
 										if (fields.fare) setOcrFare(fields.fare);
-										if (fields.ticket_date) setOcrTravelDate(fields.ticket_date);
+										if (fields.ticket_date)
+											setOcrTravelDate(fields.ticket_date);
 										if (fields.rawOcrText) setRawOcrText(fields.rawOcrText);
 									}}
 								/>
@@ -318,7 +328,9 @@ export function PassengerDashboard({
 											color: "var(--text-primary)",
 										}}
 									>
-										{isPending ? "Logging Ticket..." : "Log Ticket to Travel History"}
+										{isPending
+											? "Logging Ticket..."
+											: "Log Ticket to Travel History"}
 									</button>
 								</form>
 							</div>
