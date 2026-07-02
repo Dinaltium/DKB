@@ -17,6 +17,11 @@ export default auth(async (req) => {
 	const mustChangePwd = session?.user?.mustChangePassword;
 	const onboarded = session?.user?.onboarded;
 
+	// Public legal pages must always resolve, regardless of auth/onboarding state.
+	if (pathname.startsWith("/privacy") || pathname.startsWith("/terms")) {
+		return NextResponse.next();
+	}
+
 	// ── Redirect old standalone routes to unified dashboard ───────────────────
 	if (pathname.startsWith("/operator") || pathname.startsWith("/admin")) {
 		return NextResponse.redirect(new URL("/dashboard", req.url));

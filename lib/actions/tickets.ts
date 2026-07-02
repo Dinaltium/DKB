@@ -10,6 +10,7 @@ import {
 	tickets,
 	transactions,
 	trips,
+	users,
 } from "@/lib/db/schema";
 import { distanceBetween } from "@/lib/services/location";
 import { generateTicketHash, generateTicketUID } from "@/lib/services/qr";
@@ -220,6 +221,26 @@ export async function confirmPaymentAction(data: {
 		return { success: false, error: "Payment already confirmed" };
 	}
 
+	// Reject a UPI reference that has already been used to confirm a payment —
+	// stops one UTR being replayed across many tickets to fake payments.
+	if (data.upiTxnId) {
+		const [dup] = await db
+			.select({ id: transactions.id })
+			.from(transactions)
+			.where(
+				and(
+					eq(transactions.upiTxnId, data.upiTxnId),
+					eq(transactions.status, "confirmed"),
+				),
+			);
+		if (dup) {
+			return {
+				success: false,
+				error: "This UPI reference has already been used.",
+			};
+		}
+	}
+
 	const role = session.user.role;
 	const isStaff = role === "conductor" || role === "admin";
 	const isTicketOwner = ticket.userId && ticket.userId === session.user.id;
@@ -241,12 +262,17 @@ export async function confirmPaymentAction(data: {
 
 	const status = data.paymentMethod === "cash" ? "cash" : "paid";
 	const paymentStatus = data.paymentMethod === "cash" ? "cash" : "confirmed";
+	// Trusted only when a conductor/admin confirms cash in hand. A self-reported
+	// UPI reference is NOT proof of payment, so it stays unverified until a PSP
+	// or SMS reconciliation confirms it.
+	const paymentVerified = data.paymentMethod === "cash" && isStaff;
 
 	await db
 		.update(tickets)
 		.set({
 			status,
 			paymentStatus,
+			paymentVerified,
 			paymentRef: data.upiTxnId ?? null,
 			paymentMethod: data.paymentMethod,
 			upiApp: data.upiApp ?? null,
@@ -303,6 +329,28 @@ export async function getMyTicketsAction() {
 export async function linkTicketToAccountAction(guestPhone: string) {
 	const session = await auth();
 	if (!session) return { success: false, error: "Not authenticated" };
+
+	// Ownership check: only allow linking guest tickets whose phone matches the
+	// phone on the caller's own account. Without this, anyone could claim another
+	// person's guest tickets (and their PII) just by entering their number.
+	const normalize = (p?: string | null) =>
+		(p ?? "").replace(/\D/g, "").slice(-10);
+	const target = normalize(guestPhone);
+	if (target.length < 10) {
+		return { success: false, error: "Enter a valid 10-digit phone number" };
+	}
+
+	const [me] = await db
+		.select({ phone: users.phone })
+		.from(users)
+		.where(eq(users.id, session.user.id));
+	if (normalize(me?.phone) !== target) {
+		return {
+			success: false,
+			error:
+				"Add this phone number to your account before linking its tickets.",
+		};
+	}
 
 	const updated = await db
 		.update(tickets)

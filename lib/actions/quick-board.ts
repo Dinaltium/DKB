@@ -378,11 +378,27 @@ export async function quickBoardCaptureUtrAction(input: {
 		return { success: false as const, error: "UTR doesn't look right" };
 	}
 
+	const session = await auth();
+	if (!session?.user?.id) {
+		return { success: false as const, error: "Auth required" };
+	}
+
 	const [ticket] = await db
 		.select()
 		.from(tickets)
 		.where(eq(tickets.ticketUid, input.ticketUid));
 	if (!ticket) return { success: false as const, error: "Ticket not found" };
+
+	const role = session.user.role;
+	const isStaff = role === "conductor" || role === "admin";
+	const isOwner = ticket.userId === session.user.id;
+	if (!isStaff && !isOwner) {
+		return {
+			success: false as const,
+			error: "Not authorised to confirm this ticket",
+		};
+	}
+
 	if (ticket.paymentMethod !== "quick_board") {
 		return { success: false as const, error: "Not a Quick Board ticket" };
 	}
@@ -393,6 +409,23 @@ export async function quickBoardCaptureUtrAction(input: {
 		return {
 			success: false as const,
 			error: "Set destination before paying",
+		};
+	}
+
+	// Reject a UTR already used to confirm another payment (replay/fraud guard).
+	const [dupUtr] = await db
+		.select({ id: transactions.id })
+		.from(transactions)
+		.where(
+			and(
+				eq(transactions.upiTxnId, input.utr.trim()),
+				eq(transactions.status, "confirmed"),
+			),
+		);
+	if (dupUtr) {
+		return {
+			success: false as const,
+			error: "This UPI reference has already been used.",
 		};
 	}
 

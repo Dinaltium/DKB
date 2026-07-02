@@ -21,7 +21,7 @@ const en = {
 	feat1: "Route search with fare and seat visibility",
 	feat2: "UPI-ready mock payment journey in 2 taps",
 	feat3: "Complaint logging linked to bus number",
-	liveNow: "Buses Running Now",
+	liveNow: "Routes",
 	track: "Track",
 	login: "Login",
 	register: "Register",

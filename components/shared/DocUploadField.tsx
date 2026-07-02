@@ -1,6 +1,6 @@
 "use client";
 
-// src/components/shared/DocUploadField.tsx
+// components/shared/DocUploadField.tsx
 // All document detection logic is INLINED here — no @/lib/ocr import needed.
 
 import { Input } from "@/components/ui/input";

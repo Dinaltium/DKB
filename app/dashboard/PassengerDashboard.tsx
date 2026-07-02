@@ -2,7 +2,7 @@
 
 import { DocUploadField } from "@/components/shared/DocUploadField";
 import { applyPassAction, getMyPassesAction } from "@/lib/actions/passes";
-import { saveTravelHistoryAction } from "@/lib/actions/travelHistory";
+import { saveTravelHistoryAction } from "@/lib/actions/travel-history";
 import type { Payment, TravelHistory } from "@/lib/db/schema";
 import { Clock, MapPin, Receipt } from "lucide-react";
 import Link from "next/link";

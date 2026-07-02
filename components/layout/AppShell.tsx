@@ -402,12 +402,26 @@ export function AppShell({ title, subtitle, children }: AppShellProps) {
 			<BottomNav pendingCount={pendingCount} />
 
 			<footer
-				className="bottom-0"
+				className="mt-8 border-t-2 px-4 py-6 md:px-8"
 				style={{
 					background: "var(--header-bg)",
-					borderBottom: "1px solid var(--header-border)",
+					borderColor: "var(--header-border)",
 				}}
-			/>
+			>
+				<div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-2 text-xs sm:flex-row">
+					<span style={{ color: "var(--text-muted)" }}>
+						© {new Date().getFullYear()} BusLink — Mangaluru–Udupi corridor.
+					</span>
+					<nav className="flex gap-4 font-bold uppercase tracking-wide">
+						<Link href="/privacy" style={{ color: "var(--text-secondary)" }}>
+							Privacy
+						</Link>
+						<Link href="/terms" style={{ color: "var(--text-secondary)" }}>
+							Terms
+						</Link>
+					</nav>
+				</div>
+			</footer>
 		</div>
 	);
 }

@@ -1,6 +1,10 @@
 // lib/db/queries.ts
 // Server-only. Never import in client components.
 
+import {
+	decryptBusRequestPII,
+	decryptOperatorPII,
+} from "@/lib/services/crypto";
 import { asc, count, desc, eq, inArray } from "drizzle-orm";
 import { db } from "./index";
 import {
@@ -106,7 +110,7 @@ export async function getOperatorByUserId(userId: string) {
 		.select()
 		.from(operators)
 		.where(eq(operators.userId, userId));
-	return rows[0];
+	return rows[0] ? decryptOperatorPII(rows[0]) : rows[0];
 }
 
 export async function getBusesForOperator(operatorId: string): Promise<Bus[]> {
@@ -118,7 +122,7 @@ export async function getBusesForOperator(operatorId: string): Promise<Bus[]> {
 }
 
 export async function getAllOperators() {
-	return db
+	const rows = await db
 		.select({
 			operator: operators,
 			user: {
@@ -132,6 +136,7 @@ export async function getAllOperators() {
 		.from(operators)
 		.innerJoin(users, eq(operators.userId, users.id))
 		.orderBy(asc(operators.companyName));
+	return rows.map((r) => ({ ...r, operator: decryptOperatorPII(r.operator) }));
 }
 
 // ── Complaints ────────────────────────────────────────────────────────────────
@@ -237,7 +242,7 @@ export async function getTravelHistoryForUser(userId: string) {
 // ── Bus requests ──────────────────────────────────────────────────────────────
 
 export async function getAllBusRequests() {
-	return db
+	const rows = await db
 		.select({
 			request: busRequests,
 			operator: operators,
@@ -247,10 +252,15 @@ export async function getAllBusRequests() {
 		.innerJoin(operators, eq(busRequests.operatorId, operators.id))
 		.innerJoin(users, eq(operators.userId, users.id))
 		.orderBy(desc(busRequests.createdAt));
+	return rows.map((r) => ({
+		...r,
+		request: decryptBusRequestPII(r.request),
+		operator: decryptOperatorPII(r.operator),
+	}));
 }
 
 export async function getPendingBusRequests() {
-	return db
+	const rows = await db
 		.select({
 			request: busRequests,
 			operator: operators,
@@ -261,14 +271,20 @@ export async function getPendingBusRequests() {
 		.innerJoin(users, eq(operators.userId, users.id))
 		.where(eq(busRequests.status, "pending"))
 		.orderBy(desc(busRequests.createdAt));
+	return rows.map((r) => ({
+		...r,
+		request: decryptBusRequestPII(r.request),
+		operator: decryptOperatorPII(r.operator),
+	}));
 }
 
 export async function getBusRequestsByOperator(operatorId: string) {
-	return db
+	const rows = await db
 		.select()
 		.from(busRequests)
 		.where(eq(busRequests.operatorId, operatorId))
 		.orderBy(desc(busRequests.createdAt));
+	return rows.map((r) => decryptBusRequestPII(r));
 }
 
 export async function getPendingCountForAdmin(): Promise<number> {

@@ -21,7 +21,7 @@ const be = {
 	feat1: "Route search with fare and seat info",
 	feat2: "2 taps-la UPI payment",
 	feat3: "Complaint bus number-gu linked",
-	liveNow: "Ippaa odtha iru buses",
+	liveNow: "Routes",
 	track: "Track maadi",
 } as const;
 

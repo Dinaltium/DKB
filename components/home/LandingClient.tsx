@@ -13,7 +13,7 @@ import {
 	Bus,
 	IndianRupee,
 	MapPin,
-	Radio,
+	Route,
 	Ticket,
 	Users,
 } from "lucide-react";
@@ -130,7 +130,7 @@ export function LandingClient({
 	user?: { name?: string | null; role?: string | null } | null;
 }) {
 	const { tr } = useLanguage();
-	const { getPosition, buses } = useLiveBus();
+	const { buses, getRouteStops } = useLiveBus();
 
 	const [stats, setStats] = useState<PlatformStats | null>(null);
 	const [statsLoading, setStatsLoading] = useState(true);
@@ -183,7 +183,7 @@ export function LandingClient({
 						{buses.length > 0 && (
 							<span className="theme-bg-navy inline-flex items-center gap-1.5 rounded-none border-2 border-foreground px-2.5 py-1 text-[11px] font-black uppercase tracking-widest text-white">
 								<span className="theme-text-amber flex items-center">
-									<Radio className="h-3 w-3 animate-pulse" />
+									<Route className="h-3 w-3" />
 								</span>
 								{buses.length} {tr("liveNow")}
 							</span>
@@ -223,7 +223,7 @@ export function LandingClient({
 								icon: <IndianRupee className="h-3.5 w-3.5" />,
 								label: "UPI Ready",
 							},
-							{ icon: <Radio className="h-3.5 w-3.5" />, label: "Live GPS" },
+							{ icon: <Route className="h-3.5 w-3.5" />, label: "Route Maps" },
 							{
 								icon: <Ticket className="h-3.5 w-3.5" />,
 								label: "Digital Tickets",
@@ -377,15 +377,18 @@ export function LandingClient({
 			{/* ── Fleet Map ── */}
 			<section className="mt-12">
 				<SectionHeading
-					title="All Bus Locations"
-					subtitle="Every tracked bus on the corridor, live on the map."
+					title="Bus Routes"
+					subtitle="Every bus's expected route on the corridor, drawn on the map. Tap a line for details."
 				/>
 				<FleetMap />
 			</section>
 
-			{/* ── Live Bus Cards ── */}
+			{/* ── Route Cards ── */}
 			<section className="mt-10">
-				<SectionHeading title={tr("liveNow")} />
+				<SectionHeading
+					title="Browse Routes"
+					subtitle="Pick a bus to see its full stop list and fare."
+				/>
 
 				{/* Loading skeleton */}
 				{buses.length === 0 && statsLoading && (
@@ -416,7 +419,7 @@ export function LandingClient({
 				{buses.length > 0 && (
 					<div className="grid gap-4 md:grid-cols-3">
 						{buses.map((bus) => {
-							const pos = getPosition(bus.id);
+							const routeStops = getRouteStops(bus.id);
 							return (
 								<Link key={bus.id} href={`/bus/${bus.id}`} className="block">
 									<article
@@ -453,66 +456,29 @@ export function LandingClient({
 											{bus.destination}
 										</p>
 
-										{/* Live position */}
-										{pos ? (
-											<>
-												<div
-													className="theme-surface-alt mt-3 rounded-none border-2 px-3 py-2"
-													style={{
-														borderColor: "var(--border-default)",
-													}}
+										{/* Route stop preview */}
+										{routeStops.length > 0 ? (
+											<div
+												className="theme-surface-alt mt-3 rounded-none border-2 px-3 py-2"
+												style={{ borderColor: "var(--border-default)" }}
+											>
+												<p className="theme-text-teal flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest">
+													<MapPin className="h-3 w-3" />
+													{routeStops.length} stops
+												</p>
+												<p
+													className="mt-0.5 line-clamp-2 text-xs font-medium"
+													style={{ color: "var(--text-primary)" }}
 												>
-													<p className="theme-text-teal text-[10px] font-bold uppercase tracking-widest">
-														Now between
-													</p>
-													<p
-														className="mt-0.5 text-xs font-medium"
-														style={{ color: "var(--text-primary)" }}
-													>
-														{pos.fromStop}{" "}
-														<span className="theme-text-teal">&#8594;</span>{" "}
-														{pos.toStop}
-													</p>
-												</div>
-												<div className="mt-3">
-													<div
-														className="relative h-2 w-full rounded-none border-2 border-foreground"
-														style={{ background: "var(--bg-surface-3)" }}
-													>
-														<div
-															className="theme-bg-teal brutal-transition h-full rounded-none"
-															style={{
-																width: `${Math.round(pos.progressPct)}%`,
-															}}
-														/>
-														{/* Animated bus emoji sitting directly on the progress bar track */}
-														<div
-															className="absolute -top-1.5 h-4 w-4 text-xs transition-all duration-300"
-															style={{
-																left: `calc(${Math.round(pos.progressPct)}% - 8px)`,
-															}}
-														>
-															🚌
-														</div>
-													</div>
-													<div
-														className="mt-1.5 flex justify-between text-[10px]"
-														style={{ color: "var(--text-muted)" }}
-													>
-														<span>{bus.origin}</span>
-														<span className="theme-text-teal font-extrabold">
-															{Math.round(pos.progressPct)}%
-														</span>
-														<span>{bus.destination}</span>
-													</div>
-												</div>
-											</>
+													{routeStops.map((s) => s.name).join(" · ")}
+												</p>
+											</div>
 										) : (
 											<p
 												className="mt-3 text-xs"
 												style={{ color: "var(--text-muted)" }}
 											>
-												Locating bus...
+												Route details coming soon
 											</p>
 										)}
 
@@ -520,7 +486,7 @@ export function LandingClient({
 											className="mt-4 text-xs font-bold uppercase tracking-widest"
 											style={{ color: "var(--text-primary)" }}
 										>
-											{tr("track")} &#8594;
+											View Route &#8594;
 										</p>
 									</article>
 								</Link>

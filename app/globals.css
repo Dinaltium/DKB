@@ -1465,3 +1465,17 @@ video {
 	outline: none;
 	box-shadow: none;
 }
+
+/* ── Legal pages (privacy / terms) ─────────────────────────────────────────── */
+.legal-prose ul {
+	list-style: disc;
+	padding-left: 1.25rem;
+}
+.legal-prose li {
+	margin-top: 0.35rem;
+}
+.legal-prose a {
+	color: var(--color-teal);
+	text-decoration: underline;
+	font-weight: 600;
+}

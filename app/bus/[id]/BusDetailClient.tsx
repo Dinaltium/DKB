@@ -1,11 +1,10 @@
 "use client";
 
-import { useLiveBus } from "@/app/context/LiveBusContext";
 import { ComplaintDialog } from "@/components/modals/ComplaintDialog";
 import { PaymentDrawer } from "@/components/modals/PaymentDrawer";
 import { castVoteAction } from "@/lib/actions/bus";
 import type { Bus, Stop } from "@/lib/db/schema";
-import { Clock4, QrCode, Users } from "lucide-react";
+import { Clock4, MapPin, QrCode, Users } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -37,7 +36,6 @@ export function BusDetailClient({
 	currentStopName,
 	session,
 }: Props) {
-	const { getPosition } = useLiveBus();
 	const [votes, setVotes] = useState(bus.votes as Record<VoteKey, number>);
 	const [qrDataUrl, setQrDataUrl] = useState("");
 	const [isPending, startTransition] = useTransition();
@@ -180,8 +178,78 @@ export function BusDetailClient({
 
 			{/* ── Map ── */}
 			<section className="mt-6">
-				<BusMap stops={stops} livePosition={getPosition(bus.id)} />
+				<BusMap stops={stops} />
 			</section>
+
+			{/* ── Route stops (expected order) ── */}
+			{stops.length > 0 && (
+				<section className="mt-6">
+					<div
+						className="rounded-none border-2 p-5 neo-shadow"
+						style={cardStyle}
+					>
+						<p
+							className="text-3xl font-extrabold uppercase"
+							style={{
+								fontFamily: "'Barlow Condensed', sans-serif",
+								color: "var(--text-primary)",
+							}}
+						>
+							Route Stops
+						</p>
+						<p className="mt-1 text-xs" style={{ color: "var(--text-muted)" }}>
+							Expected stops in order. Timings may vary — this is not live
+							tracking.
+						</p>
+						<ol className="mt-4 space-y-0">
+							{stops.map((stop, idx) => {
+								const isTerminus = idx === 0 || idx === stops.length - 1;
+								return (
+									<li key={stop.id} className="flex items-stretch gap-3">
+										{/* Timeline rail */}
+										<div className="flex flex-col items-center">
+											<span
+												className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 text-[10px] font-black"
+												style={{
+													background: isTerminus
+														? "var(--color-navy)"
+														: "var(--bg-surface-2)",
+													color: isTerminus
+														? "var(--text-inverse)"
+														: "var(--text-primary)",
+													borderColor: "var(--border-default)",
+												}}
+											>
+												{idx + 1}
+											</span>
+											{idx < stops.length - 1 && (
+												<span
+													className="w-0.5 flex-1"
+													style={{ background: "var(--border-default)" }}
+												/>
+											)}
+										</div>
+										<div className="pb-4 pt-0.5">
+											<p
+												className="text-sm font-semibold"
+												style={{ color: "var(--text-primary)" }}
+											>
+												{stop.name}
+											</p>
+											{isTerminus && (
+												<span className="theme-text-teal text-[10px] font-bold uppercase tracking-widest">
+													<MapPin className="mr-1 inline h-3 w-3" />
+													{idx === 0 ? "Origin" : "Destination"}
+												</span>
+											)}
+										</div>
+									</li>
+								);
+							})}
+						</ol>
+					</div>
+				</section>
+			)}
 
 			{/* ── Fare + crowd ── */}
 			<section className="mt-6 grid gap-4 md:grid-cols-2">

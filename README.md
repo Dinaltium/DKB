@@ -243,8 +243,9 @@ dkbus/
 
 ## Testing & Deployment
 
-- **[TESTING.md](./TESTING.md)** — how to run unit, component, and Playwright e2e tests; how to add new ones.
-- **[DEPLOYMENT.md](./DEPLOYMENT.md)** — Vercel deployment, environment-variable checklist, database setup, and the production go-live checklist.
+- **[docs/TESTING.md](./docs/TESTING.md)** — how to run unit, component, and Playwright e2e tests; how to add new ones.
+- **[docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)** — Vercel deployment, environment-variable checklist, database setup, and the production go-live checklist.
+- **[docs/MOBILE.md](./docs/MOBILE.md)** — Capacitor Android build and native bridge notes.
 
 ---
 

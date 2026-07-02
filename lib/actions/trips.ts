@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import {
 	buses,
 	conductorAccess,
+	operators,
 	routes,
 	tickets,
 	tripReports,
@@ -58,9 +59,21 @@ export async function createTripAction(data: {
 		return { success: false, error: "Missing required fields" };
 	}
 
-	// Verify bus ownership
+	// Verify bus ownership: an operator may only schedule trips on a bus they
+	// own. Admins may schedule on any bus. Without this an operator could
+	// create trips on a rival operator's bus.
 	const [bus] = await db.select().from(buses).where(eq(buses.id, data.busId));
 	if (!bus) return { success: false, error: "Bus not found" };
+
+	if (session.user.role === "operator") {
+		const [operator] = await db
+			.select({ id: operators.id })
+			.from(operators)
+			.where(eq(operators.userId, session.user.id));
+		if (!operator || bus.operatorId !== operator.id) {
+			return { success: false, error: "You do not own this bus" };
+		}
+	}
 
 	const depTime24 = to24Hour(data.departureTime, data.departurePeriod);
 

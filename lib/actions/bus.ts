@@ -13,6 +13,7 @@ import {
 	stops,
 	users,
 } from "@/lib/db/schema";
+import { encryptPII } from "@/lib/services/crypto";
 import bcrypt from "bcryptjs";
 import { eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -222,6 +223,12 @@ export async function submitBusRequestAction(data: {
 
 	await db.insert(busRequests).values({
 		...data,
+		// Encrypt PII at rest — admins decrypt on read for verification.
+		operatorAadhaar: encryptPII(data.operatorAadhaar),
+		operatorLicense: encryptPII(data.operatorLicense),
+		rcNumber: encryptPII(data.rcNumber),
+		pollutionCertNumber: encryptPII(data.pollutionCertNumber),
+		insurancePolicyNumber: encryptPII(data.insurancePolicyNumber),
 		operatorId: op.id,
 	});
 
@@ -512,8 +519,10 @@ export async function createOperatorAction(data: {
 
 	const hashed = await bcrypt.hash(data.password, 12);
 	const now = new Date();
-	// ⚠ TEST MODE (5 min). Change to 7*24*60*60*1000 for production.
-	const expiresAt = new Date(now.getTime() + 5 * 60 * 1000);
+	// Temporary-password lifetime. Prod-safe default (7 days); override with
+	// OPERATOR_TEMP_PASSWORD_DAYS (e.g. a short value for local testing).
+	const tempPwDays = Number(process.env.OPERATOR_TEMP_PASSWORD_DAYS) || 7;
+	const expiresAt = new Date(now.getTime() + tempPwDays * 24 * 60 * 60 * 1000);
 
 	const [user] = await db
 		.insert(users)
@@ -568,16 +577,20 @@ export async function updateOperatorAction(
 			...(data.companyName !== undefined && { companyName: data.companyName }),
 			...(data.phone !== undefined && { phone: data.phone || null }),
 			...(data.approved !== undefined && { approved: data.approved }),
-			...(data.aadhar !== undefined && { aadhar: data.aadhar || null }),
-			...(data.drivingLicense !== undefined && {
-				drivingLicense: data.drivingLicense || null,
+			...(data.aadhar !== undefined && {
+				aadhar: encryptPII(data.aadhar || null),
 			}),
-			...(data.rcNumber !== undefined && { rcNumber: data.rcNumber || null }),
+			...(data.drivingLicense !== undefined && {
+				drivingLicense: encryptPII(data.drivingLicense || null),
+			}),
+			...(data.rcNumber !== undefined && {
+				rcNumber: encryptPII(data.rcNumber || null),
+			}),
 			...(data.pollutionCertNo !== undefined && {
-				pollutionCertNo: data.pollutionCertNo || null,
+				pollutionCertNo: encryptPII(data.pollutionCertNo || null),
 			}),
 			...(data.insurancePolicyNo !== undefined && {
-				insurancePolicyNo: data.insurancePolicyNo || null,
+				insurancePolicyNo: encryptPII(data.insurancePolicyNo || null),
 			}),
 			updatedAt: new Date(),
 		})

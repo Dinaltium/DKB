@@ -1,6 +1,13 @@
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-import { tickets, users } from "@/lib/db/schema";
+import {
+	buses,
+	conductorAccess,
+	operators,
+	tickets,
+	trips,
+	users,
+} from "@/lib/db/schema";
 import { and, eq } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
 
@@ -29,6 +36,58 @@ export async function GET(
 			);
 		}
 
+		// ── Object-level authz: staff may only read tickets for a trip whose
+		// bus they actually operate/are assigned to (admins exempt). Without
+		// this, any conductor/operator could enumerate trip IDs and harvest
+		// every passenger's name + phone. ──────────────────────────────────────
+		const role = session.user.role;
+		if (role !== "admin") {
+			const [trip] = await db
+				.select({ busId: trips.busId })
+				.from(trips)
+				.where(eq(trips.id, tripId));
+			if (!trip) {
+				return NextResponse.json(
+					{ success: false, error: "Trip not found" },
+					{ status: 404 },
+				);
+			}
+
+			let authorised = false;
+			if (role === "conductor") {
+				const access = await db
+					.select({ id: conductorAccess.id })
+					.from(conductorAccess)
+					.where(
+						and(
+							eq(conductorAccess.conductorId, session.user.id),
+							eq(conductorAccess.busId, trip.busId),
+							eq(conductorAccess.isActive, true),
+						),
+					);
+				authorised = access.length > 0;
+			} else if (role === "operator") {
+				const owned = await db
+					.select({ id: buses.id })
+					.from(buses)
+					.innerJoin(operators, eq(operators.id, buses.operatorId))
+					.where(
+						and(
+							eq(buses.id, trip.busId),
+							eq(operators.userId, session.user.id),
+						),
+					);
+				authorised = owned.length > 0;
+			}
+
+			if (!authorised) {
+				return NextResponse.json(
+					{ success: false, error: "Forbidden" },
+					{ status: 403 },
+				);
+			}
+		}
+
 		const rows = await db
 			.select({
 				ticketUid: tickets.ticketUid,
@@ -51,9 +110,10 @@ export async function GET(
 			.orderBy(tickets.createdAt);
 
 		return NextResponse.json({ success: true, data: rows });
-	} catch (err: any) {
+	} catch (err) {
+		console.error("[GET /api/tickets/trip/[tripId]]", err);
 		return NextResponse.json(
-			{ success: false, error: err.message },
+			{ success: false, error: "Server error" },
 			{ status: 500 },
 		);
 	}

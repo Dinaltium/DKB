@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import React from "react";
 import { describe, expect, it } from "vitest";
-import { StatusBadge } from "../../src/components/shared/StatusBadge";
+import { StatusBadge } from "../../components/shared/StatusBadge";
 
 describe("StatusBadge Component", () => {
 	it("renders badge with Running status", () => {

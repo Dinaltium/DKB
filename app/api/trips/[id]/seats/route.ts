@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { tickets } from "@/lib/db/schema";
 import { and, eq, inArray } from "drizzle-orm";
@@ -7,6 +8,14 @@ export async function GET(
 	request: NextRequest,
 	{ params }: { params: Promise<{ id: string }> },
 ) {
+	const session = await auth();
+	if (!session) {
+		return NextResponse.json(
+			{ success: false, error: "Unauthorised" },
+			{ status: 401 },
+		);
+	}
+
 	try {
 		const { id } = await params;
 		const tripId = Number.parseInt(id);
@@ -53,9 +62,10 @@ export async function GET(
 		}
 
 		return NextResponse.json({ success: true, data: { seatMap } });
-	} catch (err: any) {
+	} catch (err) {
+		console.error("[GET /api/trips/[id]/seats]", err);
 		return NextResponse.json(
-			{ success: false, error: err.message },
+			{ success: false, error: "Server error" },
 			{ status: 500 },
 		);
 	}

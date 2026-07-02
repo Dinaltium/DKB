@@ -71,6 +71,13 @@ export const ticketPaymentStatusEnum = pgEnum("ticket_payment_status", [
 	"cash",
 ]);
 
+export const ticketArchiveReasonEnum = pgEnum("ticket_archive_reason", [
+	"gps_arrival",
+	"time_estimate",
+	"stop_passed",
+	"manual",
+]);
+
 export const passTypeEnum = pgEnum("pass_type", ["student", "monthly"]);
 
 export const passStatusEnum = pgEnum("pass_status", [
@@ -493,9 +500,21 @@ export const tickets = pgTable("tickets", {
 		.default("pending"),
 	paymentRef: text("payment_ref"),
 	paymentMethod: text("payment_method"), // "upi", "ussd", "cash"
+	// True only when payment is verified by a trusted signal (staff cash, or a
+	// future PSP/SMS reconciliation). A self-submitted UPI reference alone does
+	// NOT set this — the conductor UI must treat unverified tickets as "claimed".
+	paymentVerified: boolean("payment_verified").notNull().default(false),
 	upiApp: text("upi_app"),
 	isGuest: boolean("is_guest").notNull().default(false),
 	expiresAt: timestamp("expires_at"),
+	// ── Active-panel lifecycle (ticket archives to History, never deleted) ──────
+	// archivedAt set → ticket has left the active panel. Reason records how.
+	// Last-known location lets us recompute an arrival ETA when GPS later drops.
+	archivedAt: timestamp("archived_at"),
+	archiveReason: ticketArchiveReasonEnum("archive_reason"),
+	lastKnownLat: real("last_known_lat"),
+	lastKnownLng: real("last_known_lng"),
+	lastSeenAt: timestamp("last_seen_at"),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

@@ -15,9 +15,12 @@ export function generateTicketHash(
 	tripId: number,
 	userId: string | null,
 ): string {
-	const secret = process.env.AUTH_SECRET;
+	// Prefer a dedicated ticket-signing key; fall back to AUTH_SECRET.
+	const secret = process.env.TICKET_HMAC_KEY ?? process.env.AUTH_SECRET;
 	if (!secret) {
-		throw new Error("AUTH_SECRET is not set — cannot sign ticket");
+		throw new Error(
+			"TICKET_HMAC_KEY / AUTH_SECRET is not set — cannot sign ticket",
+		);
 	}
 	return crypto
 		.createHmac("sha256", secret)

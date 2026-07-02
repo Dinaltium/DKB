@@ -85,14 +85,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 				if (fresh) {
 					token.mustChangePassword = fresh.mustChangePassword ?? false;
 					token.onboarded = !!fresh.onboardedAt;
-					if (
-						!token.roleCheckedAt ||
-						Date.now() - (token.roleCheckedAt as number) > 5 * 60 * 1000
-					) {
-						token.role = fresh.role;
-						token.id = fresh.id;
-						token.roleCheckedAt = Date.now();
-					}
+					// Always refresh role/id from the DB. `fresh` is already fetched
+					// every call for mustChangePassword/onboarded, so there is no extra
+					// query cost — and it removes the up-to-5-minute window where a
+					// demoted or revoked user kept their old role in the token.
+					token.role = fresh.role;
+					token.id = fresh.id;
+					token.roleCheckedAt = Date.now();
 				}
 			}
 

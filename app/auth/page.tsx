@@ -41,7 +41,16 @@ export default function AuthPage() {
 	// Default post-login destination is the dashboard. The dashboard route
 	// itself re-routes by role (conductor → /conductor, etc.). Home stays
 	// reachable because this page no longer sends users there by default.
-	const callbackUrl = params.get("callbackUrl") ?? "/dashboard";
+	//
+	// Open-redirect guard: only accept a same-origin relative path. Anything
+	// with a scheme, a protocol-relative "//host", or backslashes is rejected
+	// so ?callbackUrl=https://evil.tld can't bounce a just-authenticated user.
+	const rawCallback = params.get("callbackUrl");
+	const isSafeCallback =
+		rawCallback?.startsWith("/") &&
+		!rawCallback.startsWith("//") &&
+		!rawCallback.startsWith("/\\");
+	const callbackUrl = isSafeCallback ? (rawCallback as string) : "/dashboard";
 	const urlError = params.get("error");
 
 	const [mode, setMode] = useState<Mode>("login");
@@ -54,6 +63,7 @@ export default function AuthPage() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirm, setConfirm] = useState("");
+	const [agreed, setAgreed] = useState(false);
 
 	// ── Google sign-in ─────────────────────────────────────────────────────────
 	const handleGoogle = () => {
@@ -70,6 +80,10 @@ export default function AuthPage() {
 			if (password.length < 8)
 				return setError("Password must be at least 8 characters.");
 			if (password !== confirm) return setError("Passwords do not match.");
+			if (!agreed)
+				return setError(
+					"Please confirm you are 18+ and agree to the Terms & Privacy Policy.",
+				);
 
 			startTransition(async () => {
 				const result = await registerUser({ name, email, password });
@@ -187,10 +201,45 @@ export default function AuthPage() {
 					</div>
 				)}
 
+				{/* Age + legal consent (register only) — gates both Google and
+				    credentials sign-up below it. */}
+				{mode === "register" && (
+					<label
+						className="mb-4 flex cursor-pointer items-start gap-2 text-xs leading-relaxed"
+						style={{ color: "var(--text-muted)" }}
+					>
+						<input
+							type="checkbox"
+							checked={agreed}
+							onChange={(e) => setAgreed(e.target.checked)}
+							className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-current"
+						/>
+						<span>
+							I confirm I am 18 or older and agree to BusLink&apos;s{" "}
+							<Link
+								href="/terms"
+								target="_blank"
+								className="theme-text-teal font-bold underline"
+							>
+								Terms
+							</Link>{" "}
+							and{" "}
+							<Link
+								href="/privacy"
+								target="_blank"
+								className="theme-text-teal font-bold underline"
+							>
+								Privacy Policy
+							</Link>
+							. We only collect what a feature needs and never sell your data.
+						</span>
+					</label>
+				)}
+
 				{/* Google button */}
 				<button
 					onClick={handleGoogle}
-					disabled={isPending}
+					disabled={isPending || (mode === "register" && !agreed)}
 					className="theme-btn-secondary brutal-transition brutal-hover mb-4 flex h-12 w-full items-center justify-center gap-3 rounded-none border-2 text-sm font-bold uppercase tracking-wide neo-shadow hover:opacity-80 disabled:opacity-50"
 					style={{
 						background: "var(--bg-surface-2)",
@@ -293,7 +342,7 @@ export default function AuthPage() {
 				{/* Submit button */}
 				<button
 					onClick={handleSubmit}
-					disabled={isPending}
+					disabled={isPending || (mode === "register" && !agreed)}
 					className="theme-btn-primary brutal-transition brutal-hover mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-none border-2 text-sm font-bold uppercase tracking-widest neo-shadow disabled:opacity-60"
 				>
 					{isPending ? (
@@ -307,17 +356,6 @@ export default function AuthPage() {
 						"Create Account"
 					)}
 				</button>
-
-				{/* Footnote */}
-				{mode === "register" && (
-					<p
-						className="mt-4 text-center text-xs leading-relaxed"
-						style={{ color: "var(--text-muted)" }}
-					>
-						By registering you agree to BusLink&apos;s terms. Your data is
-						stored securely and never sold.
-					</p>
-				)}
 
 				{/* Operator/admin access note */}
 				<div
