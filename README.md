@@ -1,4 +1,4 @@
-# BusLink (dkbus)
+# BusLink
 
 **BusLink** is a Next.js app for a Mangalore–Udupi smart bus platform: route search, fares, live-style bus info, QR flows, and role-based dashboards (passenger, operator, admin). The UI leans **neobrutalist / BoldKit** (high-contrast borders, uppercase accents, Barlow Condensed for display type).
 

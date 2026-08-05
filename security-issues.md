@@ -1,4 +1,4 @@
-# BusLink (dkbus) — Security Audit
+# BusLink — Security Audit
 
 **Scope:** Full repository — App Router routes, `proxy.ts` middleware (Next 16), server actions, Drizzle DB access, auth (`auth.ts`, NextAuth v5 JWT), crypto helpers, `next.config.ts`, the AAF11 connector, and build/seed scripts. Data flow traced across files (auth → session → server action → DB).
 **References:** OWASP Top Ten 2021, CWE, CVSS v3.1.
