@@ -22,7 +22,7 @@ import type { CapacitorConfig } from "@capacitor/cli";
 //   See MOBILE.md for the full runbook.
 
 const config: CapacitorConfig = {
-	appId: "com.dkbus.buslink",
+	appId: "com.buslink.app",
 	appName: "BusLink",
 	// webDir is only used as a fallback when server.url is unreachable.
 	// `public` is the smallest valid existing dir.

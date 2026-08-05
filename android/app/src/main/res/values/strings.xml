@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">BusLink</string>
     <string name="title_activity_main">BusLink</string>
-    <string name="package_name">com.dkbus.buslink</string>
-    <string name="custom_url_scheme">com.dkbus.buslink</string>
+    <string name="package_name">com.buslink.app</string>
+    <string name="custom_url_scheme">com.buslink.app</string>
 </resources>
